@@ -2,6 +2,13 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
         "iosfwd": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "limits": "cpp",
+        "iterator": "cpp",
+        "ostream": "cpp",
+        "chrono": "cpp",
+        "complex": "cpp",
+        "unordered_map": "cpp",
+        "cassert": "cpp"
     }
 }
