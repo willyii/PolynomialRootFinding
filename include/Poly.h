@@ -3,26 +3,28 @@
 
 #include <vector>
 
-#include "Param.h"
 using std::vector;
 
 class Poly {
  public:
-  Poly(vector<double> coeff);
+  // Constructor, mutator, accessor
   Poly(){};
+  Poly(vector<double> coeff);
+  vector<double> getCoef() { return _coefficient; }
+  vector<double> getGradCoef() { return _gradientCoef; }
+  int getN() { return _N; }
+
+  // Get corresponding value and gradient
   double getValue(double x);
   double getGradient(double x);
-  double NewtonRaphson(double x0);
-  int signChangeNums(double h);
 
  private:
-  void getGradientCoef();
-  vector<double> coeffAfter(double h);
-  vector<double> polyTimes(vector<double> &c1, vector<double> &c2);
-
+  void GradientCoef();
+  
+  // variables
   vector<double> _coefficient;
   vector<double> _gradientCoef;
-  int _N;
+  int _N;  // length of coeff
 };
 
 #endif
