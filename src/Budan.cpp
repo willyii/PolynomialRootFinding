@@ -109,3 +109,13 @@ double Budan::NewtonRaphson(Poly &poly, double x) {
   if (abs(poly.getValue(x) - 0) <= Param::EPSILON) return x;
   return numeric_limits<double>::max();
 }
+
+/**
+ * Finding root
+ * 
+ * @param poly
+ * @return roots
+ */
+vector<double> Budan::rootFinding(Poly& poly){
+  
+}

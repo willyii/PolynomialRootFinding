@@ -9,6 +9,7 @@ class Budan {
  public:
   int signChangeNums(Poly &poly, double h);
   double NewtonRaphson(Poly &poly, double x);
+  vector<double> rootFinding(Poly &poly);
 
  private:
   vector<double> coeffAfter(Poly &poly, double h);
