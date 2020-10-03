@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 #include "Param.h"
 
@@ -117,5 +118,58 @@ double Budan::NewtonRaphson(Poly &poly, double x) {
  * @return roots
  */
 vector<double> Budan::rootFinding(Poly& poly){
-  
+  return vector<double> {0.0};
 }
+
+
+/**
+ * Finding GCD of two Poly's coefficient by Euclidean division
+ *
+ * @param c1, c2, coeff of two polys
+ * @return gcd of two polys
+ */
+GCD Budan::gcd(vector<double> &a, vector<double> &b){
+  int N = a.size();
+  vector<double> q(N, 0.0), r = a; 
+  int d = Budan::deg(b);
+  double c = Budan::lc(b);
+
+  while(Budan::deg(r) >= d){
+    vector<double> s(N, 0.0);
+    s[N - deg(r) + d - 1] = Budan::lc(r)/c;
+    vector<double> sb = Budan::polyTimes(s, b);
+    for(int i=0;i<N;i++){
+      q[i] = q[i] + s[i];
+      r[i] = r[i] - sb[i];
+    }
+  }
+  GCD tmp;
+  tmp.q = q;
+  tmp.r = r;
+  return tmp; 
+} 
+
+
+double Budan::lc(vector<double> &c){
+  for(auto num:c){
+    if(num!= 0.0){
+      return num;
+    }
+  }
+  return 0.0;
+}
+
+int Budan::deg(vector<double> &c){
+  int ret = 0;
+  for(int i=0; i<c.size();i++){
+    if(c[i] != 0.0){
+      return c.size() - i -1;
+    }
+  }
+  return 0;
+}
+
+
+
+
+

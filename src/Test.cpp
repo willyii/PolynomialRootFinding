@@ -1,7 +1,6 @@
 #include "Test.h"
 
 #include <math.h>
-
 #include <cassert>
 #include <iostream>
 #include <limits>
@@ -85,6 +84,7 @@ void Test::testSign() {
   right = testBudan.signChangeNums(testPoly, 2);
   assert(left - right == 0);
 
+  cout<<"Tset s a "<<endl;
   left = testBudan.signChangeNums(testPoly, 2.5);
   right = testBudan.signChangeNums(testPoly, 3.5);
   assert(left - right == 1);
@@ -106,3 +106,21 @@ void Test::testSign() {
 
   cout << "Testing SignRule Pass " << endl;
 }
+
+/* Test GCF function*/
+void Test::testGcd(){
+  vector<double> c1;
+  vector<double> c2;
+  Budan testBudan = Budan();
+  
+  c1 = {1,7,6};
+  c2 = {1,-5,-6};
+  GCD tmp = testBudan.gcd(c1, c2);
+  cout<<tmp.q[0] << tmp.q[1] << tmp.q[2] << endl;
+}
+
+
+
+
+
+

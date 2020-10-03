@@ -8,6 +8,7 @@ class Test {
   void testGradient();
   void testNewton();
   void testSign();
+  void testGcd();
 
 
 };

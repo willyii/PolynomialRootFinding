@@ -13,5 +13,8 @@ int main(int argc, char const *argv[]) {
   tester.testGradient();
   tester.testNewton();
   tester.testSign();
+  tester.testGcd();
   return 0;
 }
+
+
