@@ -1,12 +1,19 @@
 #include "Budan.h"
 
+#include <iostream>
+#include <numeric>
 #include <unordered_map>
 #include <vector>
-#include <iostream>
 
 #include "Param.h"
+#include "Util.h"
 
 using namespace std;
+using util::coeffAfter;
+using util::deg;
+using util::isZeroVec;
+using util::lc;
+using util::polyTimes;
 
 /**
  * Caculate the number of sign change when this equation added h
@@ -17,7 +24,7 @@ using namespace std;
  */
 int Budan::signChangeNums(Poly &poly, double h) {
   int ret = 0;
-  vector<double> after = coeffAfter(poly, h);
+  vector<double> after = coeffAfter(poly.getCoef(), h);
 
   bool sign = after[0] > 0;
   for (auto num : after) {
@@ -25,67 +32,6 @@ int Budan::signChangeNums(Poly &poly, double h) {
     if (num > 0 == sign) continue;
     sign = !sign;
     ret++;
-  }
-  return ret;
-}
-
-/**
- * Caculate the coefficient after add h to x
- *
- * @param poly Polynomial function
- * @param h the change of x
- * @return coef after change
- */
-vector<double> Budan::coeffAfter(Poly &poly, double h) {
-  int N = poly.getN();
-  vector<double> tmp(N, 0), coef = poly.getCoef();
-  unordered_map<int, vector<double>> memo;  // map the idx to corresponding coef
-
-  // zero case
-  memo[0] = vector<double>(N, 0);
-  memo[0][N - 1] = 1;
-
-  // one case
-  if (N >= 1) {
-    memo[1] = vector<double>(N, 0);
-    memo[1][N - 1] = h;
-    memo[1][N - 2] = 1;
-  }
-
-  // more case
-  for (int idx = 2; idx < N; idx++) {
-    int mid = idx / 2;
-    memo[idx] = polyTimes(memo[mid], memo[idx - mid]);
-  }
-
-  // combine
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      tmp[j] += coef[N - i - 1] * memo[i][j];
-    }
-  }
-
-  return tmp;
-}
-
-/**
- * Calculate the coef after two poly times
- * We can make sure the maximum will no large than _N
- *
- * @param c1 coef of poly1
- * @param c2 coef of poly2
- * @return the cofe after computation
- */
-vector<double> Budan::polyTimes(vector<double> &c1, vector<double> &c2) {
-  vector<double> ret(c1.size(), 0);
-  int idx1, idx2;
-  for (int i = 0; i < c1.size(); i++) {
-    idx1 = c1.size() - i - 1;
-    for (int j = 0; j < c1.size(); j++) {
-      idx2 = c1.size() - j - 1;
-      if (idx1 + idx2 >= c1.size()) continue;
-      ret[c1.size() - 1 - idx1 - idx2] += c1[i] * c2[j];
-    }
   }
   return ret;
 }
@@ -112,64 +58,44 @@ double Budan::NewtonRaphson(Poly &poly, double x) {
 }
 
 /**
- * Finding root
- * 
- * @param poly
- * @return roots
- */
-vector<double> Budan::rootFinding(Poly& poly){
-  return vector<double> {0.0};
-}
-
-
-/**
- * Finding GCD of two Poly's coefficient by Euclidean division
+ * Finding GCD of two Poly's coefficient by Euclid's algorithm
  *
  * @param c1, c2, coeff of two polys
  * @return gcd of two polys
  */
-GCD Budan::gcd(vector<double> &a, vector<double> &b){
-  int N = a.size();
-  vector<double> q(N, 0.0), r = a; 
-  int d = Budan::deg(b);
-  double c = Budan::lc(b);
+Poly Budan::gcd(vector<double> &a, vector<double> &b) {
+  // Reach the end
+  if (isZeroVec(b)) {
+    return Poly(a);
+  }
 
-  while(Budan::deg(r) >= d){
+  int N = a.size();
+  vector<double> q(N, 0.0), r = a;
+  int d = deg(b);
+  double c = lc(b);
+
+  while (deg(r) >= d) {
     vector<double> s(N, 0.0);
-    s[N - deg(r) + d - 1] = Budan::lc(r)/c;
-    vector<double> sb = Budan::polyTimes(s, b);
-    for(int i=0;i<N;i++){
+    s[N - deg(r) + d - 1] = lc(r) / c;
+    vector<double> sb = polyTimes(s, b);
+    for (int i = 0; i < N; i++) {
       q[i] = q[i] + s[i];
       r[i] = r[i] - sb[i];
     }
   }
-  GCD tmp;
-  tmp.q = q;
-  tmp.r = r;
-  return tmp; 
-} 
-
-
-double Budan::lc(vector<double> &c){
-  for(auto num:c){
-    if(num!= 0.0){
-      return num;
-    }
-  }
-  return 0.0;
+  return gcd(b, r);
 }
 
-int Budan::deg(vector<double> &c){
-  int ret = 0;
-  for(int i=0; i<c.size();i++){
-    if(c[i] != 0.0){
-      return c.size() - i -1;
-    }
-  }
-  return 0;
+/**
+ * Apply Yun's Algorithm to decompose a poly in to several square-free poly
+ *
+ * TODO:
+ *
+ * @param poly Polynomial need to be decompose
+ * @return The coeff of decomposed coef
+ */
+vector<vector<double>> Budan::squareFreeDecompoe(Poly &poly) {
+  vector<Poly> ans;
+  Poly a = Budan::gcd(poly.getCoef(), poly.getGradCoef());
+  return vector<vector<double>>{{0.0}};
 }
-
-
-
-
-

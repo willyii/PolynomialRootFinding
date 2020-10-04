@@ -5,9 +5,11 @@
 #include <unordered_map>
 #include <vector>
 
+#include "Util.h"
 #include "math.h"
 
 using namespace std;
+using namespace util;
 
 /**
  * Constructor
@@ -57,4 +59,24 @@ double Poly::getGradient(double x) {
     ret = ret * x + tmp;
   }
   return ret;
+}
+
+// OverLoad divide operator
+Poly Poly::operator/(Poly& b) {
+  return Poly(polyDiv(this->getCoef(), b.getCoef()));
+}
+
+// OverLoad Add operator
+Poly Poly::operator+(Poly& b) {
+  return Poly(polyAdd(this->getCoef(), b.getCoef()));
+}
+
+// OverLoad Sub operator
+Poly Poly::operator-(Poly& b) {
+  return Poly(polySub(this->getCoef(), b.getCoef()));
+}
+
+// OverLoad Times operator
+Poly Poly::operator*(Poly& b) {
+  return Poly(polyTimes(this->getCoef(), b.getCoef()));
 }

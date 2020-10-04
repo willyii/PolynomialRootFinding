@@ -112,11 +112,29 @@ void Test::testGcd(){
   vector<double> c1;
   vector<double> c2;
   Budan testBudan = Budan();
+  Poly tmp;
   
-  c1 = {1,7,6};
-  c2 = {1,-5,-6};
-  GCD tmp = testBudan.gcd(c1, c2);
-  cout<<tmp.q[0] << tmp.q[1] << tmp.q[2] << endl;
+  // c1 = {1,7,6};
+  // c2 = {1,-5,-6};
+  // vector<double> tmp = testBudan.gcd(c1, c2);
+  // cout<<tmp[0] << tmp[1] << tmp[2] << endl;
+
+  cout<<"+++++++++++++++"<<endl;
+  c1 = {1,-10,32,-32};
+  c2 = {0,3,-20,32};
+  tmp = testBudan.gcd(c1, c2);
+  for(auto num:tmp.getCoef())
+    cout<<num<<"|";
+  cout<<endl;
+
+  cout<<"+++++++++++++++"<<endl;
+  c1 = {1,-8,21,-18};
+  c2 = {0,3,-16,21};
+  tmp = testBudan.gcd(c1, c2);
+  for(auto num:tmp.getCoef())
+    cout<<num<<"|";
+  cout<<endl;
+
 }
 
 
