@@ -1,6 +1,6 @@
 # PolynomialRootFinding
 
-### 03/10/2020
+### 10/03/2020
 - Finished GCD for two polynomial
 - Pass the test of GCD
 - Move some function into util namespace
