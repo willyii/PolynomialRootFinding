@@ -4,6 +4,7 @@
 #include <limits>
 #include <unordered_map>
 #include <vector>
+#include "string.h"
 
 #include "Util.h"
 #include "math.h"
@@ -79,4 +80,15 @@ Poly Poly::operator-(Poly& b) {
 // OverLoad Times operator
 Poly Poly::operator*(Poly& b) {
   return Poly(polyTimes(this->getCoef(), b.getCoef()));
+}
+
+// Format print
+void Poly::__str__(){
+  int d = deg(this->getCoef());
+  string s = "";
+  for(int i=this->getN() - d - 1; i<this->getN();i++){
+    s += " " + to_string(this->getCoef()[i]) + "x^" + to_string(d) + " ";
+    d-=1;
+  }
+  cout<<s<<endl;
 }

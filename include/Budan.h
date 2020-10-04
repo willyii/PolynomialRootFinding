@@ -11,7 +11,7 @@ class Budan {
   int signChangeNums(Poly &poly, double h);
   double NewtonRaphson(Poly &poly, double x);
   Poly gcd(vector<double> &c1, vector<double> &c2);
-  vector<vector<double>> squareFreeDecompoe(Poly &poly);
+  vector<Poly> squareFreeDecompoe(Poly &poly);
 
 };
 

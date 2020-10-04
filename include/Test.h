@@ -9,6 +9,7 @@ class Test {
   void testNewton();
   void testSign();
   void testGcd();
+  void testDiv();
 
 
 };

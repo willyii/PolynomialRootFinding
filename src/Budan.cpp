@@ -7,13 +7,9 @@
 
 #include "Param.h"
 #include "Util.h"
-
+#include <unistd.h>
 using namespace std;
-using util::coeffAfter;
-using util::deg;
-using util::isZeroVec;
-using util::lc;
-using util::polyTimes;
+using namespace util;
 
 /**
  * Caculate the number of sign change when this equation added h
@@ -64,24 +60,37 @@ double Budan::NewtonRaphson(Poly &poly, double x) {
  * @return gcd of two polys
  */
 Poly Budan::gcd(vector<double> &a, vector<double> &b) {
+  // cout<<"a: ";
+  // for(auto num:a ){
+  //   cout<< num << "|";
+  // }
+  // cout<<"\n";
+  // cout<<"b: ";
+  // for(auto num:b ){
+  //   cout<< num << "|";
+  // }
+  // cout<<"\n";
+
   // Reach the end
   if (isZeroVec(b)) {
+    // cout<<"Found Ans: "<<endl;
+    // for(auto num:a)
+    // cout<<num<<"|";
+    // cout<<endl;
     return Poly(a);
   }
-
   int N = a.size();
   vector<double> q(N, 0.0), r = a;
   int d = deg(b);
   double c = lc(b);
 
   while (deg(r) >= d) {
+    // sleep(3);
     vector<double> s(N, 0.0);
     s[N - deg(r) + d - 1] = lc(r) / c;
     vector<double> sb = polyTimes(s, b);
-    for (int i = 0; i < N; i++) {
-      q[i] = q[i] + s[i];
-      r[i] = r[i] - sb[i];
-    }
+    q = polyAdd(q, s);
+    r = polySub(r, sb);
   }
   return gcd(b, r);
 }
@@ -94,8 +103,21 @@ Poly Budan::gcd(vector<double> &a, vector<double> &b) {
  * @param poly Polynomial need to be decompose
  * @return The coeff of decomposed coef
  */
-vector<vector<double>> Budan::squareFreeDecompoe(Poly &poly) {
+vector<Poly> Budan::squareFreeDecompoe(Poly &poly) {
   vector<Poly> ans;
-  Poly a = Budan::gcd(poly.getCoef(), poly.getGradCoef());
-  return vector<vector<double>>{{0.0}};
+  Poly a, b, c, d;
+  a = gcd(poly.getCoef(), poly.getGradCoef()); // a0 = gcd(f, f')
+  b = poly/a; // b1 = f/a0
+  c = Poly(polyDiv(poly.getGradCoef(), a.getCoef())); // c = f'/a0
+  d = Poly(polySub(c.getCoef(), b.getGradCoef())); // d = c -b' 
+
+  while(!(isOne(b.getCoef()))){
+    a = gcd(b.getCoef(), d.getCoef());
+    b = b/a;
+    c = Poly(polyDiv(d.getCoef(), a.getCoef()));
+    d = Poly(polySub(c.getCoef(), b.getGradCoef()));
+    ans.emplace_back(a);
+  }
+  return ans;
 }
+

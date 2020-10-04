@@ -18,6 +18,7 @@ class Poly {
   Poly operator-(Poly& b);
   Poly operator*(Poly& b);
 
+  void __str__();
 
   // Get corresponding value and gradient
   double getValue(double x);

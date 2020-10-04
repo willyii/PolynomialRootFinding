@@ -5,8 +5,9 @@
 - Pass the test of GCD
 - Move some function into util namespace
 - Finished square free decomposition
+- Finished simple test case of decomposition
 
 ### TODO
-- Test for square free decomposition
+- Complicated test for square free decomposition
 - Sign rule for each square free poly
 

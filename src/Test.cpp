@@ -9,8 +9,10 @@
 #include "Budan.h"
 #include "Param.h"
 #include "Poly.h"
+#include "Util.h"
 
 using namespace std;
+using namespace util;
 
 /* Test the accuracy of the poly*/
 void Test::testAccuracy() {
@@ -109,35 +111,30 @@ void Test::testSign() {
 
 /* Test GCF function*/
 void Test::testGcd(){
-  vector<double> c1;
-  vector<double> c2;
+  Poly c1;
+  Poly c2;
   Budan testBudan = Budan();
-  Poly tmp;
-  
-  // c1 = {1,7,6};
-  // c2 = {1,-5,-6};
-  // vector<double> tmp = testBudan.gcd(c1, c2);
-  // cout<<tmp[0] << tmp[1] << tmp[2] << endl;
+  vector<Poly> tmp;
 
   cout<<"+++++++++++++++"<<endl;
-  c1 = {1,-10,32,-32};
-  c2 = {0,3,-20,32};
-  tmp = testBudan.gcd(c1, c2);
-  for(auto num:tmp.getCoef())
-    cout<<num<<"|";
-  cout<<endl;
-
-  cout<<"+++++++++++++++"<<endl;
-  c1 = {1,-8,21,-18};
-  c2 = {0,3,-16,21};
-  tmp = testBudan.gcd(c1, c2);
-  for(auto num:tmp.getCoef())
-    cout<<num<<"|";
-  cout<<endl;
+  c1 = Poly(vector<double> {1, -10,32,-32});
+  tmp = testBudan.squareFreeDecompoe(c1);
+  for(auto x: tmp)
+  x.__str__();
 
 }
 
+/* Test Poly devide*/
+void Test::testDiv(){
+  Poly test1, test2, ans;
 
+  // x^2 - 12x + 32 / x-8
+  test1 = Poly(vector<double> {1, -12, 32});
+  test2 = Poly(vector<double> {0, 1, -8});
+
+  ans = test1 / test2;
+  ans.__str__();
+}
 
 
 

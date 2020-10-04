@@ -4,16 +4,26 @@
 #include <vector>
 
 #include "Param.h"
+#include <iostream>
 
 using namespace std;
 using namespace util;
 
-// Check if Zero vector or not 
+// Check if Zero vector or not
 bool util::isZeroVec(vector<double> &c) {
   for (auto num : c) {
     if (abs(num) > Param::EPSILON) return false;
   }
   return true;
+}
+
+// Check if Zero vector or not
+bool util::isOne(vector<double> &c) {
+  int N = c.size();
+  for (int i = 0; i < N - 1; i++) {
+    if (abs(c[i]-0) > Param::EPSILON) return false;
+  }
+  return abs(c[N - 1] - 1) <= Param::EPSILON;
 }
 
 // Leading coeff of Polynomial
@@ -30,11 +40,11 @@ double util::lc(vector<double> &c) {
 int util::deg(vector<double> &c) {
   int ret = 0;
   for (int i = 0; i < c.size(); i++) {
-    if (c[i] != 0.0) {
+    if (abs(c[i]-0) > Param::EPSILON) {
       return c.size() - i - 1;
     }
   }
-  return 0;
+  return -1;
 }
 
 // Caculate the coefficient after add h to x
@@ -104,22 +114,22 @@ vector<double> util::polySub(vector<double> &c1, vector<double> &c2) {
 }
 
 // Calculate the div of two poly coef
-vector<double> util::polyDiv(vector<double> &c1, vector<double> &c2) {
-    vector<double> q(c1.size(), 0.0), r = c1,t, tmp;
-    while(!isZeroVec(r) and deg(r) >= deg(c2)){
-        t = leadDiv(r, c2);
-        q = polyAdd(r,t);
-        tmp = polyTimes(t,c2);
-        r = polySub(r, tmp);
-    }
-    return q;
+vector<double> util::polyDiv(vector<double> &n, vector<double> &d) {
+  vector<double> q(n.size(), 0.0), r = n, t, tmp;
+  while (!isZeroVec(r) && deg(r) >= deg(d)) {
+    t = leadDiv(r, d);
+    q = polyAdd(q, t);
+    tmp = polyTimes(t, d);
+    r = polySub(r, tmp);
+  }
+  return q;
 }
 
 // Divide the leading term
 vector<double> util::leadDiv(vector<double> &c1, vector<double> &c2) {
-    double div = lc(c1)/ lc(c2);
-    int degree = deg(c1) - deg(c2);
-    vector<double> t (c1.size(), 0.0);
-    t[c1.size() - degree - 1] = div;
-    return t;
+  double div = lc(c1) / lc(c2);
+  int degree = deg(c1) - deg(c2);
+  vector<double> t(c1.size(), 0.0);
+  t[c1.size() - degree - 1] = div;
+  return t;
 }
