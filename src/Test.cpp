@@ -1,6 +1,8 @@
 #include "Test.h"
 
 #include <math.h>
+#include <stdlib.h>
+
 #include <cassert>
 #include <iostream>
 #include <limits>
@@ -86,7 +88,7 @@ void Test::testSign() {
   right = testBudan.signChangeNums(testPoly, 2);
   assert(left - right == 0);
 
-  cout<<"Tset s a "<<endl;
+  cout << "Tset s a " << endl;
   left = testBudan.signChangeNums(testPoly, 2.5);
   right = testBudan.signChangeNums(testPoly, 3.5);
   assert(left - right == 1);
@@ -110,32 +112,42 @@ void Test::testSign() {
 }
 
 /* Test GCF function*/
-void Test::testGcd(){
+void Test::testGcd() {
   Poly c1;
   Poly c2;
   Budan testBudan = Budan();
   vector<Poly> tmp;
 
-  cout<<"+++++++++++++++"<<endl;
-  c1 = Poly(vector<double> {1, -10,32,-32});
-  tmp = testBudan.squareFreeDecompoe(c1);
-  for(auto x: tmp)
-  x.__str__();
+  // cout << "+++++++++++++++" << endl;
+  // c1 = Poly(vector<double>{1, -10, 32, -32});
+  // tmp = testBudan.squareFreeDecompoe(c1);
+  // for (auto x : tmp) x.__str__();
 
+  cout << "+++++++++++++++" << endl;
+  c2 = Poly(vector<double>{fRand(), fRand(), fRand(), fRand()});
+  c2.__str__();
+  tmp = testBudan.squareFreeDecompoe(c2);
+  for (auto x : tmp) x.__str__();
+  double tmpans = testBudan.NewtonRaphson(tmp[0], 22);
+  cout << tmpans << endl;
+  cout<< c2.getValue(tmpans)<<endl;
 }
 
 /* Test Poly devide*/
-void Test::testDiv(){
+void Test::testDiv() {
   Poly test1, test2, ans;
 
   // x^2 - 12x + 32 / x-8
-  test1 = Poly(vector<double> {1, -12, 32});
-  test2 = Poly(vector<double> {0, 1, -8});
+  test1 = Poly(vector<double>{1, -12, 32});
+  test2 = Poly(vector<double>{0, 1, -8});
 
   ans = test1 / test2;
   ans.__str__();
 }
 
-
-
-
+/* random double*/
+double Test::fRand(double fMin, double fMax)
+{
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}

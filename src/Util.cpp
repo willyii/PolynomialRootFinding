@@ -7,7 +7,6 @@
 #include <iostream>
 
 using namespace std;
-using namespace util;
 
 // Check if Zero vector or not
 bool util::isZeroVec(vector<double> &c) {
@@ -29,7 +28,7 @@ bool util::isOne(vector<double> &c) {
 // Leading coeff of Polynomial
 double util::lc(vector<double> &c) {
   for (auto num : c) {
-    if (num != 0.0) {
+    if (abs(num-0.0) > Param::EPSILON) {
       return num;
     }
   }

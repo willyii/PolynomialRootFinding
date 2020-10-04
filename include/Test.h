@@ -11,6 +11,9 @@ class Test {
   void testGcd();
   void testDiv();
 
+  private:
+  double fRand(double fMin= -10.0, double fMax= 10.0);
+
 
 };
 

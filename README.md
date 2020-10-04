@@ -6,8 +6,8 @@
 - Move some function into util namespace
 - Finished square free decomposition
 - Finished simple test case of decomposition
+- Finished some complicated case for square free decomposition
 
 ### TODO
-- Complicated test for square free decomposition
 - Sign rule for each square free poly
 

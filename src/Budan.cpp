@@ -1,5 +1,7 @@
 #include "Budan.h"
 
+#include <unistd.h>
+
 #include <iostream>
 #include <numeric>
 #include <unordered_map>
@@ -7,7 +9,6 @@
 
 #include "Param.h"
 #include "Util.h"
-#include <unistd.h>
 using namespace std;
 using namespace util;
 
@@ -60,32 +61,28 @@ double Budan::NewtonRaphson(Poly &poly, double x) {
  * @return gcd of two polys
  */
 Poly Budan::gcd(vector<double> &a, vector<double> &b) {
-  // cout<<"a: ";
-  // for(auto num:a ){
-  //   cout<< num << "|";
-  // }
-  // cout<<"\n";
-  // cout<<"b: ";
-  // for(auto num:b ){
-  //   cout<< num << "|";
-  // }
-  // cout<<"\n";
-
   // Reach the end
   if (isZeroVec(b)) {
-    // cout<<"Found Ans: "<<endl;
-    // for(auto num:a)
-    // cout<<num<<"|";
-    // cout<<endl;
     return Poly(a);
   }
+
+  cout<<"a: ";
+  for(auto num:a) cout<<num<<"|";
+  cout<<"\n";
+  cout<<"b: ";
+  for(auto num:b) cout<<num<<"|";
+  cout<<"\n";
+
   int N = a.size();
   vector<double> q(N, 0.0), r = a;
   int d = deg(b);
   double c = lc(b);
 
-  while (deg(r) >= d) {
-    // sleep(3);
+  while (deg(r) >= d && !isZeroVec(r)) {
+    sleep(1);
+    cout<<"r: ";
+    for(auto num:r) cout<<num<<"|";
+    cout<<"\n";
     vector<double> s(N, 0.0);
     s[N - deg(r) + d - 1] = lc(r) / c;
     vector<double> sb = polyTimes(s, b);
@@ -106,18 +103,17 @@ Poly Budan::gcd(vector<double> &a, vector<double> &b) {
 vector<Poly> Budan::squareFreeDecompoe(Poly &poly) {
   vector<Poly> ans;
   Poly a, b, c, d;
-  a = gcd(poly.getCoef(), poly.getGradCoef()); // a0 = gcd(f, f')
-  b = poly/a; // b1 = f/a0
-  c = Poly(polyDiv(poly.getGradCoef(), a.getCoef())); // c = f'/a0
-  d = Poly(polySub(c.getCoef(), b.getGradCoef())); // d = c -b' 
+  a = gcd(poly.getCoef(), poly.getGradCoef());         // a0 = gcd(f, f')
+  b = poly / a;                                        // b1 = f/a0
+  c = Poly(polyDiv(poly.getGradCoef(), a.getCoef()));  // c = f'/a0
+  d = Poly(polySub(c.getCoef(), b.getGradCoef()));     // d = c -b'
 
-  while(!(isOne(b.getCoef()))){
+  while (!(isOne(b.getCoef()))) {
     a = gcd(b.getCoef(), d.getCoef());
-    b = b/a;
+    b = b / a;
     c = Poly(polyDiv(d.getCoef(), a.getCoef()));
     d = Poly(polySub(c.getCoef(), b.getGradCoef()));
     ans.emplace_back(a);
   }
   return ans;
 }
-
