@@ -66,13 +66,6 @@ Poly Budan::gcd(vector<double> &a, vector<double> &b) {
     return Poly(a);
   }
 
-  cout<<"a: ";
-  for(auto num:a) cout<<num<<"|";
-  cout<<"\n";
-  cout<<"b: ";
-  for(auto num:b) cout<<num<<"|";
-  cout<<"\n";
-
   int N = a.size();
   vector<double> q(N, 0.0), r = a;
   int d = deg(b);
@@ -80,9 +73,6 @@ Poly Budan::gcd(vector<double> &a, vector<double> &b) {
 
   while (deg(r) >= d && !isZeroVec(r)) {
     sleep(1);
-    cout<<"r: ";
-    for(auto num:r) cout<<num<<"|";
-    cout<<"\n";
     vector<double> s(N, 0.0);
     s[N - deg(r) + d - 1] = lc(r) / c;
     vector<double> sb = polyTimes(s, b);

@@ -21,8 +21,8 @@ class Poly {
   void __str__();
 
   // Get corresponding value and gradient
-  double getValue(double x);
-  double getGradient(double x);
+  double valueAt(double x);
+  double gradientAt(double x);
 
  private:
   void GradientCoef();
