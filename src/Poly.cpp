@@ -3,12 +3,24 @@
 #include <vector>
 #include <string.h>
 
-using std::vector;
+using namespace std;
 
 
-/**
- * Calculate the coefficient of gradient
- */
+// Constructor
+Poly::Poly(){}
+Poly::Poly(Coef& d){_coef = d; gradientCoef();}
+Poly::Poly(vector<double>& d) {_coef = Coef(d); gradientCoef();} 
+
+// Accessor
+Coef& Poly::getCoef() { return _coef; }
+Coef& Poly::getGradCoef() { return _gradCoef; }
+int Poly::size() const  {return _coef.size();}
+Poly Poly::getGradPoly() {return Poly(_gradCoef);}
+
+// Overload [] operator
+const double& Poly::operator[](int i) const {return _coef[i];}
+
+// Calculate the coefficient of gradient
 void Poly::gradientCoef() {
   int N = _coef.size();
   vector<double> tmp(1,0.0);
@@ -58,4 +70,14 @@ double Poly::gradientAt(double x) {
     ret = ret * x + _gradCoef[i];
   
   return ret;
+}
+
+// Overload << operator
+std::ostream& operator<<(std::ostream& out, const Poly& u){
+  int N = u.size();
+  for (int i = 0; i < N; i++) {
+    if (i) out << ' ' << '+' << ' ';
+    out << u[i] << 'x' <<'^' << N-i-1;
+  }
+  return out;
 }
