@@ -1,17 +1,12 @@
 #ifndef BUDAN_H
 #define BUDAN_H
 
-#include <vector>
+#include "isolate.h"
 
-#include "Poly.h"
-
-
-class Budan {
- public:
-  int signChangeNums(Poly &poly, double h);
-  double NewtonRaphson(Poly &poly, double x);
-  Poly gcd(vector<double> &c1, vector<double> &c2);
-  vector<Poly> squareFreeDecompoe(Poly &poly);
+class Budan: public Isolate{
+    public:
+    Poly addToP(Poly& p, double h);
+    int signChangeNum(Poly& p);
 
 };
 
