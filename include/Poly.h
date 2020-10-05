@@ -1,13 +1,14 @@
 #ifndef POLY_H
 #define POLY_H
 
-#include "coef.h"
 #include <iostream>
+
+#include "coef.h"
 
 using std::vector;
 
 class Poly {
-  public:
+ public:
   Poly();
   Poly(vector<double>& d);
   Poly(Coef& d);
@@ -23,16 +24,14 @@ class Poly {
   Poly operator/(Poly& b);
   friend std::ostream& operator<<(std::ostream& out, const Poly& u);
   const double& operator[](int i) const;
+  double& operator[](int i);
 
   Poly getGradPoly();
 
-
-  private:
+ private:
   void gradientCoef();
   coef _coef;
   coef _gradCoef;
-
-
 };
 
 #endif

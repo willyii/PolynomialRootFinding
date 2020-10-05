@@ -1,109 +1,50 @@
-// #include "Budan.h"
+#include "budan.h"
 
-// #include <unistd.h>
+#include <unordered_map>
 
-// #include <iostream>
-// #include <numeric>
-// #include <unordered_map>
-// #include <vector>
+using namespace std;
 
-// #include "Param.h"
-// #include "Util.h"
-// using namespace std;
-// using namespace util;
+// Poly after add h to x
+Poly Budan::addToP(Poly& p, double h) {
+  int N = p.size();
+  Coef tmp = Coef(N);
+  unordered_map<int, Coef> memo;  // map the idx to corresponding coef
 
-// /**
-//  * Caculate the number of sign change when this equation added h
-//  *
-//  * @param poly Polynomila function that need to be caculated
-//  * @param h after add this number, formula will be changed
-//  * @return the number of sign change
-//  */
-// int Budan::signChangeNums(Poly &poly, double h) {
-//   int ret = 0;
-//   vector<double> after = coeffAfter(poly.getCoef(), h);
+  // zero case
+  memo[0] = Coef(N);
+  memo[0][N - 1] = 1;
 
-//   bool sign = after[0] > 0;
-//   for (auto num : after) {
-//     if (num == 0) continue;
-//     if (num > 0 == sign) continue;
-//     sign = !sign;
-//     ret++;
-//   }
-//   return ret;
-// }
+  // one case
+  if (N >= 1) {
+    memo[1] = Coef(N);
+    memo[1][N - 1] = h;
+    memo[1][N - 2] = 1;
+  }
 
-// /**
-//  * NewtonRaphson method to find root.
-//  *
-//  * This is already garentee that only one root in polynomoal.
-//  * TODO: Add intervals to this function and make sure it will find the root.
-//  *
-//  * @param poly polynomial function
-//  * @param x initial guess of the root.
-//  * @return the root of this polynomial.
-//  */
-// double Budan::NewtonRaphson(Poly &poly, double x) {
-//   int idx = 0;
-//   while ((abs(poly.getValue(x) - 0) > Param::EPSILON) &&
-//          (idx < Param::MAX_ITER)) {
-//     x -= poly.getValue(x) / poly.getGradient(x);
-//     idx += 1;
-//   }
-//   if (abs(poly.getValue(x) - 0) <= Param::EPSILON) return x;
-//   return numeric_limits<double>::max();
-// }
+  // more case
+  for (int idx = 2; idx < N; idx++) {
+    int mid = idx / 2;
+    memo[idx] = memo[mid] * memo[idx - mid];
+  }
 
-// /**
-//  * Finding GCD of two Poly's coefficient by Euclid's algorithm
-//  *
-//  * @param c1, c2, coeff of two polys
-//  * @return gcd of two polys
-//  */
-// Poly Budan::gcd(vector<double> &a, vector<double> &b) {
-//   // Reach the end
-//   if (isZeroVec(b)) {
-//     return Poly(a);
-//   }
+  // combine
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+      tmp[j] += p[N - i - 1] * memo[i][j];
+    }
+  }
 
-//   int N = a.size();
-//   vector<double> q(N, 0.0), r = a;
-//   int d = deg(b);
-//   double c = lc(b);
+  return Poly(tmp);
+}
 
-//   while (deg(r) >= d && !isZeroVec(r)) {
-//     sleep(1);
-//     vector<double> s(N, 0.0);
-//     s[N - deg(r) + d - 1] = lc(r) / c;
-//     vector<double> sb = polyTimes(s, b);
-//     q = polyAdd(q, s);
-//     r = polySub(r, sb);
-//   }
-//   return gcd(b, r);
-// }
-
-// /**
-//  * Apply Yun's Algorithm to decompose a poly in to several square-free poly
-//  *
-//  * TODO:
-//  *
-//  * @param poly Polynomial need to be decompose
-//  * @return The coeff of decomposed coef
-//  */
-// vector<Poly> Budan::squareFreeDecompoe(Poly &poly) {
-//   vector<Poly> ans;
-//   Poly a, b, c, d;
-//   a = gcd(poly.getCoef(), poly.getGradCoef());         // a0 = gcd(f, f')
-//   b = poly / a;                                        // b1 = f/a0
-//   c = Poly(polyDiv(poly.getGradCoef(), a.getCoef()));  // c = f'/a0
-//   d = Poly(polySub(c.getCoef(), b.getGradCoef()));     // d = c -b'
-
-//   while (!(isOne(b.getCoef()))) {
-//     a = gcd(b.getCoef(), d.getCoef());
-//     b = b / a;
-//     c = Poly(polyDiv(d.getCoef(), a.getCoef()));
-//     d = Poly(polySub(c.getCoef(), b.getGradCoef()));
-//     ans.emplace_back(a);
-//   }
-//   return ans;
-// }
+int Budan::signChangeNum(Poly& p) {
+  int ret = 0;
+  bool sign = p[0] > 0;
+  for (int i = 0; i < p.size(); i++) {
+    if (abs(p[i] - 0) <= EPSILON) continue;
+    if (p[i] > 0 == sign) continue;
+    sign = !sign;
+    ret++;
+  }
+  return ret;
+}
