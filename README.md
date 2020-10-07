@@ -14,7 +14,11 @@
 
 ### 10/06/2020
 - Add Monic function to poly, make it robust to the really close roots
+- Finished budan's theorem based root isolation
+- Pass the simple tests for the polynomial with no duplicated roots.
 
 ### TODO
-- Sign rule for each square free poly
+- Make the Newtown Method robust to the no root condition
+- Combine the decomposition with the root finding.
+- Make the root finding process into thread level.
 

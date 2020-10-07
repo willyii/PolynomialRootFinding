@@ -64,7 +64,7 @@ Poly Poly::operator/(Poly& b) {
 double Poly::valueAt(double x) {
   double ret = 0.0;
   for (int i = 0; i < _coef.size(); i++) ret = ret * x + _coef[i];
-
+  if(fabs(ret - 0.0) < EPSILON) return 0.0;
   return ret;
 }
 
