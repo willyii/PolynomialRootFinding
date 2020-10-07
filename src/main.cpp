@@ -11,12 +11,16 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
   /* code */
-  // vector<double> coe = {1, -4, -122, 252, 3969};
-  vector<double> coe = {1, 2, 1};
+  vector<double> coef1 = {0, 0, 1, -7.0};
+  Poly test1 = Poly(coef1);
+  vector<double> coef2 = {0, 0, 1, -7.001};
+  Poly test2 = Poly(coef2);
+  Poly test = test1* test2 * test2;
+
   Budan util;
-  Poly test = Poly(coe), tmp = util.addToP(test, -2);
-  int ans = util.signChangeNum( tmp );
-  cout << "test: " << ans << endl;
+  vector<Poly> ans = util.squareFreeDecompo(test);
+  for(Poly tmp:ans)
+  cout<< tmp<< endl;
 
   return 0;
 }

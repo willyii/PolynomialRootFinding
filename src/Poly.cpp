@@ -85,3 +85,20 @@ std::ostream& operator<<(std::ostream& out, const Poly& u) {
   }
   return out;
 }
+
+// Make polynomial monic
+void Poly::monic() {
+  double div = 1;
+  for (int i = 0; i < _coef.size(); i++) {
+    if (fabs(_coef[i] - 0.0) > EPSILON) {
+      div = 1 / _coef[i];
+      break;
+    }
+  }
+  for (int i = 0; i < _coef.size(); i++) {
+    if (fabs(_coef[i] - 0.0) > EPSILON) {
+      _coef[i] *= div;
+    }
+  }
+  return;
+}

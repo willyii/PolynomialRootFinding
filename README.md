@@ -12,6 +12,9 @@
 - Finished the basic operator for ceof and Poly
 - Reformated the code, abstract the isolate class and the other class should inherated from this one
 
+### 10/06/2020
+- Add Monic function to poly, make it robust to the really close roots
+
 ### TODO
 - Sign rule for each square free poly
 

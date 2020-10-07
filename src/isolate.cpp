@@ -2,7 +2,10 @@
 
 // GCD of two Poly
 Poly Isolate::gcd(Poly& p1, Poly& p2) {
-  if (p2.getCoef().isZero()) return p1;
+  if (p2.getCoef().isZero()) {
+    p1.monic();
+    return p1;
+  }
 
   int N = p1.size(), d = p2.getCoef().deg();
   double c = p2.getCoef().lc();
@@ -49,4 +52,3 @@ bool Isolate::isOne(Poly& p) {
   }
   return abs(p[N - 1] - 1.0) <= EPSILON;
 }
-

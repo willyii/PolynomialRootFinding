@@ -27,6 +27,7 @@ class Poly {
   double& operator[](int i);
 
   Poly getGradPoly();
+  void monic();
 
  private:
   void gradientCoef();
