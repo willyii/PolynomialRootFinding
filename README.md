@@ -25,7 +25,7 @@
 - Combine the decomposition with the root finding.
 - Refine the freeSqureDecompo process
 
-### TODO
-- Re test the whole process
-- Make the root finding process into thread level.
+### 10/08/2020
+- Move the develop process into project field
+
 
