@@ -28,6 +28,7 @@ vector<Poly> Isolate::squareFreeDecompo(Poly& p) {
   Poly a, b, c, d, fd, bd;
   fd = p.getGradPoly();
   a = gcd(p, fd);
+  std::cout<<"Debug a: "<<a<<std::endl;
   b = p / a;
   c = fd / a;
   bd = b.getGradPoly();
@@ -40,6 +41,7 @@ vector<Poly> Isolate::squareFreeDecompo(Poly& p) {
     bd = b.getGradPoly();
     d = c - bd;
     ans.emplace_back(a);
+    if(a.getCoef().deg() <=0) return {p};
   }
   return ans;
 }

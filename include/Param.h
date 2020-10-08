@@ -4,6 +4,10 @@
 
 // #define EPSILON std::numeric_limits<double>::epsilon()
 
-#define EPSILON 1e-10
+#define NOTFOUND std::numeric_limits<double>::min()
+
+#define EPSILON 1e-5
+#define MAXITER 1000
+#define MINRANGE 0.001
 
 #endif

@@ -17,8 +17,15 @@
 - Finished budan's theorem based root isolation
 - Pass the simple tests for the polynomial with no duplicated roots.
 
-### TODO
+### 10/07/2020
+- Tried some random case.
+- Redfined the newtwon method stop condition
+- Redfined the bisection stop condition
 - Make the Newtown Method robust to the no root condition
 - Combine the decomposition with the root finding.
+- Refine the freeSqureDecompo process
+
+### TODO
+- Re test the whole process
 - Make the root finding process into thread level.
 

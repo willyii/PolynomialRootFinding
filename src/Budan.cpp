@@ -50,18 +50,17 @@ int Budan::signChangeNum(Poly& tmp, double h) {
   return ret;
 }
 
-// TODO: solve function
-vector<double> Budan::solve(Poly& p) {
+// TODO: Test solve Square Free function
+vector<double> Budan::solveSquareFree(Poly& p) {
   vector<double> roots;
   deque<Boundry> b;
-  double tmp = bound(p), mid;
+  double tmp = bound(p), mid, root;
   int midchange;
 
   b.push_back(
       Boundry{-tmp, signChangeNum(p, -tmp), tmp, signChangeNum(p, tmp)});
   Boundry tmpb;
 
-  // TODO: Apply bisection to find the range of the root
   while (b.size() > 0) {
     tmpb = b[0];
     b.pop_front();
@@ -69,18 +68,18 @@ vector<double> Budan::solve(Poly& p) {
     midchange = signChangeNum(p, mid);
 
     // left side
-    if (tmpb.lchange - midchange == 1) {
-      roots.push_back(rootInBound(p, tmpb.left, mid));
-      // roots.push_back((tmpb.left + mid) / 2);  // TODO solve exactly
-    } else if (tmpb.lchange - midchange > 1) {
+    if (mid - tmpb.left  < MINRANGE && tmpb.lchange - midchange > 0) {
+      root = rootInBound(p, tmpb.left, mid);
+      if (root != NOTFOUND) roots.push_back(root);
+    } else if (tmpb.lchange - midchange > 0) {
       b.push_back(Boundry{tmpb.left, tmpb.lchange, mid, midchange});
     }
 
     // right side
-    if (midchange - tmpb.rchange == 1) {
-      roots.push_back(rootInBound(p, mid, tmpb.right));
-      // roots.push_back((tmpb.right + mid) / 2);  // TODO solve exactly
-    } else if (midchange - tmpb.rchange > 1) {
+    if ( tmpb.right - mid < MINRANGE && midchange - tmpb.rchange > 0) {
+      root = rootInBound(p, mid, tmpb.right);
+      if (root != NOTFOUND) roots.push_back(root);
+    } else if (midchange - tmpb.rchange > 0) {
       b.push_back(Boundry{mid, midchange, tmpb.right, tmpb.rchange});
     }
   }
@@ -100,10 +99,34 @@ double Budan::bound(Poly& p) {
 
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
-double Budan::rootInBound(Poly& p, double left, double right){
-  double x0 = (left + right)/2;
-  while(p.valueAt(x0) != 0 ){
-    x0 = x0- (p.valueAt(x0)/p.gradientAt(x0));
+double Budan::rootInBound(Poly& p, double left, double right) {
+  double x0 = (left + right) / 2;
+  int idx = 0;
+  while (p.valueAt(x0) != 0 && idx < MAXITER) {
+    x0 = x0 - (p.valueAt(x0) / p.gradientAt(x0));
+    idx += 1;
+  }
+  if (idx == MAXITER) {
+    cout << "Newton Failed" << endl;
+    cout<<"Range: "<< left<< "-"<<right<<endl;
+    return NOTFOUND;
   }
   return x0;
+}
+
+vector<double> Budan::solve(Poly& p) {
+  p.monic();
+  cout << "Debug: " << p << endl;
+  vector<Poly> plist = squareFreeDecompo(p);
+  vector<double> roots, tmpRoots;
+
+  for (auto p : plist) {
+  cout << "Debug: " << p << endl;
+    if (p.getCoef().deg() <= 0) continue;
+    tmpRoots = solveSquareFree(p);
+    roots.insert(roots.end(), tmpRoots.begin(), tmpRoots.end());
+  }
+  if (roots.size() == 0)
+    cout << "There is not real roots of this polynomial" << endl;
+  return roots;
 }

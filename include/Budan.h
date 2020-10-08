@@ -6,6 +6,7 @@
 class Budan: public Isolate{
     public:
     int signChangeNum(Poly& tmp, double h);
+    vector<double> solveSquareFree(Poly& p);
     vector<double> solve(Poly& p);
 
     private:
@@ -16,9 +17,9 @@ class Budan: public Isolate{
 
 struct Boundry{
     double left;
-    int lchange = 0; // sign change at left 
+    int lchange; // sign change at left 
     double right;
-    int rchange = 0; // sign change at right
+    int rchange; // sign change at right
 };
 
 #endif
