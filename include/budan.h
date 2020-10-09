@@ -7,7 +7,7 @@ class Budan: public Isolate{
     public:
     int signChangeNum(Poly& tmp, double h);
     vector<double> solveSquareFree(Poly& p);
-    vector<double> solve(Poly& p);
+    vector<double> solve(Poly tmp);
 
     private:
     double bound(Poly& p);

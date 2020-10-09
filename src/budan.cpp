@@ -91,7 +91,7 @@ vector<double> Budan::solveSquareFree(Poly& p) {
 double Budan::bound(Poly& p) {
   int N = p.size();
   double tmp = __DBL_MIN__, lc = p.getCoef().lc();
-  for (int i = 0; i < N - 1; i++) {
+  for (int i = 1; i < N ; i++) {
     tmp = max(tmp, fabs(p[i] / lc));
   }
   return 1 + tmp;
@@ -112,7 +112,8 @@ double Budan::rootInBound(Poly& p, double left, double right) {
   return x0;
 }
 
-vector<double> Budan::solve(Poly& p) {
+vector<double> Budan::solve(Poly tmp) {
+  Poly p;p = tmp;
   p.monic();
   vector<Poly> plist = squareFreeDecompo(p);
   vector<double> roots, tmpRoots;

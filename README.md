@@ -27,5 +27,7 @@
 
 ### 10/08/2020
 - Move the develop process into project field.
+- Fix the bug in the roots boundry
+- Meet precision problem, try to fix it,
 
 

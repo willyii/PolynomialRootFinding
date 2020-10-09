@@ -13,6 +13,7 @@ int main(int argc, char const *argv[]) {
   /* code */
   testBudan();
 
+
   // Coef t1 = Coef({1,-7, 12});
   // Poly test1 = Poly(t1);
   // Coef t2 = Coef({0,1,-3});

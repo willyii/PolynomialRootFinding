@@ -16,11 +16,11 @@ double rand_float(double a = -10, double b = 10) {
 
 void testPoly(Poly& p, Budan util) {
   vector<double> roots;
-  cout << "===============================" << endl;
+  // cout << "===============================" << endl;
   cout << "Poly: " << p << endl;
   roots = util.solve(p);
   for (auto root : roots) {
-    cout << "root: " << root << endl;
+    cout << "root: " << root <<" Value: "<<p.valueAt(root) << endl;
     assert(p.valueAt(root) == 0.0);
   }
   cout << "Test Pass" << endl;
@@ -34,7 +34,7 @@ void testBudan() {
   Budan util;
 
   // 1 root
-  tmpCoef = {1, -7, 12};
+  tmpCoef = {1, rand_float()};
   test = Poly(tmpCoef);
   testPoly(test, util);
 
