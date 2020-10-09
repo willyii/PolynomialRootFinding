@@ -20,7 +20,7 @@ void testPoly(Poly& p, Budan util) {
   cout << "Poly: " << p << endl;
   roots = util.solve(p);
   for (auto root : roots) {
-      cout<<"root: "<<root<<endl;
+    cout << "root: " << root << endl;
     assert(p.valueAt(root) == 0.0);
   }
   cout << "Test Pass" << endl;
@@ -34,9 +34,9 @@ void testBudan() {
   Budan util;
 
   // 1 root
-  // tmpCoef = {1, -2, 17};
-  // test = Poly(tmpCoef);
-  // testPoly(test, util);
+  tmpCoef = {1, -7, 12};
+  test = Poly(tmpCoef);
+  testPoly(test, util);
 
   // // repeat roots
   // tmpCoef = {0, 0, 1, rand_float()};
@@ -47,9 +47,9 @@ void testBudan() {
   // testPoly(test, util);
 
   // Random poly
-//   tmpCoef = {-0.585497, -0.452439, -4.14772, 9.23648};
-// tmpCoef = {9.8939, 6.81843, -2.69483, 7.92039};
-  tmpCoef = {rand_float(), rand_float(),rand_float(), rand_float()};
+  //   tmpCoef = {-0.585497, -0.452439, -4.14772, 9.23648};
+  // tmpCoef = {9.8939, 6.81843, -2.69483, 7.92039};
+  tmpCoef = {rand_float(), rand_float(), rand_float(), rand_float()};
   test = Poly(tmpCoef);
   // cout<<test.valueAt(1.50220411)<<endl;
   testPoly(test, util);

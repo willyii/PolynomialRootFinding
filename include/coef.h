@@ -3,10 +3,12 @@
 
 #include <math.h>
 
+#include <algorithm>
 #include <vector>
 
 #include "param.h"
 
+using std::reverse;
 using std::vector;
 
 struct Coef {
@@ -41,35 +43,55 @@ struct Coef {
   }
 
   Coef operator+(const Coef& d) {
-    Coef r = Coef(d.size());
-    for (int i = 0; i < data.size(); i++) r[i] = data[i] + d[i];
-    return r;
+    vector<double> d1 = data, d2 = d.data, r(fmax(d1.size(), d2.size()), 0);
+    reverse(d1.begin(), d1.end());
+    reverse(d2.begin(), d2.end());
+    for (int i = 0; i < d1.size(); i++) r[i] += d1[i];
+    for (int i = 0; i < d2.size(); i++) r[i] += d2[i];
+    reverse(r.begin(), r.end());
+    return Coef(r);
   }
 
   Coef& operator+=(const Coef& d) {
-    for (int i = 0; i < data.size(); i++) data[i] += d[i];
+    vector<double> d1 = data, d2 = d.data, r(fmax(d1.size(), d2.size()), 0);
+    reverse(d1.begin(), d1.end());
+    reverse(d2.begin(), d2.end());
+    for (int i = 0; i < d1.size(); i++) r[i] += d1[i];
+    for (int i = 0; i < d2.size(); i++) r[i] += d2[i];
+    reverse(r.begin(), r.end());
+    data = r;
     return *this;
   }
 
   Coef operator-(const Coef& d) {
-    Coef r = Coef(d.size());
-    for (int i = 0; i < data.size(); i++) r[i] = data[i] - d[i];
-    return r;
+    vector<double> d1 = data, d2 = d.data, r(fmax(d1.size(), d2.size()), 0);
+    reverse(d1.begin(), d1.end());
+    reverse(d2.begin(), d2.end());
+    for (int i = 0; i < d1.size(); i++) r[i] += d1[i];
+    for (int i = 0; i < d2.size(); i++) r[i] -= d2[i];
+    reverse(r.begin(), r.end());
+    return Coef(r);
   }
 
   Coef& operator-=(const Coef& d) {
-    for (int i = 0; i < data.size(); i++) data[i] -= d[i];
+    vector<double> d1 = data, d2 = d.data, r(fmax(d1.size(), d2.size()), 0);
+    reverse(d1.begin(), d1.end());
+    reverse(d2.begin(), d2.end());
+    for (int i = 0; i < d1.size(); i++) r[i] += d1[i];
+    for (int i = 0; i < d2.size(); i++) r[i] -= d2[i];
+    reverse(r.begin(), r.end());
+    data = r;
     return *this;
   }
 
   Coef operator*(const Coef& d) {
-    Coef r = Coef(data.size());
-    int idx1, idx2, N = data.size();
-    for (int i = 0; i < N; i++) {
-      idx1 = N - i - 1;
-      for (int j = 0; j < N; j++) {
-        idx2 = N - j - 1;
-        if (idx1 + idx2 >= N) continue;
+    int N = d.size() + size() - 1, N1 = size(), N2 = d.size();
+    Coef r = Coef(N);
+    int idx1, idx2;
+    for (int i = 0; i < N1; i++) {
+      idx1 = N1 - i - 1;
+      for (int j = 0; j < N2; j++) {
+        idx2 = N2 - j - 1;
         r[N - 1 - idx1 - idx2] += data[i] * d[j];
       }
     }
@@ -77,13 +99,13 @@ struct Coef {
   }
 
   Coef& operator*=(const Coef& d) {
-    vector<double> r(data.size(), 0);
-    int idx1, idx2, N = data.size();
-    for (int i = 0; i < N; i++) {
-      idx1 = N - i - 1;
-      for (int j = 0; j < N; j++) {
-        idx2 = N - j - 1;
-        if (idx1 + idx2 >= N) continue;
+    int N = d.size() + size() - 1, N1 = size(), N2 = d.size();
+    vector<double> r(N, 0);
+    int idx1, idx2;
+    for (int i = 0; i < N1; i++) {
+      idx1 = N1 - i - 1;
+      for (int j = 0; j < N2; j++) {
+        idx2 = N2 - j - 1;
         r[N - 1 - idx1 - idx2] += data[i] * d[j];
       }
     }

@@ -107,8 +107,6 @@ double Budan::rootInBound(Poly& p, double left, double right) {
     idx += 1;
   }
   if (idx == MAXITER) {
-    cout << "Newton Failed" << endl;
-    cout<<"Range: "<< left<< "-"<<right<<endl;
     return NOTFOUND;
   }
   return x0;
@@ -116,12 +114,10 @@ double Budan::rootInBound(Poly& p, double left, double right) {
 
 vector<double> Budan::solve(Poly& p) {
   p.monic();
-  cout << "Debug: " << p << endl;
   vector<Poly> plist = squareFreeDecompo(p);
   vector<double> roots, tmpRoots;
 
   for (auto p : plist) {
-  cout << "Debug: " << p << endl;
     if (p.getCoef().deg() <= 0) continue;
     tmpRoots = solveSquareFree(p);
     roots.insert(roots.end(), tmpRoots.begin(), tmpRoots.end());
