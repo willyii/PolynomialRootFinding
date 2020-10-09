@@ -26,6 +26,6 @@
 - Refine the freeSqureDecompo process
 
 ### 10/08/2020
-- Move the develop process into project field
+- Move the develop process into project field.
 
 
