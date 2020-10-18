@@ -30,4 +30,4 @@
 - Fix the bug in the roots boundry
 - Meet precision problem, try to fix it,
 
-
+### 10/17/2020

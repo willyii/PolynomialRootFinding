@@ -10,4 +10,7 @@
 #define MAXITER 1000
 #define MINRANGE 0.001
 
+#define DEBUG_GCD false
+#define DEBUG_SQD true
+
 #endif
