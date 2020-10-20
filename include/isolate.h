@@ -33,14 +33,21 @@ class Isolate {
     vector<Poly> ans;
     Poly a, b, c, d, fd, bd;
     fd = p.getGradPoly();
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: fd in first: "<<fd<<std::endl;
     a = gcd(p, fd);
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: a in first: "<<a<<std::endl;
     b = p / a;
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: b in first: "<<b<<std::endl;
     c = fd / a;
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: c in first: "<<c<<std::endl;
     bd = b.getGradPoly();
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: bd in first: "<<bd<<std::endl;
     d = c - bd;
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: d in first: "<<d<<std::endl;
 
     while (!isOne(b)) {
       a = gcd(b, d);
+      if(DEBUG_SQD) std::cout<<"DEGUG SQF: a in others: "<<a<<std::endl;
       b = b / a;
       c = d / a;
       bd = b.getGradPoly();

@@ -25,12 +25,20 @@ Poly Budan::addToP(Poly& p, double h) {
     int mid = idx / 2;
     memo[idx] = memo[mid] * memo[idx - mid];
   }
-  // combine
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      tmp[j] += p[N - i - 1] * memo[i][j];
+  if(DEBUG_BUDAN){
+    cout<<"DEBUG BUDAN memo: "<<endl;
+    for(int i = 0; i< N; i++){
+      cout<<i<<" : "<<memo[i]<<endl;
     }
   }
+  // combine
+  Poly ans = Poly(tmp);
+  for (int i = 0; i < N; i++) {
+      memo[i] = memo[i] * p[N - i - 1] ;
+      ans += memo[i];
+  }
+  if(DEBUG_BUDAN) cout<<"DEBUG BUDAN: after add "<<h<<" : "<<Poly(tmp)<<endl;
+  return ans;
   return Poly(tmp);
 }
 
@@ -61,8 +69,11 @@ vector<double> Budan::solveSquareFree(Poly& p) {
   while (b.size() > 0) {
     tmpb = b[0];
     b.pop_front();
+    if(DEBUG_BUDAN) cout<<"Search Boundary: " << tmpb.left << "\t | \t  "<<tmpb.right<<endl;
+    if(DEBUG_BUDAN) cout<< tmpb.lchange << "\t | \t  "<<tmpb.rchange<<endl;
     mid = (tmpb.left + tmpb.right) / 2;
     midchange = signChangeNum(p, mid);
+    if(DEBUG_BUDAN) cout<<"Mid Change:  "<<midchange<<endl;
 
     // left side
     if (mid - tmpb.left < MINRANGE && tmpb.lchange - midchange > 0) {
@@ -89,7 +100,7 @@ double Budan::bound(Poly& p) {
   int N = p.size();
   double tmp = __DBL_MIN__, lc = p.lc();
   for (int i = 1; i < N; i++) {
-    tmp = max(tmp, fabs(p[i] / lc));
+    tmp = fmax(tmp, fabs(p[i] / lc));
   }
   return 1 + tmp;
 }
@@ -99,11 +110,11 @@ double Budan::bound(Poly& p) {
 double Budan::rootInBound(Poly& p, double left, double right) {
   double x0 = (left + right) / 2;
   int idx = 0;
-  while (p.valueAt(x0) != 0 && idx < MAXITER) {
+  while (p.valueAt(x0) != 0 && idx < MAXITER && x0 >= left && x0 <= right) {
     x0 = x0 - (p.valueAt(x0) / p.gradientAt(x0));
     idx += 1;
   }
-  if (idx == MAXITER) {
+  if (idx == MAXITER || x0 < left || x0 > right) {
     return NOTFOUND;
   }
   return x0;
@@ -111,6 +122,10 @@ double Budan::rootInBound(Poly& p, double left, double right) {
 
 vector<double> Budan::solve(Poly& p) {
   vector<Poly> plist = squareFreeDecompo(p);
+  if(DEBUG_BUDAN){
+    cout<<"DEBUG BUDAN SQUREFREE DECOMP: "<<endl;
+    for(auto x: plist) cout<<x<<endl;
+  }
   vector<double> roots, tmpRoots;
 
   for (auto p : plist) {

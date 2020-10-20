@@ -195,6 +195,11 @@ class Poly {
     _cleanUp();
     return (*this);
   }
+  Poly operator*(const double t) {
+    vector<double> d = _coeff;
+    for(int i=0; i<d.size();i++) d[i] *= t;
+    return Poly(d);
+  }
 };
 
 static std::ostream& operator<<(std::ostream& out, const Poly& u) {
@@ -203,7 +208,7 @@ static std::ostream& operator<<(std::ostream& out, const Poly& u) {
     if (u[i] == 0) continue;
     char sign = '+';
     if (u[i] < 0) sign = '-';
-    if (i) out << " " << sign << " ";
+    out << " " << sign << " ";
     out << fabs(u[i]) << 'x' << '^' << N - i - 1;
   }
   return out;
