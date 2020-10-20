@@ -2,11 +2,14 @@
 #define BUDAN_H
 
 #include "isolate.h"
+#include <tuple>
+
+using std::tuple;
 
 class Budan: public Isolate{
     public:
     int signChangeNum(Poly& tmp, double h);
-    vector<double> solveSquareFree(Poly& p);
+    vector<tuple<double, double>> isoRoot(Poly& p);
     vector<double> solve(Poly& p);
 
     private:

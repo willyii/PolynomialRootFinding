@@ -11,6 +11,7 @@ class Isolate {
                 << "p1: " << p1 << "\t | \t p2: " << p2 << std::endl;
     }
     if (p2.isZero()) {
+      if(p1.deg() <= 0) p1/= p1;
       return p1;
     }
 
@@ -23,6 +24,7 @@ class Isolate {
       std::fill(tmp.begin(), tmp.end(), 0.0);
       tmp[N - r.deg() + d - 1] = r.lc() / c;
       Poly s = Poly(tmp);
+      if(DEBUG_GCD) std::cout<<"DEBUG GCD: s = "<<r.lc() / c<<std::endl;
       Poly sb = s * p2;
       q += s;
       r = r - sb;

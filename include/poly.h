@@ -24,7 +24,8 @@ class Poly {
   void _cleanUp() {
     int N = 0;
     for (int i = 0; i < _coeff.size(); i++) {
-      if (fabs(_coeff[i] - 0) > EPSILON) break;
+      // if (fabs(_coeff[i] - 0) > EPSILON) break;
+      if(_coeff[i] != 0) break;
       N++;
     }
     if (N == _coeff.size()) {
@@ -81,6 +82,7 @@ class Poly {
     for (auto tmp : _coeff) {
       ans = ans * x + tmp;
     }
+    // return ans;
     return fabs(ans - 0.0) < EPSILON ? 0.0 : ans;
   }
   double gradientAt(double x) {
@@ -88,7 +90,7 @@ class Poly {
     for (auto tmp : _gradient) {
       ans = ans * x + tmp;
     }
-    return ans;
+    return fabs(ans - 0.0) < EPSILON ? 0.0 : ans;
   }
 
   // Overload operation

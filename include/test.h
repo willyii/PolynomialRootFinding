@@ -35,24 +35,27 @@ void testBudan() {
   Budan util;
 
   // 1 root
-  tmpCoef = {1, -2, 1};
-  test = Poly(tmpCoef);
-  testPoly(test, util);
+  // tmpCoef = {1, -2, 1};
+  // test = Poly(tmpCoef);
+  // testPoly(test, util);
 
   // repeat roots
-  // tmpCoef = {1, rand_float()};
-  // test1 = Poly(tmpCoef);
-  // tmpCoef = {1, rand_float()};
-  // test2 = Poly(tmpCoef);
-  // test = test1 * test2 *test2;
-  // testPoly(test, util);
+  tmpCoef = {1, rand_float()};
+  test1 = Poly(tmpCoef);
+  tmpCoef = {1, rand_float()};
+  test2 = Poly(tmpCoef);
+
+  tmpCoef = {1, rand_float()};
+  test3 = Poly(tmpCoef);
+  test = test1 * test2 *test3;
+  testPoly(test, util);
 
   // Random poly
   // tmpCoef = {3.02385, 1.91351, 0.288506, 8.9231};
-  tmpCoef = { rand_float(), rand_float(), rand_float()};
-  test = Poly(tmpCoef);
-  // cout<<test.valueAt(1.50220411)<<endl;
-  testPoly(test, util);
+  // tmpCoef = { rand_float(), rand_float(), rand_float(), rand_float(),  rand_float()};
+  // test = Poly(tmpCoef);
+  // // cout<<test.valueAt(1.50220411)<<endl;
+  // testPoly(test, util);
 }
 
 #endif
