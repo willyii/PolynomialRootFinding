@@ -7,33 +7,38 @@ using namespace std;
 
 Poly Budan::addToP(Poly& p, double h) {
   int N = p.size();
-  Coef tmp = Coef(N);
-  unordered_map<int, Coef> memo;  // map the idx to corresponding coef
-
+  vector<double> tmp(N, 0.0);
+  unordered_map<int, Poly> memo;  // map the idx to corresponding coef
   // zero case
-  memo[0] = Coef(N);
-  memo[0][N - 1] = 1;
-
+  tmp[N - 1] = 1;
+  memo[0] = Poly(tmp);
+  fill(tmp.begin(), tmp.end(), 0);
   // one case
   if (N >= 1) {
-    memo[1] = Coef(N);
-    memo[1][N - 1] = h;
-    memo[1][N - 2] = 1;
+    tmp[N - 1] = h;
+    tmp[N - 2] = 1;
+    memo[1] = Poly(tmp);
+    fill(tmp.begin(), tmp.end(), 0);
   }
-
   // more case
   for (int idx = 2; idx < N; idx++) {
     int mid = idx / 2;
     memo[idx] = memo[mid] * memo[idx - mid];
   }
-
-  // combine
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      tmp[j] += p[N - i - 1] * memo[i][j];
+  if(DEBUG_BUDAN){
+    cout<<"DEBUG BUDAN memo: "<<endl;
+    for(int i = 0; i< N; i++){
+      cout<<i<<" : "<<memo[i]<<endl;
     }
   }
-
+  // combine
+  Poly ans = Poly(tmp);
+  for (int i = 0; i < N; i++) {
+      memo[i] = memo[i] * p[N - i - 1] ;
+      ans += memo[i];
+  }
+  if(DEBUG_BUDAN) cout<<"DEBUG BUDAN: after add "<<h<<" : "<<Poly(tmp)<<endl;
+  return ans;
   return Poly(tmp);
 }
 
@@ -64,11 +69,14 @@ vector<double> Budan::solveSquareFree(Poly& p) {
   while (b.size() > 0) {
     tmpb = b[0];
     b.pop_front();
+    if(DEBUG_BUDAN) cout<<"Search Boundary: " << tmpb.left << "\t | \t  "<<tmpb.right<<endl;
+    if(DEBUG_BUDAN) cout<< tmpb.lchange << "\t | \t  "<<tmpb.rchange<<endl;
     mid = (tmpb.left + tmpb.right) / 2;
     midchange = signChangeNum(p, mid);
+    if(DEBUG_BUDAN) cout<<"Mid Change:  "<<midchange<<endl;
 
     // left side
-    if (mid - tmpb.left  < MINRANGE && tmpb.lchange - midchange > 0) {
+    if (mid - tmpb.left < MINRANGE && tmpb.lchange - midchange > 0) {
       root = rootInBound(p, tmpb.left, mid);
       if (root != NOTFOUND) roots.push_back(root);
     } else if (tmpb.lchange - midchange > 0) {
@@ -76,7 +84,7 @@ vector<double> Budan::solveSquareFree(Poly& p) {
     }
 
     // right side
-    if ( tmpb.right - mid < MINRANGE && midchange - tmpb.rchange > 0) {
+    if (tmpb.right - mid < MINRANGE && midchange - tmpb.rchange > 0) {
       root = rootInBound(p, mid, tmpb.right);
       if (root != NOTFOUND) roots.push_back(root);
     } else if (midchange - tmpb.rchange > 0) {
@@ -90,9 +98,9 @@ vector<double> Budan::solveSquareFree(Poly& p) {
 // Get the boundry of roots, applied Cauchy's bound
 double Budan::bound(Poly& p) {
   int N = p.size();
-  double tmp = __DBL_MIN__, lc = p.getCoef().lc();
-  for (int i = 1; i < N ; i++) {
-    tmp = max(tmp, fabs(p[i] / lc));
+  double tmp = __DBL_MIN__, lc = p.lc();
+  for (int i = 1; i < N; i++) {
+    tmp = fmax(tmp, fabs(p[i] / lc));
   }
   return 1 + tmp;
 }
@@ -102,24 +110,26 @@ double Budan::bound(Poly& p) {
 double Budan::rootInBound(Poly& p, double left, double right) {
   double x0 = (left + right) / 2;
   int idx = 0;
-  while (p.valueAt(x0) != 0 && idx < MAXITER) {
+  while (p.valueAt(x0) != 0 && idx < MAXITER && x0 >= left && x0 <= right) {
     x0 = x0 - (p.valueAt(x0) / p.gradientAt(x0));
     idx += 1;
   }
-  if (idx == MAXITER) {
+  if (idx == MAXITER || x0 < left || x0 > right) {
     return NOTFOUND;
   }
   return x0;
 }
 
-vector<double> Budan::solve(Poly tmp) {
-  Poly p;p = tmp;
-  p.monic();
+vector<double> Budan::solve(Poly& p) {
   vector<Poly> plist = squareFreeDecompo(p);
+  if(DEBUG_BUDAN){
+    cout<<"DEBUG BUDAN SQUREFREE DECOMP: "<<endl;
+    for(auto x: plist) cout<<x<<endl;
+  }
   vector<double> roots, tmpRoots;
 
   for (auto p : plist) {
-    if (p.getCoef().deg() <= 0) continue;
+    if (p.deg() <= 0) continue;
     tmpRoots = solveSquareFree(p);
     roots.insert(roots.end(), tmpRoots.begin(), tmpRoots.end());
   }
