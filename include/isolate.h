@@ -2,6 +2,9 @@
 #define ISOLATE_H
 
 #include "poly.h"
+#include <unistd.h>
+
+
 
 class Isolate {
  public:
@@ -11,7 +14,7 @@ class Isolate {
                 << "p1: " << p1 << "\t | \t p2: " << p2 << std::endl;
     }
     if (p2.isZero()) {
-      if(p1.deg() <= 0) p1/= p1;
+      p1.monic();
       return p1;
     }
 
@@ -24,14 +27,16 @@ class Isolate {
       std::fill(tmp.begin(), tmp.end(), 0.0);
       tmp[N - r.deg() + d - 1] = r.lc() / c;
       Poly s = Poly(tmp);
-      if(DEBUG_GCD) std::cout<<"DEBUG GCD: s = "<<r.lc() / c<<std::endl;
       Poly sb = s * p2;
       q += s;
       r = r - sb;
     }
+    if(DEBUG_GCD) usleep(500000);
     return gcd(p2, r);
   }
   static vector<Poly> squareFreeDecompo(Poly& p) {
+
+    if(DEBUG_SQD) std::cout<<"DEGUG SQF: p in first: "<<p<<std::endl;
     vector<Poly> ans;
     Poly a, b, c, d, fd, bd;
     fd = p.getGradPoly();
@@ -51,10 +56,14 @@ class Isolate {
       a = gcd(b, d);
       if(DEBUG_SQD) std::cout<<"DEGUG SQF: a in others: "<<a<<std::endl;
       b = b / a;
+      if(DEBUG_SQD) std::cout<<"DEGUG SQF: b in others: "<<b<<std::endl;
       c = d / a;
+      if(DEBUG_SQD) std::cout<<"DEGUG SQF: c in others: "<<c<<std::endl;
       bd = b.getGradPoly();
       d = c - bd;
+      if(DEBUG_SQD) std::cout<<"DEGUG SQF: d in others: "<<d<<std::endl;
       ans.emplace_back(a);
+      if(DEBUG_SQD) usleep(300000);
     }
     return ans;
   }

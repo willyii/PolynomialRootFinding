@@ -4,6 +4,9 @@
 #include <time.h>
 
 #include <cassert>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 #include "budan.h"
 
@@ -14,48 +17,88 @@ double rand_float(double a = -10, double b = 10) {
   return ((double)rand() / RAND_MAX) * (b - a) + a;
 }
 
-void testPoly(Poly& p, Budan util) {
-  vector<double> roots;
-  // cout << "===============================" << endl;
-  cout << "Poly: " << p << endl;
-  roots = util.solve(p);
-  cout<<"There are "<<roots.size()<< " roots in total" << endl;
-  for (auto root : roots) {
-    cout << "root: " << root <<" Value: "<<p.valueAt(root) << endl;
-    assert(p.valueAt(root) == 0.0);
+bool validSinglePoly(Poly& p, Budan& util, vector<double>& ans) {
+  vector<double> roots = util.solve(p);
+  if (ans.size() != roots.size()) {
+    cout << "Validation fail on: " << p << "\n"
+         << "Current root num: " << roots.size() << "\n"
+         << "Actual root num: " << ans.size() << "\n";
+
+    cout << "Current roots : "
+         << "\n";
+    for (auto r : roots) cout << r << "\t";
+    cout << "\n";
+
+    cout << "Actual roots : "
+         << "\n";
+    for (auto r : ans) cout << r << "\t";
+    cout << "\n";
+    return false;
   }
-  cout << "Test Pass" << endl;
-  cout << "===============================" << endl;
+  sort(roots.begin(), roots.end());
+
+  for (int i = 0; i < ans.size(); i++) {
+    if (fabs(roots[i] - ans[i]) > TESTERROR) {
+      cout << "Validation fail on " << p << "\n"
+           << " with test root: " << roots[i] << " and actual root: " << ans[i]
+           << "\n"
+           << " Error: " << fabs(roots[i] - ans[i]) << endl;
+      return false;
+    }
+  }
+  return true;
+}
+
+void validPolyFromFile(string path) {
+  Budan util;
+  ifstream validfile(path);
+  string line, tmp_ans, tmp_ceof;
+  vector<double> coef, ans;
+  Poly testPoly;
+  int test_count = 0, pass = 0;
+
+  while (getline(validfile, line)) {
+    coef = {};
+    ans = {};
+    istringstream iss(line);
+    while (iss >> tmp_ceof) coef.emplace_back(stod(tmp_ceof));
+    testPoly = Poly(coef);
+
+    if (!getline(validfile, line)) break;
+    istringstream iss2(line);
+    while (iss2 >> tmp_ans) {
+      if (tmp_ans == "#") {
+        ans = {};
+        break;
+      } else {
+        ans.emplace_back(stod(tmp_ans));
+      }
+    }
+    cout<<"Current Polynomial: "<< testPoly << endl;
+    if (validSinglePoly(testPoly, util, ans)) pass++;
+    test_count++;
+  }
+
+  cout << "============================================"
+       << " Total Test: " << test_count << " Passed Case: " << pass
+       << " Pass Rate: " << pass / double(test_count) << endl;
+  return;
 }
 
 void testBudan() {
   srand(time(NULL));
-  vector<double> tmpCoef, roots;
-  Poly test1, test2, test3, test;
-  Budan util;
+  validPolyFromFile("test/validation.test");
 
-  // 1 root
-  // tmpCoef = {1, -2, 1};
-  // test = Poly(tmpCoef);
-  // testPoly(test, util);
-
-  // repeat roots
-  tmpCoef = {1, rand_float()};
-  test1 = Poly(tmpCoef);
-  tmpCoef = {1, rand_float()};
-  test2 = Poly(tmpCoef);
-
-  tmpCoef = {1, rand_float()};
-  test3 = Poly(tmpCoef);
-  test = test1 * test2 *test3;
-  testPoly(test, util);
-
-  // Random poly
-  // tmpCoef = {3.02385, 1.91351, 0.288506, 8.9231};
-  // tmpCoef = { rand_float(), rand_float(), rand_float(), rand_float(),  rand_float()};
-  // test = Poly(tmpCoef);
-  // // cout<<test.valueAt(1.50220411)<<endl;
-  // testPoly(test, util);
+  // vector<double> testCoef = {-0.0180918, 9.61255,  -0.951933,
+  //                            -6.93554,   -8.33893, -1.047};
+  // vector<double> testCoef = {- 2.57462, 3.49491, 3.25646, -5.07535, -1.02978, 8.16008};// -0.902717
+  // Poly testP = Poly(testCoef);  // 0.365350
+  // Budan util;
+  // vector<double> roots = util.solve(testP);
+  // for (auto r : roots) {
+  //   cout << "Debug Roots: " << r << endl; 
+  // }
+  return; 
 }
 
 #endif

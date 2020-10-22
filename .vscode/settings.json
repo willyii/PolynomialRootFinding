@@ -67,5 +67,6 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp"
-    }
+    },
+    "python.pythonPath": "/usr/local/bin/python3"
 }

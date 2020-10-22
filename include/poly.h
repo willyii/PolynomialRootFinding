@@ -25,7 +25,7 @@ class Poly {
     int N = 0;
     for (int i = 0; i < _coeff.size(); i++) {
       // if (fabs(_coeff[i] - 0) > EPSILON) break;
-      if(_coeff[i] != 0) break;
+      if (_coeff[i] != 0) break;
       N++;
     }
     if (N == _coeff.size()) {
@@ -39,7 +39,7 @@ class Poly {
   }
 
  public:
-  Poly() {};
+  Poly(){};
   Poly(vector<double>& d) : _coeff(d) {
     _gradCalc();
     _cleanUp();
@@ -51,8 +51,8 @@ class Poly {
   int size() const { return _coeff.size(); }
   bool isZero() const {
     int N = size();
-    for(int i=0; i< N ;i++)
-     if(fabs(_coeff[i] - 0.0) > EPSILON) return false;
+    for (int i = 0; i < N; i++)
+      if (fabs(_coeff[i] - 0.0) > EPSILON) return false;
     return true;
   }
   int deg() const {
@@ -75,6 +75,14 @@ class Poly {
     return Poly(t);
   }
   Poly getGradPoly() { return Poly(_gradient); }
+  void monic() {
+    double tmp = lc();
+    for (int i = 0; i < _coeff.size(); i++) {
+      _coeff[i] /= tmp;
+    }
+    _gradCalc();
+    _cleanUp();
+  };
 
   // Some calculation
   double valueAt(double x) {
@@ -90,7 +98,7 @@ class Poly {
     for (auto tmp : _gradient) {
       ans = ans * x + tmp;
     }
-    return fabs(ans - 0.0) < EPSILON ? 0.0 : ans;
+    return ans;
   }
 
   // Overload operation
@@ -199,7 +207,7 @@ class Poly {
   }
   Poly operator*(const double t) {
     vector<double> d = _coeff;
-    for(int i=0; i<d.size();i++) d[i] *= t;
+    for (int i = 0; i < d.size(); i++) d[i] *= t;
     return Poly(d);
   }
 };

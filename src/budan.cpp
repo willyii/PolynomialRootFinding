@@ -106,12 +106,21 @@ double Budan::bound(Poly& p) {
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
 double Budan::rootInBound(Poly& p, double left, double right) {
+  if (DEBUG_BUDAN)
+    cout << "DEBUG BUDAN: ===== Searching root in range =====" << left << " to "
+         << right << "\n";
+  if(p.valueAt(left) == 0) return left;
+  if(p.valueAt(right) == 0) return right;
   double x0 = (left + right) / 2;
   int idx = 0;
   while (p.valueAt(x0) != 0 && idx < MAXITER && x0 >= left && x0 <= right) {
-    x0 = x0 - (p.valueAt(x0) / p.gradientAt(x0));
+    double step = p.gradientAt(x0);
+    if(step >=0) step = fmin(TRUNCATE, step);
+    if(step < 0) step = fmax(step, -TRUNCATE);
+    x0 = x0 - (p.valueAt(x0) / step);
     idx += 1;
   }
+
   if (idx == MAXITER || x0 < left || x0 > right) {
     return NOTFOUND;
   }
@@ -119,6 +128,7 @@ double Budan::rootInBound(Poly& p, double left, double right) {
 }
 
 vector<double> Budan::solve(Poly& p) {
+  if (p.deg() == 1) return {-p[1] / p[0]};
   vector<Poly> plist = squareFreeDecompo(p);
   vector<tuple<double, double>> ranges, tmprange;
   vector<double> roots;
@@ -143,7 +153,7 @@ vector<double> Budan::solve(Poly& p) {
     if (tmp != NOTFOUND) roots.emplace_back(tmp);
   }
 
-  if (roots.size() == 0)
-    cout << "There is no real roots of this polynomial" << endl;
+  // if (roots.size() == 0)
+  //   cout << "There is no real roots of this polynomial" << endl;
   return roots;
 }
