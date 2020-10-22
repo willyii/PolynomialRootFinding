@@ -30,6 +30,7 @@
 - Fix the bug in the roots boundry
 - Meet precision problem, try to fix it,
 
-### 10/17/2020
-TODO: Decompo problem
-TODO: Large gradient
+### 10/21/2020
+- Finished the Budan method. 
+- Finished Test Cases
+
