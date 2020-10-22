@@ -25,21 +25,15 @@ Poly Budan::addToP(Poly& p, double h) {
     int mid = idx / 2;
     memo[idx] = memo[mid] * memo[idx - mid];
   }
-  if(DEBUG_BUDAN){
-    cout<<"DEBUG BUDAN memo: "<<endl;
-    for(int i = 0; i< N; i++){
-      cout<<i<<" : "<<memo[i]<<endl;
-    }
-  }
   // combine
   Poly ans = Poly(tmp);
   for (int i = 0; i < N; i++) {
-      memo[i] = memo[i] * p[N - i - 1] ;
-      ans += memo[i];
+    memo[i] = memo[i] * p[N - i - 1];
+    ans += memo[i];
   }
-  if(DEBUG_BUDAN) cout<<"DEBUG BUDAN: after add "<<h<<" : "<<Poly(tmp)<<endl;
+  if (DEBUG_BUDAN)
+    cout << "DEBUG BUDAN: after add " << h << " : " << Poly(tmp) << endl;
   return ans;
-  return Poly(tmp);
 }
 
 int Budan::signChangeNum(Poly& tmp, double h) {
@@ -55,30 +49,33 @@ int Budan::signChangeNum(Poly& tmp, double h) {
   return ret;
 }
 
-// TODO: Test solve Square Free function
-vector<double> Budan::solveSquareFree(Poly& p) {
-  vector<double> roots;
+vector<tuple<double, double>> Budan::isoRoot(Poly& p) {
+  vector<tuple<double, double>> ret;
   deque<Boundry> b;
   double tmp = bound(p), mid, root;
   int midchange;
+  Boundry tmpb;
 
   b.push_back(
       Boundry{-tmp, signChangeNum(p, -tmp), tmp, signChangeNum(p, tmp)});
-  Boundry tmpb;
 
   while (b.size() > 0) {
     tmpb = b[0];
     b.pop_front();
-    if(DEBUG_BUDAN) cout<<"Search Boundary: " << tmpb.left << "\t | \t  "<<tmpb.right<<endl;
-    if(DEBUG_BUDAN) cout<< tmpb.lchange << "\t | \t  "<<tmpb.rchange<<endl;
+    if (DEBUG_BUDAN)
+      cout << "Search Boundary: " << tmpb.left << "\t | \t  " << tmpb.right
+           << endl;
+    if (DEBUG_BUDAN)
+      cout << tmpb.lchange << "\t | \t  " << tmpb.rchange << endl;
     mid = (tmpb.left + tmpb.right) / 2;
     midchange = signChangeNum(p, mid);
-    if(DEBUG_BUDAN) cout<<"Mid Change:  "<<midchange<<endl;
+    if (DEBUG_BUDAN) cout << "Mid Change:  " << midchange << endl;
 
     // left side
     if (mid - tmpb.left < MINRANGE && tmpb.lchange - midchange > 0) {
       root = rootInBound(p, tmpb.left, mid);
-      if (root != NOTFOUND) roots.push_back(root);
+      if (root != NOTFOUND)
+        ret.push_back(tuple<double, double>(tmpb.left, mid));
     } else if (tmpb.lchange - midchange > 0) {
       b.push_back(Boundry{tmpb.left, tmpb.lchange, mid, midchange});
     }
@@ -86,13 +83,14 @@ vector<double> Budan::solveSquareFree(Poly& p) {
     // right side
     if (tmpb.right - mid < MINRANGE && midchange - tmpb.rchange > 0) {
       root = rootInBound(p, mid, tmpb.right);
-      if (root != NOTFOUND) roots.push_back(root);
+      if (root != NOTFOUND)
+        ret.push_back(tuple<double, double>(mid, tmpb.right));
     } else if (midchange - tmpb.rchange > 0) {
       b.push_back(Boundry{mid, midchange, tmpb.right, tmpb.rchange});
     }
   }
 
-  return roots;
+  return ret;
 }
 
 // Get the boundry of roots, applied Cauchy's bound
@@ -108,32 +106,55 @@ double Budan::bound(Poly& p) {
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
 double Budan::rootInBound(Poly& p, double left, double right) {
+  if (DEBUG_BUDAN)
+    cout << "DEBUG BUDAN: ===== Searching root in range =====" << left << " to "
+         << right << "\n";
+  if(p.valueAt(left) == 0) return left;
+  if(p.valueAt(right) == 0) return right;
   double x0 = (left + right) / 2;
   int idx = 0;
   while (p.valueAt(x0) != 0 && idx < MAXITER && x0 >= left && x0 <= right) {
-    x0 = x0 - (p.valueAt(x0) / p.gradientAt(x0));
+    double step = (p.valueAt(x0) / p.gradientAt(x0));
+    x0 = x0 - step;
+    if(step <= EPSILON) break;
     idx += 1;
   }
+
   if (idx == MAXITER || x0 < left || x0 > right) {
+    // cout<<"Warning: out of range"<<endl;
+    // cout<<"Value at right"<<p.valueAt(right)<<endl;
     return NOTFOUND;
   }
   return x0;
 }
 
 vector<double> Budan::solve(Poly& p) {
+  if (p.deg() == 1) return {-p[1] / p[0]};
   vector<Poly> plist = squareFreeDecompo(p);
-  if(DEBUG_BUDAN){
-    cout<<"DEBUG BUDAN SQUREFREE DECOMP: "<<endl;
-    for(auto x: plist) cout<<x<<endl;
+  vector<tuple<double, double>> ranges, tmprange;
+  vector<double> roots;
+  double tmp;
+
+  if (DEBUG_BUDAN) {
+    cout << "DEBUG BUDAN SQUREFREE DECOMP: " << endl;
+    for (auto x : plist) cout << x << endl;
   }
-  vector<double> roots, tmpRoots;
 
   for (auto p : plist) {
     if (p.deg() <= 0) continue;
-    tmpRoots = solveSquareFree(p);
-    roots.insert(roots.end(), tmpRoots.begin(), tmpRoots.end());
+    tmprange = isoRoot(p);
+    ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());
   }
-  if (roots.size() == 0)
-    cout << "There is not real roots of this polynomial" << endl;
+
+  for (auto range : ranges) {
+    if (DEBUG_BUDAN)
+      cout << "Finding root in range: " << get<0>(range) << " to "
+           << get<1>(range) << endl;
+    tmp = rootInBound(p, get<0>(range), get<1>(range));
+    if (tmp != NOTFOUND) roots.emplace_back(tmp);
+  }
+
+  // if (roots.size() == 0)
+  //   cout << "There is no real roots of this polynomial" << endl;
   return roots;
 }

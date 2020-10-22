@@ -1,32 +1,22 @@
-# import numpy as np
-
-# coef = [3.02385, 1.91351, 0.288506, 8.9231]
-# coef = [- 3.27011, -0.661767, -2.32141]
-
-# ans = np.roots(coef)
-
-# print(ans)
-
-
 import numpy as np
+from numpy.random import randint, uniform
 
+test_file = open("test/validation.test", "w")
 
-def learnnb(X, Y):
-    maxfeatval = X.max().max()
-    m = len(X)
-    n = len(X[0])
+for _ in range(10000):
+    d = randint(1, 7)
+    coef = []
+    for _ in range(d+1):
+        coef.append(uniform(-10, 10))
+    roots = np.roots(coef)
+    roots = sorted([ x.real for x in roots if x.imag == 0])
+    roots = ["{:.6f}".format(x) for x in roots]
+    coef_str = " ".join(map(str, coef))
+    root_str = " ".join(map(str, roots))
 
-    # priorp
-    y0_count = np.sum(Y[Y==0])
-    y1_count = m - y0_count
-    priorp = np.array([y0_count/m, y1_count/m])
-
-    # condp
-    condp = np.zeros(np.zeros((n, maxfeatval, 2)))
-    for i in range(m):
-        for j in range(n):
-            label = Y[i]
-            condp[j][X[i][j]][label] += 1
-    condp[:][:][1] /= y1_count
-    condp[:][:][0] /= y0_count
-    
+    test_file.writelines(coef_str + "\n")
+    if(len(roots) == 0):
+        test_file.writelines("#" + "\n")
+    else:
+        test_file.writelines(root_str + "\n")
+test_file.close()

@@ -31,3 +31,5 @@
 - Meet precision problem, try to fix it,
 
 ### 10/17/2020
+TODO: Decompo problem
+TODO: Large gradient
