@@ -74,7 +74,7 @@ void validPolyFromFile(string path) {
         ans.emplace_back(stod(tmp_ans));
       }
     }
-    cout<<"Current Polynomial: "<< testPoly << endl;
+    cout << "Current Polynomial: " << testPoly << endl;
     if (validSinglePoly(testPoly, util, ans)) pass++;
     test_count++;
   }
@@ -89,16 +89,7 @@ void testBudan() {
   srand(time(NULL));
   validPolyFromFile("test/validation.test");
 
-  // vector<double> testCoef = {-0.0180918, 9.61255,  -0.951933,
-  //                            -6.93554,   -8.33893, -1.047};
-  // vector<double> testCoef = {- 2.57462, 3.49491, 3.25646, -5.07535, -1.02978, 8.16008};// -0.902717
-  // Poly testP = Poly(testCoef);  // 0.365350
-  // Budan util;
-  // vector<double> roots = util.solve(testP);
-  // for (auto r : roots) {
-  //   cout << "Debug Roots: " << r << endl; 
-  // }
-  return; 
+  return;
 }
 
 #endif

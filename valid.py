@@ -4,7 +4,7 @@ from numpy.random import randint, uniform
 test_file = open("test/validation.test", "w")
 
 for _ in range(10000):
-    d = randint(1, 6)
+    d = randint(1, 7)
     coef = []
     for _ in range(d+1):
         coef.append(uniform(-10, 10))
@@ -20,9 +20,3 @@ for _ in range(10000):
     else:
         test_file.writelines(root_str + "\n")
 test_file.close()
-
-
-# coef = [3.14902, -3.07213, -4.79618, -0.791942]
-# coef = [-6.80291, 7.15229, 2.39251]
-
-# print(np.roots(coef))

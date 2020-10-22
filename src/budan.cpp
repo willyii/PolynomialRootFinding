@@ -114,14 +114,15 @@ double Budan::rootInBound(Poly& p, double left, double right) {
   double x0 = (left + right) / 2;
   int idx = 0;
   while (p.valueAt(x0) != 0 && idx < MAXITER && x0 >= left && x0 <= right) {
-    double step = p.gradientAt(x0);
-    if(step >=0) step = fmin(TRUNCATE, step);
-    if(step < 0) step = fmax(step, -TRUNCATE);
-    x0 = x0 - (p.valueAt(x0) / step);
+    double step = (p.valueAt(x0) / p.gradientAt(x0));
+    x0 = x0 - step;
+    if(step <= EPSILON) break;
     idx += 1;
   }
 
   if (idx == MAXITER || x0 < left || x0 > right) {
+    // cout<<"Warning: out of range"<<endl;
+    // cout<<"Value at right"<<p.valueAt(right)<<endl;
     return NOTFOUND;
   }
   return x0;
