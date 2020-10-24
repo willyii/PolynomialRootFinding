@@ -6,7 +6,7 @@
 
 #define NOTFOUND std::numeric_limits<double>::min()
 
-#define EPSILON 1e-7
+#define EPSILON 1e-9
 #define TESTERROR 1e-5
 #define MAXITER 10000
 #define MINRANGE 0.0001
