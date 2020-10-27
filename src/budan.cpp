@@ -1,5 +1,48 @@
 #include "budan.h"
 
+vector<tuple<double, double>> Budan::isoRoot(Poly& p) {
+    vector<tuple<double, double>> ret;
+    deque<Boundry> b;
+    double tmp = bound(p), mid, root;
+    int midchange;
+    Boundry tmpb;
+
+    b.push_back(
+        Boundry{-tmp, signChangeNum(p, -tmp), tmp, signChangeNum(p, tmp)});
+
+    while (b.size() > 0) {
+      tmpb = b[0];
+      b.pop_front();
+      if (DEBUG_BUDAN)
+        cout << "Search Boundary: " << tmpb.left << "\t | \t  " << tmpb.right
+             << endl;
+      if (DEBUG_BUDAN)
+        cout << tmpb.lchange << "\t | \t  " << tmpb.rchange << endl;
+      mid = (tmpb.left + tmpb.right) / 2;
+      midchange = signChangeNum(p, mid);
+      if (DEBUG_BUDAN) cout << "Mid Change:  " << midchange << endl;
+
+      // left side
+      if (mid - tmpb.left < MINRANGE && tmpb.lchange - midchange > 0) {
+        root = rootInBound(p, tmpb.left, mid);
+        if (root != NOTFOUND)
+          ret.push_back(tuple<double, double>(tmpb.left, mid));
+      } else if (tmpb.lchange - midchange > 0) {
+        b.push_back(Boundry{tmpb.left, tmpb.lchange, mid, midchange});
+      }
+
+      // right side
+      if (tmpb.right - mid < MINRANGE && midchange - tmpb.rchange > 0) {
+        root = rootInBound(p, mid, tmpb.right);
+        if (root != NOTFOUND)
+          ret.push_back(tuple<double, double>(mid, tmpb.right));
+      } else if (midchange - tmpb.rchange > 0) {
+        b.push_back(Boundry{mid, midchange, tmpb.right, tmpb.rchange});
+      }
+    }
+
+    return ret;
+  }
 
 vector<double> Budan::solve(Poly& p) {
   if (p.deg() == 1) return {-p[1] / p[0]};
