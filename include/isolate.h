@@ -5,7 +5,6 @@
 
 #include <deque>
 #include <tuple>
-#include <unordered_map>
 
 #include "boundry.h"
 #include "poly.h"
@@ -14,7 +13,6 @@ using std::cout;
 using std::deque;
 using std::endl;
 using std::tuple;
-using std::unordered_map;
 using std::get;
 
 class Isolate {

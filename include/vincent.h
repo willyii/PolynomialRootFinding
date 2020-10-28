@@ -7,5 +7,8 @@ class Vincent : public Isolate {
  public:
   vector<tuple<double, double>> isoRoot(Poly& p);
   vector<double> solve(Poly& p);
+
+private:
+  Poly inverseTimesB(Poly& p, int b); // util
 };
 #endif

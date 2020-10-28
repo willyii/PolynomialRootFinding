@@ -73,3 +73,10 @@ vector<double> Vincent::solve(Poly& p) {
 
   return roots;
 }
+
+Poly Vincent::inverseTimesB(Poly& p, int b){
+
+  
+
+  return Poly();
+}

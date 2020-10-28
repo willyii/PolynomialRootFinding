@@ -3,11 +3,14 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 #include "math.h"
 #include "param.h"
 
 using std::vector;
+using std::unordered_map;
+
 
 class Poly {
  private:
@@ -83,6 +86,17 @@ class Poly {
     _gradCalc();
     _cleanUp();
   };
+  Poly pow(const int d){
+    unordered_map<int, Poly> memo;
+    vector<double> tmpCoef = {1.0};
+    memo[0] = Poly(tmpCoef);
+    memo[1] = *this;
+    for(size_t i = 2; i<=d;i++){
+      int mid = i/2;
+      memo[i] = memo[mid] * memo[i-mid];
+    }
+    return memo[d];
+  }
 
   // Some calculation
   double valueAt(double x) {

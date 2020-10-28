@@ -16,8 +16,10 @@ int main(int argc, char const *argv[]) {
   // testBudan();
   
 
-  // vector<double> tmp = {1.0, -2.0, 4.0};
-  // Poly test1 = Poly(tmp);
+  vector<double> tmp = {1.0, -1.0};
+  Poly test1 = Poly(tmp);
+  test1 = test1.pow(2);
+  cout<<test1<<endl;
   // Budan util;
   // test1 = util.timeToP(test1, -2);
   // cout<<test1<<endl;
