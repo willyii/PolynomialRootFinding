@@ -9,6 +9,7 @@
 #include <string>
 
 #include "budan.h"
+#include "vincent.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ double rand_float(double a = -10, double b = 10) {
   return ((double)rand() / RAND_MAX) * (b - a) + a;
 }
 
-bool validSinglePoly(Poly& p, Budan& util, vector<double>& ans) {
+bool validSinglePoly(Poly& p, Vincent& util, vector<double>& ans) {
   vector<double> roots = util.solve(p);
   if (ans.size() != roots.size()) {
     cout << "Validation fail on: " << p << "\n"
@@ -50,7 +51,7 @@ bool validSinglePoly(Poly& p, Budan& util, vector<double>& ans) {
 }
 
 void validPolyFromFile(string path) {
-  Budan util;
+  Vincent util;
   ifstream validfile(path);
   string line, tmp_ans, tmp_ceof;
   vector<double> coef, ans;

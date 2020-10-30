@@ -4,7 +4,7 @@
 // #include <vector>
 
 #include "test.h"
-
+#include "vincent.h"
 #include "isolate.h"
 
 using namespace std;
@@ -13,13 +13,17 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
   /* code */
-  // testBudan();
+  testBudan();
   
 
-  vector<double> tmp = {1.0, -1.0};
-  Poly test1 = Poly(tmp);
-  test1 = test1.pow(2);
-  cout<<test1<<endl;
+  // test1 = test1.pow(2);
+  // Vincent util;
+  
+  // vector<double> tmp = {1.0, 3.333};
+  // Poly test1 = Poly(tmp);
+  // vector<double> ans = util.solve(test1);
+  // for(auto r : ans)
+  //  cout<<"root: "<<r<<endl;
   // Budan util;
   // test1 = util.timeToP(test1, -2);
   // cout<<test1<<endl;
