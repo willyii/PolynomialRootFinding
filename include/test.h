@@ -18,8 +18,8 @@ double rand_float(double a = -10, double b = 10) {
   return ((double)rand() / RAND_MAX) * (b - a) + a;
 }
 
-bool validSinglePoly(Poly& p, Vincent& util, vector<double>& ans) {
-  vector<double> roots = util.solve(p);
+bool validSinglePolyBudan(Poly& p, vector<double>& ans) {
+  vector<double> roots = budanSolve(p);
   if (ans.size() != roots.size()) {
     cout << "Validation fail on: " << p << "\n"
          << "Current root num: " << roots.size() << "\n"
@@ -51,7 +51,6 @@ bool validSinglePoly(Poly& p, Vincent& util, vector<double>& ans) {
 }
 
 void validPolyFromFile(string path) {
-  Vincent util;
   ifstream validfile(path);
   string line, tmp_ans, tmp_ceof;
   vector<double> coef, ans;
@@ -76,7 +75,7 @@ void validPolyFromFile(string path) {
       }
     }
     cout << "Current Polynomial: " << testPoly << endl;
-    if (validSinglePoly(testPoly, util, ans)) pass++;
+    if (validSinglePolyBudan(testPoly, ans)) pass++;
     test_count++;
   }
 
