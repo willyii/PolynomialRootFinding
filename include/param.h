@@ -1,5 +1,8 @@
 #ifndef PARAM_H
 #define PARAM_H
+#include <unistd.h>
+
+#include <cstdlib>
 #include <limits>
 
 // #define EPSILON std::numeric_limits<double>::epsilon()
@@ -12,8 +15,9 @@
 #define MINRANGE 0.0001
 
 #define DEBUG_GCD false
-#define DEBUG_SQD false 
+#define DEBUG_SQD false
 #define DEBUG_BUDAN false
-#define DEBUG_VINCENT true
+#define DEBUG_VINCENT false
+#define DEBUG_BISECT true
 
 #endif

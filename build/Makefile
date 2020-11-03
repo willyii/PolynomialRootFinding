@@ -142,6 +142,60 @@ Test/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/build
 .PHONY : Test/fast
 
+src/bisect.o: src/bisect.cpp.o
+
+.PHONY : src/bisect.o
+
+# target to build an object file
+src/bisect.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/bisect.cpp.o
+.PHONY : src/bisect.cpp.o
+
+src/bisect.i: src/bisect.cpp.i
+
+.PHONY : src/bisect.i
+
+# target to preprocess a source file
+src/bisect.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/bisect.cpp.i
+.PHONY : src/bisect.cpp.i
+
+src/bisect.s: src/bisect.cpp.s
+
+.PHONY : src/bisect.s
+
+# target to generate assembly for a file
+src/bisect.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/bisect.cpp.s
+.PHONY : src/bisect.cpp.s
+
+src/budan.o: src/budan.cpp.o
+
+.PHONY : src/budan.o
+
+# target to build an object file
+src/budan.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/budan.cpp.o
+.PHONY : src/budan.cpp.o
+
+src/budan.i: src/budan.cpp.i
+
+.PHONY : src/budan.i
+
+# target to preprocess a source file
+src/budan.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/budan.cpp.i
+.PHONY : src/budan.cpp.i
+
+src/budan.s: src/budan.cpp.s
+
+.PHONY : src/budan.s
+
+# target to generate assembly for a file
+src/budan.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/budan.cpp.s
+.PHONY : src/budan.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -168,6 +222,33 @@ src/main.s: src/main.cpp.s
 src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
+
+src/util.o: src/util.cpp.o
+
+.PHONY : src/util.o
+
+# target to build an object file
+src/util.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/util.cpp.o
+.PHONY : src/util.cpp.o
+
+src/util.i: src/util.cpp.i
+
+.PHONY : src/util.i
+
+# target to preprocess a source file
+src/util.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/util.cpp.i
+.PHONY : src/util.cpp.i
+
+src/util.s: src/util.cpp.s
+
+.PHONY : src/util.s
+
+# target to generate assembly for a file
+src/util.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/src/util.cpp.s
+.PHONY : src/util.cpp.s
 
 src/vincent.o: src/vincent.cpp.o
 
@@ -205,9 +286,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Test"
+	@echo "... src/bisect.o"
+	@echo "... src/bisect.i"
+	@echo "... src/bisect.s"
+	@echo "... src/budan.o"
+	@echo "... src/budan.i"
+	@echo "... src/budan.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/util.o"
+	@echo "... src/util.i"
+	@echo "... src/util.s"
 	@echo "... src/vincent.o"
 	@echo "... src/vincent.i"
 	@echo "... src/vincent.s"

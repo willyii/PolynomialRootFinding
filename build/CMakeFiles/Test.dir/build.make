@@ -76,9 +76,35 @@ include CMakeFiles/Test.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Test.dir/flags.make
 
+CMakeFiles/Test.dir/src/bisect.cpp.o: CMakeFiles/Test.dir/flags.make
+CMakeFiles/Test.dir/src/bisect.cpp.o: ../src/bisect.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Test.dir/src/bisect.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Test.dir/src/bisect.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/bisect.cpp
+
+CMakeFiles/Test.dir/src/bisect.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Test.dir/src/bisect.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/bisect.cpp > CMakeFiles/Test.dir/src/bisect.cpp.i
+
+CMakeFiles/Test.dir/src/bisect.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Test.dir/src/bisect.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/bisect.cpp -o CMakeFiles/Test.dir/src/bisect.cpp.s
+
+CMakeFiles/Test.dir/src/budan.cpp.o: CMakeFiles/Test.dir/flags.make
+CMakeFiles/Test.dir/src/budan.cpp.o: ../src/budan.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Test.dir/src/budan.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Test.dir/src/budan.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.cpp
+
+CMakeFiles/Test.dir/src/budan.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Test.dir/src/budan.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.cpp > CMakeFiles/Test.dir/src/budan.cpp.i
+
+CMakeFiles/Test.dir/src/budan.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Test.dir/src/budan.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.cpp -o CMakeFiles/Test.dir/src/budan.cpp.s
+
 CMakeFiles/Test.dir/src/main.cpp.o: CMakeFiles/Test.dir/flags.make
 CMakeFiles/Test.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Test.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Test.dir/src/main.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Test.dir/src/main.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/main.cpp
 
 CMakeFiles/Test.dir/src/main.cpp.i: cmake_force
@@ -89,9 +115,22 @@ CMakeFiles/Test.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Test.dir/src/main.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/main.cpp -o CMakeFiles/Test.dir/src/main.cpp.s
 
+CMakeFiles/Test.dir/src/util.cpp.o: CMakeFiles/Test.dir/flags.make
+CMakeFiles/Test.dir/src/util.cpp.o: ../src/util.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Test.dir/src/util.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Test.dir/src/util.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.cpp
+
+CMakeFiles/Test.dir/src/util.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Test.dir/src/util.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.cpp > CMakeFiles/Test.dir/src/util.cpp.i
+
+CMakeFiles/Test.dir/src/util.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Test.dir/src/util.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.cpp -o CMakeFiles/Test.dir/src/util.cpp.s
+
 CMakeFiles/Test.dir/src/vincent.cpp.o: CMakeFiles/Test.dir/flags.make
 CMakeFiles/Test.dir/src/vincent.cpp.o: ../src/vincent.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Test.dir/src/vincent.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Test.dir/src/vincent.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Test.dir/src/vincent.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/vincent.cpp
 
 CMakeFiles/Test.dir/src/vincent.cpp.i: cmake_force
@@ -104,17 +143,23 @@ CMakeFiles/Test.dir/src/vincent.cpp.s: cmake_force
 
 # Object files for target Test
 Test_OBJECTS = \
+"CMakeFiles/Test.dir/src/bisect.cpp.o" \
+"CMakeFiles/Test.dir/src/budan.cpp.o" \
 "CMakeFiles/Test.dir/src/main.cpp.o" \
+"CMakeFiles/Test.dir/src/util.cpp.o" \
 "CMakeFiles/Test.dir/src/vincent.cpp.o"
 
 # External object files for target Test
 Test_EXTERNAL_OBJECTS =
 
+Test: CMakeFiles/Test.dir/src/bisect.cpp.o
+Test: CMakeFiles/Test.dir/src/budan.cpp.o
 Test: CMakeFiles/Test.dir/src/main.cpp.o
+Test: CMakeFiles/Test.dir/src/util.cpp.o
 Test: CMakeFiles/Test.dir/src/vincent.cpp.o
 Test: CMakeFiles/Test.dir/build.make
 Test: CMakeFiles/Test.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Test"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable Test"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Test.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

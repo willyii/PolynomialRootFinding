@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+../include/bisect.h
+util.h
+../include/util.h
+
 ../include/boundry.h
 
 ../include/budan.h
@@ -13,15 +17,19 @@ util.h
 ../include/util.h
 
 ../include/param.h
+unistd.h
+-
+cstdlib
+-
 limits
 -
 
 ../include/poly.h
 iostream
 -
-vector
--
 unordered_map
+-
+vector
 -
 math.h
 ../include/math.h
@@ -47,26 +55,26 @@ vincent.h
 ../include/vincent.h
 
 ../include/util.h
-poly.h
-../include/poly.h
 unistd.h
 -
 algorithm
 -
-boundry.h
-../include/boundry.h
 deque
 -
 tuple
 -
+boundry.h
+../include/boundry.h
+poly.h
+../include/poly.h
 
 ../include/vincent.h
 
 /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/main.cpp
-test.h
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/test.h
+bisect.h
+/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/bisect.h
 budan.h
 /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.h
-
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/vincent.cpp
+test.h
+/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/test.h
 
