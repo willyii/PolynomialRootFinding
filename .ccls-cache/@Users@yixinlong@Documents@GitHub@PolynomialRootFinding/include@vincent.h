@@ -1,26 +1,27 @@
 #ifndef VINCENT_H
 #define VINCENT_H
 
-//#include "isolate.h"
+#include "util.h"
 
+using std::tuple;
 
-//struct CustomLessThan {
-//  bool operator()(tuple<double, double> const& lhs,
-//                  tuple<double, double> const& rhs) const {
-//    if(get<1>(lhs) == get<1>(rhs)) 
-//      return get<0>(lhs) < get<0>(rhs);
-//    return get<1>(lhs) < get<1>(rhs);
-//  }
-//};
+// Isolat the range of every root
+vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative);
 
-//class Vincent : public Isolate {
-// public:
-//  vector<tuple<double, double>> isoRoot(Poly& p);
-//  vector<double> solve(Poly& p);
-//  Poly inverseTimesB(Poly& p, double b);  // util
+// Solver using Vincent
+vector<double> vincentSolve(Poly& p);
 
-// private:
-//  vector<tuple<double, double>> dropDuplicate_(
-//      vector<tuple<double, double>> ranges);
-//};
+// Inverse the coefficent and generate new Poly
+Poly reverse(Poly& p);
+
+// Refine the range, make the range smaller enough to avoid edge case
+void refineRange(Poly& p, tuple<double, double>& range);
+
+// Interval
+struct Interval {
+  double a, b, c, d;  // Set range
+  Poly p;
+  int s;  // Sign Change
+};
+
 #endif

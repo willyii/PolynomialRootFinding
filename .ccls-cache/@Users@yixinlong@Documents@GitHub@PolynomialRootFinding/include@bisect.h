@@ -3,8 +3,12 @@
 
 #include "util.h"
 
-vector<tuple<double, double>> bisectIsoroot(Poly &p);
+// vector<tuple<double, double>> bisectIsoroot(Poly &p);
 
-vector<double> bisectSolve(Poly &p);
+// vector<double> bisectSolve(Poly &p);
+
+// Poly reverseCoef(Poly &p);
+
+// Poly _change1(Poly &p);
 
 #endif

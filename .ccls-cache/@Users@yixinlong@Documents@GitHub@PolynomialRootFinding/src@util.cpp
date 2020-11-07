@@ -1,5 +1,8 @@
 #include "util.h"
 
+using std::cout;
+using std::endl;
+
 // Compute the GCD between p1 and p2
 Poly gcd(Poly p1, Poly p2) {
   if (DEBUG_GCD) {
@@ -90,8 +93,6 @@ Poly addToP(Poly& p, double h) {
     memo[i] = memo[i] * p[N - i - 1];
     ans += memo[i];
   }
-  if (DEBUG_BUDAN)
-    cout << "DEBUG BUDAN: after add " << h << " : " << Poly(tmp) << endl;
   return ans;
 }
 
@@ -121,7 +122,7 @@ int signChangeNum(Poly& tmp, double h) {
 }
 
 // Get the boundry of roots, applied Cauchy's bound
-double bound(Poly& p) {
+double upperBound(Poly& p) {
   int N = p.size();
   double tmp = __DBL_MIN__, lc = p.lc();
   for (int i = 1; i < N; i++) {
@@ -130,18 +131,30 @@ double bound(Poly& p) {
   return 1 + tmp;
 }
 
+// Get the lower bound of roots
+double lowerBound(Poly& p) {
+  int N = p.size();
+  double a0 = p[N - 1], tmp = __DBL_MIN__;
+  if (fabs(a0 - 0) < EPSILON) return 0.0;
+  for (size_t i = 0; i < N - 1; i++) tmp = fmax(tmp, fabs(p[i] / a0));
+
+  return (1 / (1 + tmp));
+}
+
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
 double rootInBound(Poly& p, double left, double right) {
-  if (DEBUG_BUDAN)
-    cout << "DEBUG BUDAN: ===== Searching root in range =====" << left << " to "
-         << right << "\n";
+  if (fabs(left - right) < EPSILON) return left;
+  // if (p.valueAt(left) == 0.0) return left;
+  // if (p.valueAt(right) == 0.0) return right;
   double x0 = (left + right) / 2;
   int idx = 0;
   while (p.valueAt(x0) != 0 && idx < MAXITER && x0 >= left && x0 <= right) {
     double step = (p.valueAt(x0) / p.gradientAt(x0));
     x0 = x0 - step;
-    if (step <= EPSILON) break;
+    if (std::fabs(step) <= EPSILON) {
+      break;
+    }
     idx += 1;
   }
 

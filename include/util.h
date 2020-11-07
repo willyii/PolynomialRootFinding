@@ -7,14 +7,7 @@
 #include <deque>
 #include <tuple>
 
-#include "boundry.h"
 #include "poly.h"
-
-using std::cout;
-using std::deque;
-using std::endl;
-using std::get;
-using std::tuple;
 
 // Compute the GCD between p1 and p2
 Poly gcd(Poly p1, Poly p2);
@@ -31,11 +24,14 @@ Poly timeToP(Poly& p, double h);
 // Compute the sign change of coefficient
 int signChangeNum(Poly& tmp, double h);
 
-// Get the boundry of roots, applied Cauchy's bound
-double bound(Poly& p);
+// Get the upper boundry of roots, applied Cauchy's bound
+double upperBound(Poly& p);
+
+// Get the lower boundary of roots, applied Cauchy's bound
+double lowerBound(Poly& p);
 
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
 double rootInBound(Poly& p, double left, double right);
-#endif
 
+#endif
