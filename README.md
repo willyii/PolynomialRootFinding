@@ -60,3 +60,7 @@ Last command will run the **valid.py** first. Which will generate 10000 random p
 - Finished the Budan method. 
 - Finished Test Cases
 
+### 10/26/2020
+- Add branch Vincent
+- Finished timeToP function
+
