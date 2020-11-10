@@ -1,5 +1,7 @@
 #include "util.h"
 
+#include <algorithm>
+
 using std::cout;
 using std::endl;
 
@@ -144,6 +146,7 @@ double lowerBound(Poly& p) {
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
 double rootInBound(Poly& p, double left, double right) {
+  if (left > right) return rootInBound(p, right, left);
   if (fabs(left - right) < EPSILON) return left;
   // if (p.valueAt(left) == 0.0) return left;
   // if (p.valueAt(right) == 0.0) return right;
@@ -159,6 +162,8 @@ double rootInBound(Poly& p, double left, double right) {
   }
 
   if (idx == MAXITER || left - x0 > EPSILON || x0 - right > EPSILON) {
+    if (left - x0 > EPSILON || x0 - right > EPSILON)
+      std::cout << "Out bound" << std::endl;
     return NOTFOUND;
   }
   return x0;

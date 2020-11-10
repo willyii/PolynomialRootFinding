@@ -136,33 +136,10 @@ vector<double> vincentSolve(Poly& p) {
   vector<double> roots;
   double tmp;
 
-  //// Postive roots
-  // for (auto poly : plist) {
-  //  if (poly.deg() <= 0) continue;
-  //  tmprange = vincentIsoroot(poly, false);
-  //  for (size_t i = 0; i < tmprange.size(); i++) {
-  //    if (DEBUG_VINCENT)
-  //      std::cout << "Before Range: from " << get<0>(tmprange[i]) << " to "
-  //                << get<1>(tmprange[i]) << std::endl;
-  //    refineRange(poly, tmprange[i]);
-  //    if (DEBUG_VINCENT)
-  //      std::cout << "After Range: from " << get<0>(tmprange[i]) << " to "
-  //                << get<1>(tmprange[i]) << std::endl;
-  //  }
-  //  ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());
-  //}
-
-  // for (auto range : ranges) {
-  //  tmp = rootInBound(p, std::get<0>(range), std::get<1>(range));
-  //  if (tmp != NOTFOUND) roots.emplace_back(tmp);
-  //}
-
-  // Negative roots
-  ranges = {};
+  // Postive roots
   for (auto poly : plist) {
     if (poly.deg() <= 0) continue;
-    Poly tmpp = timeToP(poly, -1);
-    tmprange = vincentIsoroot(tmpp, false);
+    tmprange = vincentIsoroot(poly, false);
     for (size_t i = 0; i < tmprange.size(); i++) {
       if (DEBUG_VINCENT)
         std::cout << "Before Range: from " << get<0>(tmprange[i]) << " to "
@@ -176,9 +153,32 @@ vector<double> vincentSolve(Poly& p) {
   }
 
   for (auto range : ranges) {
+    tmp = rootInBound(p, std::get<0>(range), std::get<1>(range));
+    if (tmp != NOTFOUND) roots.emplace_back(tmp);
+  }
+
+  // Negative roots
+  ranges = {};
+  for (auto poly : plist) {
+    if (poly.deg() <= 0) continue;
+    Poly tmpp = timeToP(poly, -1);
+    tmprange = vincentIsoroot(tmpp, false);
+    for (size_t i = 0; i < tmprange.size(); i++) {
+      if (DEBUG_VINCENT)
+        std::cout << "Before Range: from " << get<0>(tmprange[i]) << " to "
+                  << get<1>(tmprange[i]) << std::endl;
+      refineRange(tmpp, tmprange[i]);
+      if (DEBUG_VINCENT)
+        std::cout << "After Range: from " << get<0>(tmprange[i]) << " to "
+                  << get<1>(tmprange[i]) << std::endl;
+    }
+    ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());
+  }
+
+  for (auto range : ranges) {
     if (DEBUG_VINCENT)
-      std::cout << "DEBUG: Searching root in range from " << std::get<0>(range)
-                << " to " << std::get<1>(range) << std::endl;
+      std::cout << "DEBUG: Searching root in range from " << -std::get<1>(range)
+                << " to " << -std::get<0>(range) << std::endl;
     tmp = rootInBound(p, -std::get<1>(range), -std::get<0>(range));
     if (tmp != NOTFOUND) roots.emplace_back(tmp);
   }

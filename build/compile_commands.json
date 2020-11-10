@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/include -isystem /usr/local/Cellar/gsl/2.6/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -std=gnu++17 -o CMakeFiles/Test.dir/test/test.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/test/test.cpp",
+  "file": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/test/test.cpp"
+},
+{
+  "directory": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -std=gnu++17 -o CMakeFiles/Poly.dir/main/main.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/main/main.cpp",
+  "file": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/main/main.cpp"
+},
+{
+  "directory": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -std=gnu++17 -o CMakeFiles/POLYLIB.dir/src/budan.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.cpp",
+  "file": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.cpp"
+},
+{
+  "directory": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -std=gnu++17 -o CMakeFiles/POLYLIB.dir/src/util.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.cpp",
+  "file": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.cpp"
+},
+{
+  "directory": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -std=gnu++17 -o CMakeFiles/POLYLIB.dir/src/vincent.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/vincent.cpp",
+  "file": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/vincent.cpp"
+}
+]

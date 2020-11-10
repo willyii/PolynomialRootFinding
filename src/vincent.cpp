@@ -43,7 +43,7 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
       c *= lower;
       lower = 1;
     }
-    if ((lower - 1) > EPSILON) {
+    if (lower >= 1) {
       q = addToP(q, lower);
       b += lower * a;
       c *= lower;
@@ -112,19 +112,19 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
     }
   }
 
-  if (negative == true) {
-    for (size_t i = 0; i < rootlist.size(); i++) {
-      std::cout << "Last Bug BE: " << get<0>(rootlist[i]) << " and "
-                << get<1>(rootlist[i]) << std::endl;
-      double tmp = get<0>(rootlist[i]);
-      get<0>(rootlist[i]) = -get<1>(rootlist[i]);
-      get<1>(rootlist[i]) = -tmp;
-      // rootlist[i] = std::make_tuple(-get<1>(rootlist[i]),
-      // -get<0>(rootlist[i]));
-      std::cout << "Last Bug AF: " << get<0>(rootlist[i]) << " and "
-                << get<1>(rootlist[i]) << std::endl;
-    }
-  }
+  // if (negative == true) {
+  //  for (size_t i = 0; i < rootlist.size(); i++) {
+  //    std::cout << "Last Bug BE: " << get<0>(rootlist[i]) << " and "
+  //              << get<1>(rootlist[i]) << std::endl;
+  //    double tmp = get<0>(rootlist[i]);
+  //    get<0>(rootlist[i]) = -get<1>(rootlist[i]);
+  //    get<1>(rootlist[i]) = -tmp;
+  //    // rootlist[i] = std::make_tuple(-get<1>(rootlist[i]),
+  //    // -get<0>(rootlist[i]));
+  //    std::cout << "Last Bug AF: " << get<0>(rootlist[i]) << " and "
+  //              << get<1>(rootlist[i]) << std::endl;
+  //  }
+  //}
 
   return rootlist;
 }
@@ -165,20 +165,20 @@ vector<double> vincentSolve(Poly& p) {
     tmprange = vincentIsoroot(tmpp, false);
     for (size_t i = 0; i < tmprange.size(); i++) {
       if (DEBUG_VINCENT)
-        std::cout << "Before Range: from " << get<0>(tmprange[i]) << " to "
-                  << get<1>(tmprange[i]) << std::endl;
+        std::cout << "Before Range: from " << -get<1>(tmprange[i]) << " to "
+                  << -get<0>(tmprange[i]) << std::endl;
       refineRange(tmpp, tmprange[i]);
       if (DEBUG_VINCENT)
-        std::cout << "After Range: from " << get<0>(tmprange[i]) << " to "
-                  << get<1>(tmprange[i]) << std::endl;
+        std::cout << "After Range: from " << -get<1>(tmprange[i]) << " to "
+                  << -get<0>(tmprange[i]) << std::endl;
     }
     ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());
   }
 
   for (auto range : ranges) {
     if (DEBUG_VINCENT)
-      std::cout << "DEBUG: Searching root in range from " << std::get<0>(range)
-                << " to " << std::get<1>(range) << std::endl;
+      std::cout << "DEBUG: Searching root in range from " << -std::get<1>(range)
+                << " to " << -std::get<0>(range) << std::endl;
     tmp = rootInBound(p, -std::get<1>(range), -std::get<0>(range));
     if (tmp != NOTFOUND) roots.emplace_back(tmp);
   }
@@ -197,7 +197,7 @@ Poly reverse(Poly& p) {
 void refineRange(Poly& p, tuple<double, double>& range) {
   int lchange = signChangeNum(p, get<0>(range));
   int rchange = signChangeNum(p, get<1>(range));
-  while ((get<1>(range) - get<0>(range)) > 0.1) {
+  while ((get<1>(range) - get<0>(range)) > MINRANGE) {
     double mid = (get<0>(range) + get<1>(range)) / 2;
     int midchange = signChangeNum(p, mid);
     if ((lchange - midchange) % 2 == 0) {

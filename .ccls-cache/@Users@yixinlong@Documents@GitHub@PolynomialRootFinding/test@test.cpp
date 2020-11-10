@@ -27,11 +27,9 @@ vector<double> gslSolve(double coef[], int N) {
   gsl_poly_complex_workspace_free(w);
 
   for (int i = 0; i < (N - 1) * 2; i++) {
-    if (gslAnsComplex[2 * i + 1] == 0) {
+    if (gslAnsComplex[2 * i + 1] == 0 && gslAnsComplex[2 * i] != 0) {
       gsl_ans.emplace_back(gslAnsComplex[2 * i]);
     }
-    printf("z%d = %+.18f %+.18f\n", i, gslAnsComplex[2 * i],
-           gslAnsComplex[2 * i + 1]);
   }
   sort(gsl_ans.begin(), gsl_ans.end());
   return gsl_ans;
@@ -41,8 +39,8 @@ int main(int argc, char const *argv[]) {
   srand(time(NULL));
 
   // ------------- Random Poly     -------------------
-  // int N = rand_int();
-  int N = 6;
+  int N = rand_int();
+  // int N = 6;
   double coef[N];
   for (size_t i = 0; i < N; i++) {
     coef[i] = rand_float();
@@ -62,6 +60,7 @@ int main(int argc, char const *argv[]) {
   sort(vin_ans.begin(), vin_ans.end());
 
   // check the root size
+  cout << "Test Polynomial: " << testPoly << endl;
   cout << "=====================================" << endl;
   cout << "Vlaidating the correctness # of roots" << endl;
   if (budan_ans.size() != gsl_ans.size())
