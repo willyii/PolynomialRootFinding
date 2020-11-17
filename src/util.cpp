@@ -147,7 +147,7 @@ double lowerBound(Poly& p) {
 // Newtown method temporary
 double rootInBound(Poly& p, double left, double right) {
   if (left > right) return rootInBound(p, right, left);
-  if (fabs(left - right) < EPSILON) return left;
+  if (fabs(left - right) < RANGEERROR) return left;
   // if (p.valueAt(left) == 0.0) return left;
   // if (p.valueAt(right) == 0.0) return right;
   double x0 = (left + right) / 2;
@@ -162,8 +162,8 @@ double rootInBound(Poly& p, double left, double right) {
   }
 
   if (idx == MAXITER || left - x0 > EPSILON || x0 - right > EPSILON) {
-    if (left - x0 > EPSILON || x0 - right > EPSILON)
-      std::cout << "Out bound" << std::endl;
+    // if (left - x0 > EPSILON || x0 - right > EPSILON)
+    //  std::cout << "Out bound" << std::endl;
     return NOTFOUND;
   }
   return x0;

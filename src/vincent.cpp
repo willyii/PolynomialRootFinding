@@ -88,25 +88,30 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
 
     if (s1 == 0) continue;
     if (s1 == 1) {
-      if (DEBUG_VINCENT)
-        std::cout << "DEBUG_VINCENT: a1/c1 = " << a1 / c1
-                  << ", b1 / d1 = " << b1 / d1 << std::endl;
-      if (DEBUG_VINCENT)
-        std::cout << "DEBUG_VINCENT: a1 = " << a1 << ", b1 = " << b1
-                  << ", c1 = " << c1 << ", d1 = " << d1 << std::endl;
-      if (fabs(c1 - 0) < EPSILON)
-        rootlist.emplace_back(make_tuple(b1 / d1, upper));
-      else
-        rootlist.emplace_back(make_tuple(a1 / c1, b1 / d1));
+      // if (DEBUG_VINCENT)
+      //  std::cout << "DEBUG_VINCENT: a1/c1 = " << a1 / c1
+      //            << ", b1 / d1 = " << b1 / d1 << std::endl;
+      // if (DEBUG_VINCENT)
+      //  std::cout << "DEBUG_VINCENT: a1 = " << a1 << ", b1 = " << b1
+      //            << ", c1 = " << c1 << ", d1 = " << d1 << std::endl;
+      double start = fmin(fmin(a1 / c1, upper), fmin(b1 / d1, upper));
+      double end = fmax(fmin(a1 / c1, upper), fmin(b1 / d1, upper));
+      rootlist.emplace_back(make_tuple(start, end));
+      // if (fabs(c1 - 0) < EPSILON)
+      //  rootlist.emplace_back(make_tuple(b1 / d1, upper));
+      // else
+      //  rootlist.emplace_back(make_tuple(a1 / c1, b1 / d1));
     } else {
       intervals.emplace_back(Interval{a1, b1, c1, d1, q1, s1});
     }
     if (s2 == 0) continue;
     if (s2 == 1) {
-      if (DEBUG_VINCENT)
-        std::cout << "DEBUG_VINCENT: a2/c2 = " << a2 / c2
-                  << ", b2 / d2 = " << b2 / d2 << std::endl;
-      rootlist.emplace_back(make_tuple(a2 / c2, b2 / d2));
+      // if (DEBUG_VINCENT)
+      //  std::cout << "DEBUG_VINCENT: a2/c2 = " << a2 / c2
+      //            << ", b2 / d2 = " << b2 / d2 << std::endl;
+      double start = fmin(b2 / d2, a2 / c2);
+      double end = fmax(b2 / d2, a2 / c2);
+      rootlist.emplace_back(make_tuple(start, end));
     } else {
       intervals.emplace_back(Interval{a2, b2, c2, d2, q2, s2});
     }
@@ -141,18 +146,22 @@ vector<double> vincentSolve(Poly& p) {
     if (poly.deg() <= 0) continue;
     tmprange = vincentIsoroot(poly, false);
     for (size_t i = 0; i < tmprange.size(); i++) {
-      if (DEBUG_VINCENT)
-        std::cout << "Before Range: from " << get<0>(tmprange[i]) << " to "
-                  << get<1>(tmprange[i]) << std::endl;
+      // if (DEBUG_VINCENT)
+      //  std::cout << "Before Range: from " << get<0>(tmprange[i]) << " to "
+      //            << get<1>(tmprange[i]) << std::endl;
       refineRange(poly, tmprange[i]);
-      if (DEBUG_VINCENT)
-        std::cout << "After Range: from " << get<0>(tmprange[i]) << " to "
-                  << get<1>(tmprange[i]) << std::endl;
+      // if (DEBUG_VINCENT)
+      //  std::cout << "After Range: from " << get<0>(tmprange[i]) << " to "
+      //            << get<1>(tmprange[i]) << std::endl;
     }
     ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());
   }
 
   for (auto range : ranges) {
+    if (DEBUG_VINCENT)
+      std::cout << "DEBUG VINCENT: Searching root in range from "
+                << std::get<0>(range) << " to " << std::get<1>(range)
+                << std::endl;
     tmp = rootInBound(p, std::get<0>(range), std::get<1>(range));
     if (tmp != NOTFOUND) roots.emplace_back(tmp);
   }
@@ -164,25 +173,25 @@ vector<double> vincentSolve(Poly& p) {
     Poly tmpp = timeToP(poly, -1);
     tmprange = vincentIsoroot(tmpp, false);
     for (size_t i = 0; i < tmprange.size(); i++) {
-      if (DEBUG_VINCENT)
-        std::cout << "Before Range: from " << -get<1>(tmprange[i]) << " to "
-                  << -get<0>(tmprange[i]) << std::endl;
+      // if (DEBUG_VINCENT)
+      //  std::cout << "Before Range: from " << -get<1>(tmprange[i]) << " to "
+      //            << -get<0>(tmprange[i]) << std::endl;
       refineRange(tmpp, tmprange[i]);
-      if (DEBUG_VINCENT)
-        std::cout << "After Range: from " << -get<1>(tmprange[i]) << " to "
-                  << -get<0>(tmprange[i]) << std::endl;
+      // if (DEBUG_VINCENT)
+      //  std::cout << "After Range: from " << -get<1>(tmprange[i]) << " to "
+      //            << -get<0>(tmprange[i]) << std::endl;
     }
     ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());
   }
 
   for (auto range : ranges) {
     if (DEBUG_VINCENT)
-      std::cout << "DEBUG: Searching root in range from " << -std::get<1>(range)
-                << " to " << -std::get<0>(range) << std::endl;
+      std::cout << "DEBUG VINCENT: Searching root in range from "
+                << -std::get<1>(range) << " to " << -std::get<0>(range)
+                << std::endl;
     tmp = rootInBound(p, -std::get<1>(range), -std::get<0>(range));
     if (tmp != NOTFOUND) roots.emplace_back(tmp);
   }
-
   return roots;
 }
 

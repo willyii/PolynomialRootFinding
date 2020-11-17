@@ -1,5 +1,7 @@
 #include "budan.h"
 
+#include <iostream>
+
 using std::cout;
 using std::deque;
 using std::endl;
@@ -52,6 +54,10 @@ vector<double> budanSolve(Poly& p) {
   }
 
   for (auto range : ranges) {
+    if (DEBUG_BUDAN)
+      std::cout << "DEBUG_BUDAN: Searching root in range: "
+                << std::get<0>(range) << " to " << std::get<1>(range)
+                << std::endl;
     tmp = rootInBound(p, std::get<0>(range), std::get<1>(range));
     if (tmp != NOTFOUND) roots.emplace_back(tmp);
   }
