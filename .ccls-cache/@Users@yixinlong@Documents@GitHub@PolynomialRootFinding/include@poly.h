@@ -11,6 +11,7 @@
 using std::unordered_map;
 using std::vector;
 
+/* TODO: avoid use vector , assume maximum size*/
 class Poly {
  private:
   vector<double> _coeff;
@@ -57,13 +58,13 @@ class Poly {
   bool isZero() const {
     int N = size();
     for (int i = 0; i < N; i++)
-      if (fabs(_coeff[i] - 0.0) > EPSILON) return false;
+      if (fabs(_coeff[i]) > EPSILON) return false;
     return true;
   }
   bool isOne() const {
     int N = size();
     for (size_t i = 0; i < N - 1; i++)
-      if (fabs(_coeff[i] - 0.0) > EPSILON) return false;
+      if (fabs(_coeff[i]) > EPSILON) return false;
     return fabs(_coeff[N - 1] - 1.0) <= EPSILON;
   }
 
@@ -96,7 +97,7 @@ class Poly {
     _cleanUp();
   };
   Poly pow(const int d) {
-    unordered_map<int, Poly> memo;
+    unordered_map<int, Poly> memo; /* TODO: avoid map */
     vector<double> tmpCoef = {1.0};
     memo[0] = Poly(tmpCoef);
     memo[1] = *this;

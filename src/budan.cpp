@@ -48,6 +48,7 @@ vector<double> budanSolve(Poly& p) {
   double tmp;
 
   for (auto p : plist) {
+    if (DEBUG_BUDAN) cout << p << endl;
     if (p.deg() <= 0) continue;
     tmprange = budanIsoroot(p);
     ranges.insert(ranges.end(), tmprange.begin(), tmprange.end());

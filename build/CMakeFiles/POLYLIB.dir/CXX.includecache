@@ -46,33 +46,9 @@ tuple
 poly.h
 ../include/poly.h
 
-../include/vincent.h
-util.h
-../include/util.h
-
 /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.cpp
 budan.h
 /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/budan.h
 iostream
 -
-
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.cpp
-util.h
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.h
-algorithm
--
-
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/vincent.cpp
-vincent.h
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/vincent.h
-algorithm
--
-iostream
--
-memory
--
-tuple
--
-util.h
-/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/util.h
 

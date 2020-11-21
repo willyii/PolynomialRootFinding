@@ -5,6 +5,7 @@
 using std::cout;
 using std::endl;
 
+/* TODO: GCD and  SQD speed up */
 // Compute the GCD between p1 and p2
 Poly gcd(Poly p1, Poly p2) {
   if (DEBUG_GCD) {
@@ -35,6 +36,7 @@ Poly gcd(Poly p1, Poly p2) {
 }
 
 // Decompose p into square free polynomials
+// /* TODO: sleep */
 vector<Poly> squareFreeDecompo(Poly& p) {
   if (DEBUG_SQD) std::cout << "DEGUG SQF: p in first: " << p << std::endl;
   vector<Poly> ans;

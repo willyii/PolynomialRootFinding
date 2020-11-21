@@ -7,6 +7,8 @@
 #include "gsl/gsl_poly.h"
 #include "vincent.h"
 
+#define PRINTROOT true
+
 bool validAnswer(vector<double> actual, vector<double> current) {
   bool state = true;
   if (actual.size() != current.size()) state = false;
@@ -15,17 +17,15 @@ bool validAnswer(vector<double> actual, vector<double> current) {
       if (fabs(actual[i] - current[i]) > TESTERROR) state = false;
   }
 
-  state = false;
-  if (state == false) {
+  if (PRINTROOT) {
     std::cout << "Acutal roots: ";
     for (size_t i = 0; i < actual.size(); i++) std::cout << " " << actual[i];
     std::cout << "\n";
     std::cout << "Current roots: ";
     for (size_t i = 0; i < current.size(); i++) std::cout << " " << current[i];
     std::cout << "\n";
-    return false;
   }
-  return true;
+  return state;
 }
 
 vector<double> gslSolve(double coef[], int N) {
@@ -52,6 +52,7 @@ double rand_float(double a = -10, double b = 10) {
   return ((double)rand() / RAND_MAX) * (b - a) + a;
 }
 
+/* Process polynomial from command line */
 bool validSinglePoly(double coef[], int N) {
   bool state = true;
   vector<double> gsl_ans = gslSolve(coef, N);
@@ -79,14 +80,22 @@ bool validSinglePoly(double coef[], int N) {
   return state;
 }
 
+/* Porcess random generated polynomial */
 int testRandomPoly() {
   std::cout << "===============================" << std::endl;
   std::cout << "Test a single random polynomial:" << std::endl;
-  int N = rand_int();
-  double coef[N];
-  for (size_t i = 0; i < N; i++) {
-    coef[i] = rand_float();
-  }
+  // int N = rand_int();
+  // double coef[N];
+  // for (size_t i = 0; i < N; i++) {
+  //  coef[i] = rand_float();
+  //}
+
+  // x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 
+  // x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 + 1e-6
+  // x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 - 1e-6
+  int N = 5;
+  double coef[] = {1, -1.2, .51, -.88e-1, .48e-2 - 1e-6};
+  std::reverse(coef, coef + N);
 
   bool result = validSinglePoly(coef, N);
   if (result) {
@@ -101,7 +110,6 @@ int testRandomPoly() {
 /* TODO: Test Polynomials from file */
 int testFromFile(char const *filename) { return 0; }
 
-/* TODO: Test Single polynomial get from command line */
 int testSinglePoly(int argc, char const *argv[]) {
   std::cout << "===============================" << std::endl;
   std::cout << "Test a polynomial from input  :" << std::endl;
