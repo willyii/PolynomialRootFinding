@@ -5,6 +5,7 @@
 
 #include "budan.h"
 #include "gsl/gsl_poly.h"
+#include "parse.h"
 #include "vincent.h"
 
 #define PRINTROOT true
@@ -84,19 +85,13 @@ bool validSinglePoly(double coef[], int N) {
 int testRandomPoly() {
   std::cout << "===============================" << std::endl;
   std::cout << "Test a single random polynomial:" << std::endl;
-  // int N = rand_int();
-  // double coef[N];
-  // for (size_t i = 0; i < N; i++) {
-  //  coef[i] = rand_float();
-  //}
+  int N = rand_int();
+  double coef[N];
+  for (size_t i = 0; i < N; i++) {
+    coef[i] = rand_float();
+  }
 
-  // x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 
-  // x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 + 1e-6
-  // x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 - 1e-6
-  int N = 5;
-  double coef[] = {1, -1.2, .51, -.88e-1, .48e-2 - 1e-6};
-  std::reverse(coef, coef + N);
-
+  /* TODO: Vincent zero root */
   bool result = validSinglePoly(coef, N);
   if (result) {
     std::cout << "Test on random polynomial passed\n" << std::endl;
@@ -108,7 +103,29 @@ int testRandomPoly() {
 }
 
 /* TODO: Test Polynomials from file */
-int testFromFile(char const *filename) { return 0; }
+int testFromFile(char const *filename) {
+  std::cout << "===============================" << std::endl;
+  std::cout << "Test polynomials from file " << filename << std::endl;
+  std::vector<std::vector<double>> polys = parseFromFile(filename);
+
+  std::cout << "poly list size: " << polys.size() << std::endl;
+
+  for (auto poly : polys) {
+    std::cout << "\n\n===============================" << std::endl;
+    int N = poly.size();
+    std::reverse(poly.begin(), poly.end());
+    double coefArray[N];
+    std::copy(poly.begin(), poly.end(), coefArray);
+    validSinglePoly(coefArray, N);
+  }
+
+  // for (double *poly : polys) {
+  //  std::reverse(poly, poly + N);
+  //  validSinglePoly(poly, N);
+  //}
+
+  return 0;
+}
 
 int testSinglePoly(int argc, char const *argv[]) {
   std::cout << "===============================" << std::endl;
