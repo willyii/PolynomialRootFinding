@@ -15,13 +15,27 @@ using std::swap;
 
 vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
   vector<tuple<double, double>> rootlist;
+
+  while (p.valueAt(0) == 0 && !negative) {
+    vector<double> t = {1, 0};
+    Poly tmp = Poly(t);
+    p /= tmp;
+    if (rootlist.size() == 0)
+      rootlist.emplace_back(make_tuple(-EPSILON, EPSILON));
+    // rootlist.emplace_back(make_tuple(-EPSILON, EPSILON));
+  }
+
   int s;
   double upper = upperBound(p), lower = lowerBound(p);
   s = signChangeNum(p, 0);
   double a, b, c, d, a0 = 16;
   Poly q;
-  if (s == 0) return {};
-  if (s == 1) return {make_tuple(0.0, upper)};
+  if (s == 0) return {rootlist};
+  if (s == 1) {
+    rootlist.emplace_back(make_tuple(0.0, upper));
+    return rootlist;
+  }
+
   deque<Interval> intervals = {Interval{1, 0, 0, 1, p, s}};
   // Helper poly x;
   vector<double> tmp = {1, 0};
@@ -171,7 +185,7 @@ vector<double> vincentSolve(Poly& p) {
   for (auto poly : plist) {
     if (poly.deg() <= 0) continue;
     Poly tmpp = timeToP(poly, -1);
-    tmprange = vincentIsoroot(tmpp, false);
+    tmprange = vincentIsoroot(tmpp, true);
     for (size_t i = 0; i < tmprange.size(); i++) {
       // if (DEBUG_VINCENT)
       //  std::cout << "Before Range: from " << -get<1>(tmprange[i]) << " to "

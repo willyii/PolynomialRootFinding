@@ -31,12 +31,11 @@ Poly gcd(Poly p1, Poly p2) {
     q += s;
     r = r - sb;
   }
-  if (DEBUG_GCD) usleep(500000);
+  // if (DEBUG_GCD) usleep(500000);
   return gcd(p2, r);
 }
 
 // Decompose p into square free polynomials
-// /* TODO: sleep */
 vector<Poly> squareFreeDecompo(Poly& p) {
   if (DEBUG_SQD) std::cout << "DEGUG SQF: p in first: " << p << std::endl;
   vector<Poly> ans;
@@ -132,7 +131,7 @@ double upperBound(Poly& p) {
   for (int i = 1; i < N; i++) {
     tmp = fmax(tmp, fabs(p[i] / lc));
   }
-  return 1 + tmp;
+  return 1 + tmp + EPSILON;
 }
 
 // Get the lower bound of roots

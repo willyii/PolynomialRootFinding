@@ -1,6 +1,5 @@
 #ifndef POLY_H
 #define POLY_H
-
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -12,6 +11,7 @@ using std::unordered_map;
 using std::vector;
 
 /* TODO: avoid use vector , assume maximum size*/
+/* TODO: Make constant first */
 class Poly {
  private:
   vector<double> _coeff;

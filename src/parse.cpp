@@ -38,7 +38,7 @@ std::vector<double> parseSingleLine(std::string polyString) {
   std::vector<Item> itemList;
 
   for (size_t i = 0; i < polyString.length(); i++) {
-    if ((polyString[i] != '+' && polyString[i] != '-') ||
+    if ((polyString[i] != '+' && polyString[i] != '-') || i == 0 ||
         polyString[i - 1] == 'e')
       item += polyString[i];
     else {
@@ -74,12 +74,16 @@ Item parseItem(std::string item) {
   Item ans;  // save the result
   double c;  // coefficient of this item
   int d;     // degree of this tiem
+  std::cout << "DEBUG: " << item << std::endl;
 
   std::size_t pos = item.find('x');
   if (pos == std::string::npos) {  // Constant
     c = std::stod(item);
     d = 0;
   } else if (pos == (item.length() - 1)) {  // x
+    if (item[item.length() - 2] == '+' || item[item.length() - 2] == '-')
+      item.insert(item.length() - 1, "1*");
+
     c = std::stod(item.substr(0, item.length() - 2));
     d = 1;
   } else if (pos == 0) {  // x^d
