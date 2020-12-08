@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/param.h
+unistd.h
+-
+cstdlib
+-
+limits
+-
+
+../include/parse.h
+string
+-
+vector
+-
+poly.h
+../include/poly.h
+
+../include/poly.h
+iostream
+-
+unordered_map
+-
+vector
+-
+math.h
+../include/math.h
+param.h
+../include/param.h
+
+/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/parse.cpp
+parse.h
+/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/parse.h
+array
+-
+fstream
+-
+iostream
+-
+
