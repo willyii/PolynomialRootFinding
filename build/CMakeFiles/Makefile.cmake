@@ -25,9 +25,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/Compiler/Clang.cmake"
   "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/Compiler/GNU.cmake"
-  "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/FindGSL.cmake"
-  "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
-  "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/FindPackageMessage.cmake"
   "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/Internal/CMakeCheckCompilerFlag.cmake"
   "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake"
   "/usr/local/Cellar/cmake/3.19.0/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake"
@@ -52,7 +49,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/Test.dir/DependInfo.cmake"
   "CMakeFiles/Poly.dir/DependInfo.cmake"
-  "CMakeFiles/POLYLIB.dir/DependInfo.cmake"
   )

@@ -130,19 +130,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Test
-
-# Build rule for target.
-Test: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Test
-.PHONY : Test
-
-# fast build rule for target.
-Test/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/build
-.PHONY : Test/fast
-
-#=============================================================================
 # Target rules for targets named Poly
 
 # Build rule for target.
@@ -154,19 +141,6 @@ Poly: cmake_check_build_system
 Poly/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Poly.dir/build.make CMakeFiles/Poly.dir/build
 .PHONY : Poly/fast
-
-#=============================================================================
-# Target rules for targets named POLYLIB
-
-# Build rule for target.
-POLYLIB: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 POLYLIB
-.PHONY : POLYLIB
-
-# fast build rule for target.
-POLYLIB/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/build
-.PHONY : POLYLIB/fast
 
 main/main.o: main/main.cpp.o
 
@@ -195,141 +169,6 @@ main/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Poly.dir/build.make CMakeFiles/Poly.dir/main/main.cpp.s
 .PHONY : main/main.cpp.s
 
-src/budan.o: src/budan.cpp.o
-
-.PHONY : src/budan.o
-
-# target to build an object file
-src/budan.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/budan.cpp.o
-.PHONY : src/budan.cpp.o
-
-src/budan.i: src/budan.cpp.i
-
-.PHONY : src/budan.i
-
-# target to preprocess a source file
-src/budan.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/budan.cpp.i
-.PHONY : src/budan.cpp.i
-
-src/budan.s: src/budan.cpp.s
-
-.PHONY : src/budan.s
-
-# target to generate assembly for a file
-src/budan.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/budan.cpp.s
-.PHONY : src/budan.cpp.s
-
-src/parse.o: src/parse.cpp.o
-
-.PHONY : src/parse.o
-
-# target to build an object file
-src/parse.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/parse.cpp.o
-.PHONY : src/parse.cpp.o
-
-src/parse.i: src/parse.cpp.i
-
-.PHONY : src/parse.i
-
-# target to preprocess a source file
-src/parse.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/parse.cpp.i
-.PHONY : src/parse.cpp.i
-
-src/parse.s: src/parse.cpp.s
-
-.PHONY : src/parse.s
-
-# target to generate assembly for a file
-src/parse.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/parse.cpp.s
-.PHONY : src/parse.cpp.s
-
-src/util.o: src/util.cpp.o
-
-.PHONY : src/util.o
-
-# target to build an object file
-src/util.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/util.cpp.o
-.PHONY : src/util.cpp.o
-
-src/util.i: src/util.cpp.i
-
-.PHONY : src/util.i
-
-# target to preprocess a source file
-src/util.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/util.cpp.i
-.PHONY : src/util.cpp.i
-
-src/util.s: src/util.cpp.s
-
-.PHONY : src/util.s
-
-# target to generate assembly for a file
-src/util.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/util.cpp.s
-.PHONY : src/util.cpp.s
-
-src/vincent.o: src/vincent.cpp.o
-
-.PHONY : src/vincent.o
-
-# target to build an object file
-src/vincent.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/vincent.cpp.o
-.PHONY : src/vincent.cpp.o
-
-src/vincent.i: src/vincent.cpp.i
-
-.PHONY : src/vincent.i
-
-# target to preprocess a source file
-src/vincent.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/vincent.cpp.i
-.PHONY : src/vincent.cpp.i
-
-src/vincent.s: src/vincent.cpp.s
-
-.PHONY : src/vincent.s
-
-# target to generate assembly for a file
-src/vincent.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/POLYLIB.dir/build.make CMakeFiles/POLYLIB.dir/src/vincent.cpp.s
-.PHONY : src/vincent.cpp.s
-
-test/test.o: test/test.cpp.o
-
-.PHONY : test/test.o
-
-# target to build an object file
-test/test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/test/test.cpp.o
-.PHONY : test/test.cpp.o
-
-test/test.i: test/test.cpp.i
-
-.PHONY : test/test.i
-
-# target to preprocess a source file
-test/test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/test/test.cpp.i
-.PHONY : test/test.cpp.i
-
-test/test.s: test/test.cpp.s
-
-.PHONY : test/test.s
-
-# target to generate assembly for a file
-test/test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Test.dir/build.make CMakeFiles/Test.dir/test/test.cpp.s
-.PHONY : test/test.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -338,27 +177,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... POLYLIB"
 	@echo "... Poly"
-	@echo "... Test"
 	@echo "... main/main.o"
 	@echo "... main/main.i"
 	@echo "... main/main.s"
-	@echo "... src/budan.o"
-	@echo "... src/budan.i"
-	@echo "... src/budan.s"
-	@echo "... src/parse.o"
-	@echo "... src/parse.i"
-	@echo "... src/parse.s"
-	@echo "... src/util.o"
-	@echo "... src/util.i"
-	@echo "... src/util.s"
-	@echo "... src/vincent.o"
-	@echo "... src/vincent.i"
-	@echo "... src/vincent.s"
-	@echo "... test/test.o"
-	@echo "... test/test.i"
-	@echo "... test/test.s"
 .PHONY : help
 
 

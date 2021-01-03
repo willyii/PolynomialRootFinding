@@ -98,7 +98,6 @@ Poly_EXTERNAL_OBJECTS =
 
 Poly: CMakeFiles/Poly.dir/main/main.cpp.o
 Poly: CMakeFiles/Poly.dir/build.make
-Poly: libPOLYLIB.a
 Poly: CMakeFiles/Poly.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Poly"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Poly.dir/link.txt --verbose=$(VERBOSE)

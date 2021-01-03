@@ -1,2 +1,0 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc libPOLYLIB.a CMakeFiles/POLYLIB.dir/src/budan.cpp.o CMakeFiles/POLYLIB.dir/src/parse.cpp.o CMakeFiles/POLYLIB.dir/src/util.cpp.o CMakeFiles/POLYLIB.dir/src/vincent.cpp.o
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib libPOLYLIB.a

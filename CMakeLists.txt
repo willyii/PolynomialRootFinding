@@ -6,20 +6,20 @@ Project(Polinomial)
 include_directories(include)
 
 # set library
-file( GLOB LIB_SOURCES src/*.cpp )
-file( GLOB LIB_HEADERS include/*.h )
-add_library( POLYLIB ${LIB_SOURCES} ${LIB_HEADERS} )
+#file( GLOB LIB_SOURCES src/util.cpp )
+#file( GLOB LIB_HEADERS include/poly.h include/util.h )
+#add_library( POLYLIB ${LIB_SOURCES} ${LIB_HEADERS} )
 
 add_executable( Poly main/main.cpp )
 # Make sure YourLib is linked to each app
-target_link_libraries( Poly  POLYLIB )
+#target_link_libraries( Poly  POLYLIB )
 
-add_executable( Test test/test.cpp )
-# Make sure YourLib is linked to each app
-target_link_libraries( Test POLYLIB )
+#add_executable( Test test/test.cpp )
+## Make sure YourLib is linked to each app
+#target_link_libraries( Test POLYLIB )
 
-set(CMAKE_CXX_STANDARD_REQUIRED YES)  
-find_package(GSL REQUIRED)   
-target_link_libraries(Test GSL::gsl)
+#set(CMAKE_CXX_STANDARD_REQUIRED YES)  
+#find_package(GSL REQUIRED)   
+#target_link_libraries(Test GSL::gsl)
 
 

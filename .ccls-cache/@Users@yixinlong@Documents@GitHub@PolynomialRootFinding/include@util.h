@@ -1,37 +1,86 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <unistd.h>
+//#include <unistd.h>
 
-#include <algorithm>
-#include <deque>
-#include <tuple>
+//#include <algorithm>
+//#include <deque>
+//#include <tuple>
 
 #include "poly.h"
 
 // Compute the GCD between p1 and p2
-Poly gcd(Poly p1, Poly p2);
+// /* TODO: */
+// Poly gcd(Poly p1, Poly p2);
 
 // Decompose p into square free polynomials
-vector<Poly> squareFreeDecompo(Poly& p);
+// /* TODO: */
+// vector<Poly> squareFreeDecompo(Poly& p);
 
 // Add convert x to (x + h) return coresponding Poly
-Poly addToP(Poly& p, double h);
+// /* TODO: */
+template <int n>
+Poly<n> addToX(Poly<n>& p, double h) {
+  Poly<n> ret;
+
+  Poly<0> op(1.0, 0);
+
+  Poly<1> xh(h, 0);
+  xh.addCoef(1, 1);
+
+  for (int i = 0; i < p.size(); i++) {
+    ret = ret + op * p[i];
+    // op = op * xh;
+  }
+
+  return ret;
+}
 
 // Time h to x, convert it to (hx), return corresponding Polynomial
-Poly timeToP(Poly& p, double h);
+template <int n>
+Poly<n> timeToX(Poly<n>& p, double h) {
+  Poly<n> ret(p);
+  double op = 1;
+  for (int i = 0; i < ret.size(); i++) {
+    ret[i] *= op;
+    op *= h;
+  }
+  return ret;
+}
 
 // Compute the sign change of coefficient
-int signChangeNum(Poly& tmp, double h);
+template <int n>
+int signChangeNum(Poly<n>& p) {
+  int ans = 0;
+  bool sign = p[p.degree()] > 0;
+  for (int i = p.degree() - 1; i >= 0; i--)
+    if (fabs(p[i]) > EPSILON && ((p[i] > 0) != sign)) {
+      sign = !sign;
+      ans++;
+    }
+  return ans;
+}
 
 // Get the upper boundry of roots, applied Cauchy's bound
-double upperBound(Poly& p);
+template <int n>
+double upperBound(Poly<n>& p) {
+  double ans = 0, lc = p.lc();
+  for (int i = 0; i < p.degree(); i++) ans = fmax(ans, fabs(p[i] / lc));
+  return 1 + ans;
+}
 
 // Get the lower boundary of roots, applied Cauchy's bound
-double lowerBound(Poly& p);
+template <int n>
+double lowerBound(Poly<n>& p) {
+  double a0 = p[0], ans = 0;
+  if (fabs(a0) < EPSILON) return 0.0;
+  for (int i = 1; i < p.size(); i++) ans = fmax(ans, fabs(p[i] / a0));
+  return 1 / (1 + ans);
+}
 
 // Finding root in boundry b. root is isolated in that boundry
 // Newtown method temporary
-double rootInBound(Poly& p, double left, double right);
+/* TODO: */
+// double rootInBound(Poly& p, double left, double right);
 
 #endif
