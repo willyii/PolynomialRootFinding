@@ -4,7 +4,6 @@
 
 using std::cout;
 using std::endl;
-
 /* TODO: GCD and  SQD speed up */
 // Compute the GCD between p1 and p2
 // Poly gcd(Poly p1, Poly p2) {
