@@ -1,6 +1,6 @@
-#include "util.h"
-
 #include <algorithm>
+
+#include "util.h"
 
 using std::cout;
 using std::endl;
