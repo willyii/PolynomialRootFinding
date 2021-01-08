@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "poly.h"
+#include "util.h"
 
 int main() {
   double coef1[3] = {2.0, -3.0, 1.0};  // x^2 - 2x + 1

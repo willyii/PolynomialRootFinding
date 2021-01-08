@@ -1,7 +1,12 @@
 [
 {
   "directory": "/home/xinlong/Documents/Github/PolynomialRootFinding/build",
-  "command": "/usr/bin/c++      -std=gnu++17 -o CMakeFiles/Poly.dir/src/main.cpp.o -c /home/xinlong/Documents/Github/PolynomialRootFinding/src/main.cpp",
-  "file": "/home/xinlong/Documents/Github/PolynomialRootFinding/src/main.cpp"
+  "command": "/usr/bin/c++      -std=gnu++17 -o CMakeFiles/Poly.dir/src/tmp.cpp.o -c /home/xinlong/Documents/Github/PolynomialRootFinding/src/tmp.cpp",
+  "file": "/home/xinlong/Documents/Github/PolynomialRootFinding/src/tmp.cpp"
+},
+{
+  "directory": "/home/xinlong/Documents/Github/PolynomialRootFinding/build",
+  "command": "/usr/bin/c++      -std=gnu++17 -o CMakeFiles/Poly.dir/src/util.cpp.o -c /home/xinlong/Documents/Github/PolynomialRootFinding/src/util.cpp",
+  "file": "/home/xinlong/Documents/Github/PolynomialRootFinding/src/util.cpp"
 }
 ]

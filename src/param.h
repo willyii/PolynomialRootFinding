@@ -9,13 +9,12 @@
 //
 // ----------------------------------------------------------------------------
 
-#ifndef PARAM_H
-#define PARAM_H
+#ifndef POLY_PARAM_H
+#define POLY_PARAM_H
 
 // Regard number as 0 when it's smaller than kEPSILON
 static const double kEPSILON = 1e-9;
 
-/* TODO: add static const */
 //#define EPSILON 1e-9
 //#define TESTERROR 1e-5
 //#define MAXITER 100000
@@ -28,4 +27,4 @@ static const double kEPSILON = 1e-9;
 //#define DEBUG_VINCENT true
 //#define DEBUG_BISECT false
 
-#endif
+#endif  // POLY_PARAM_H
