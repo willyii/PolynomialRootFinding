@@ -16,10 +16,10 @@
 //    IsZero              : Return true if polynomial is zero
 //
 // DOING:
-//    GCD
 //
 // TODO:
-//    SquareFreeDecompose
+//    GCD # Test
+//    SquareFreeDecompose # Test
 //    Replace
 //    NumSignChange
 //    UpperBound
@@ -32,6 +32,8 @@
 
 #ifndef POLY_UTIL_H
 #define POLY_UTIL_H
+
+#include <vector>
 
 #include "poly.h"
 
@@ -52,10 +54,31 @@ bool IsZero(Poly<n> poly) {
 template <int n1, int n2>
 Poly<n1> GCD(Poly<n1>& poly1, Poly<n2>& poly2) {
   if (IsZero(poly2)) return poly1;
-
   auto divans = poly1 / poly2;
+  return Poly<n1>(std::move(GCD(poly2, divans.remainder)));
+}
 
-  return Poly<n1>(GCD(poly2, divans.remainder));
+// This function will decompose a polynomial in to an array of square free
+// polynomials.
+template <int n>
+std::vector<Poly<n>> SquareFreeDecompose(Poly<n> poly) {
+  std::vector<Poly<n>> ans;
+
+  auto fd(poly.Derivative());
+  auto a(GCD(poly, fd));
+  auto b((poly / a).quotient);
+  auto c((fd / a).quotient);
+  auto d(c - b.Derivative());
+
+  while (!(b.Size() == 1 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
+    a = GCD(b, d);
+    ans.emplace_back(a);
+    b = (b / a).quotient;
+    c = (d / a).quotient;
+    d = c - b.Derivative();
+  }
+
+  return ans;
 }
 
 #endif  // POLY_UTIL_H

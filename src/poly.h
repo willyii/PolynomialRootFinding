@@ -108,6 +108,15 @@ class Poly {
     return ans;
   }
 
+  // Get derivative of polynomal
+  inline Poly<n> Derivative() {
+    Poly<n> ans(*this);
+    for (int i = 0; i < ans.Size() - 1; i++) ans[i] = ans[i + 1] * (i + 1);
+    ans[ans.Size() - 1] = 0.0;
+    ans.set_num_coef(ans.Size() - 1);
+    return ans;
+  }
+
   // Get leading coefficent
   inline double lead_coef() const { return coef_[num_coef_ - 1]; }
 
@@ -180,10 +189,9 @@ class Poly {
   // Right shift operator, move coef right
   inline Poly<n>& operator>>(const int move_num) {
     if (move_num == 0) return *this;
-    for (int i = num_coef_ - 1; i >= 0; i--) {
+    for (int i = num_coef_ - move_num; i >= 0; i--)
       coef_[i + move_num] = coef_[i];
-      coef_[i] = 0.0;
-    }
+    for (int i = move_num - 1; i >= 0; i--) coef_[i] = 0.0;
     num_coef_ += move_num;
     return *this;
   }
@@ -253,6 +261,9 @@ DivsionRet<n1> operator/(const Poly<n1>& poly1, const Poly<n2>& poly2) {
     Poly<n2> quotient, remainder(poly1);
     return DivsionRet<n2>{quotient, remainder(poly1)};
   } else {
+    // If poly2 is a constant number
+    if (poly2.Size() == 1) return {Poly<n1>(poly1 / poly2[0]), Poly<n1>()};
+
     Poly<n1> quotient;
     Poly<n1> remainder(poly1);
     int degree = poly2.Size() - 1, remainder_degree = remainder.Size() - 1;
