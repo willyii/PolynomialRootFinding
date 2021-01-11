@@ -36,12 +36,15 @@
 //  >> : Accept integer, right shift coefficients with n units
 //
 template <int n>
-class Poly {
+class Poly {  // TODO : make every function const
+  static_assert(n >= 0);
+
  public:
   // Constructor a zero polynomial
   inline Poly() : coef_{} { num_coef_ = 1; }
 
   // Construct a polynomial only idx-th degree has coefficient num
+  // // TODO : get rid of it
   inline Poly(const double num, const int idx) : coef_{} {
     coef_[idx] = num;
     num_coef_ = idx + 1;
@@ -58,7 +61,7 @@ class Poly {
   template <int n1>
   inline Poly(const Poly<n1>& copy_poly) : coef_{} {
     static_assert(n1 <= n);
-    for (int i = 0; i < copy_poly.Size(); i++) coef_[i] = copy_poly[i];
+    for (int i = 0; i <= n1; i++) coef_[i] = copy_poly[i];
     num_coef_ = copy_poly.Size();
   }
 
@@ -66,53 +69,36 @@ class Poly {
   template <int n1>
   inline Poly<n>& operator=(const Poly<n1>& copy_poly) {
     static_assert(n1 <= n);
-    for (int i = 0; i < n1; i++) coef_[i] = copy_poly[i];
-    for (int i = n1; i <= n; i++) coef_[i] = 0.0;
+    for (int i = 0; i <= n1; i++) coef_[i] = copy_poly[i];
+    for (int i = n1 + 1; i <= n; i++) coef_[i] = 0.0;
     num_coef_ = copy_poly.Size();
     return *this;
   }
 
-  // Move construct
-  template <int n1>
-  inline Poly(Poly<n1>&& move_poly) : coef_{} {
-    static_assert(n1 <= n);
-    for (int i = 0; i < move_poly.Size(); i++) coef_[i] = move_poly[i];
-    num_coef_ = move_poly.Size();
-  }
-
-  // Move assignment
-  template <int n1>
-  inline Poly<n>& operator=(Poly<n1>&& move_poly) {
-    static_assert(n1 <= n);
-    for (int i = 0; i < n1; i++) coef_[i] = move_poly[i];
-    for (int i = n1; i <= n; i++) coef_[i] = 0.0;
-    num_coef_ = move_poly.Size();
-    return *this;
-  }
-
   // Get or set number of coefficents
-  inline const int Size() const { return num_coef_; }
-  inline void set_num_coef(int num_coef_input) { num_coef_ = num_coef_input; }
+  int Size() { return num_coef_; }
+  void set_num_coef(int num_coef_input) {
+    num_coef_ = num_coef_input;
+  }  // TODO : shouldn't be public
 
   // Get value of polynomial at point x
-  inline double ValueAt(double x) {
+  double ValueAt(double x) {
     double ans = coef_[num_coef_ - 1];
     for (int i = num_coef_ - 2; i >= 0; i--) ans = ans * x + coef_[i];
     return ans;
   }
 
   // Get gradient of polynomial at point x
-  inline double GradientAt(double x) {
+  inline double GradientAt(double x) {  // dderivative at
     double ans = coef_[num_coef_ - 1] * (num_coef_ - 1);
     for (int i = num_coef_ - 2; i >= 1; i--) ans = ans * x + coef_[i] * i;
     return ans;
   }
 
   // Get derivative of polynomal
-  inline Poly<n> Derivative() {
-    Poly<n> ans(*this);
-    for (int i = 0; i < ans.Size() - 1; i++) ans[i] = ans[i + 1] * (i + 1);
-    ans[ans.Size() - 1] = 0.0;
+  inline Poly<n - 1> Derivative() {
+    Poly<n - 1> ans;
+    for (int i = 0; i < ans.Size() - 1; i++) ans[i] = coef_[i + 1] * (i + 1);
     ans.set_num_coef(std::max(ans.Size() - 1, 1));
     return ans;
   }
@@ -138,8 +124,11 @@ class Poly {
     for (int i = 0; i < poly2.Size(); i++) coef_[i] += poly2[i];
 
     if (num_coef_ == poly2.Size())
-      for (int i = num_coef_ - 1; i > 0 && std::abs(coef_[i]) < kEPSILON; i--)
+      for (int i = num_coef_ - 1; i > 0 && std::abs(coef_[i]) < kEPSILON; i--) {
+        coef_[i] = 0.0;  // TODO : check if has same issue. Make anothor
+                         // function to do it
         num_coef_--;
+      }
     else
       num_coef_ = std::max(num_coef_, poly2.Size());
 
@@ -147,7 +136,7 @@ class Poly {
   }
 
   // Sum of polynomial with a number
-  inline Poly<n>& operator+=(const double num) {
+  inline Poly<n>& operator+=(double num) {
     coef_[0] += num;
     return *this;
   }
@@ -169,25 +158,31 @@ class Poly {
   }
 
   // Difference between polynomial and a number
-  inline Poly<n>& operator-=(const double num) {
+  inline Poly<n>& operator-=(double num) {
     coef_[0] -= num;
     return *this;
   }
 
+  // TODO : no const double
   // Division of a polynomial and a number
-  inline Poly<n>& operator/=(const double num) {
+  inline Poly<n>& operator/=(double num) {
     for (int i = 0; i < num_coef_; i++) coef_[i] /= num;
     return *this;
   }
 
   // Production of a polynomial and a number
-  inline Poly<n>& operator*=(const double num) {
+  inline Poly<n>& operator*=(double num) {
     for (int i = 0; i < num_coef_; i++) coef_[i] *= num;
     return *this;
   }
 
   // Right shift operator, move coef right
-  inline Poly<n>& operator>>(const int move_num) {
+  // // TODO : const value parameter and const return
+  // // TODO : shouldn't change in place
+  // // TODO : use anothor function to do it, don't name shfit
+  // // TODO : name sacle by power of x
+  // // TODO : find bug here
+  inline Poly<n>& operator>>(int move_num) {
     if (move_num == 0) return *this;
     for (int i = n - move_num; i >= 0; i--) coef_[i + move_num] = coef_[i];
     for (int i = move_num - 1; i >= 0; i--) coef_[i] = 0.0;
@@ -197,15 +192,7 @@ class Poly {
 
  private:
   double coef_[n + 1];
-  int num_coef_;
-};
-
-// Struct for division result.
-// Store both quotient and remainder
-template <int n>
-struct DivsionRet {
-  Poly<n> quotient;
-  Poly<n> remainder;
+  int num_coef_;  // TODO : Store degree
 };
 
 // Sum of two polynomials
@@ -253,13 +240,24 @@ Poly<n> operator*(const double num, const Poly<n>& poly) {
   return Poly<n>(poly) *= num;
 }
 
+// Struct for division result.
+// Store both quotient and remainder
+//
+template <int n>
+struct DivsionRet {
+  Poly<n> quotient;
+  Poly<n> remainder;
+};
+
 // Division of two polynomials
 // Applied long division method, pls check :
 // https://en.wikipedia.org/wiki/Polynomial_long_division
+// // TODO : remainder should have size n2-1
 template <int n1, int n2>
-DivsionRet<n1> operator/(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+DivsionRet<n1> DivRemainder(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   // If poly2 is a constant number
-  if (poly2.Size() == 1) return {Poly<n1>(poly1 / poly2[0]), Poly<n1>()};
+  if (poly2.Size() == 1)
+    return {Poly<n1>(poly1 / poly2[0]), Poly<n1>()};  // TODO : fix it
 
   Poly<n1> quotient;
   Poly<n1> remainder(poly1);
@@ -272,8 +270,9 @@ DivsionRet<n1> operator/(const Poly<n1>& poly1, const Poly<n2>& poly2) {
     quotient[degree_idx] += division;
     quotient.set_num_coef(std::max(quotient.Size(), degree_idx + 1));
 
+    // TODO : next 4 line should be optimize, avoid zero operations
     Poly<n1> sub(poly2);
-    sub >> degree_idx;
+    sub >> degree_idx;  // TODO : get rid of it
     sub *= division;
     remainder -= sub;
     remainder_degree = remainder.Size() - 1;
@@ -287,13 +286,6 @@ Poly<n> operator/(const Poly<n>& poly, const double num) {
   return Poly<n>(poly) /= num;
 }
 
-// Division of polynomial and a number
-template <int n>
-Poly<n> operator/(const double num, const Poly<n>& poly) {
-  return Poly<n>(poly) /= num;
-}
-
-// Print out the polynomial. Ouput format will be like "cx^0 + bx^1 + ax^2"
 //
 // EXAMPLE:
 //    Poly<3> a(Poly<3>(2, 3.0));
