@@ -113,7 +113,7 @@ class Poly {
     Poly<n> ans(*this);
     for (int i = 0; i < ans.Size() - 1; i++) ans[i] = ans[i + 1] * (i + 1);
     ans[ans.Size() - 1] = 0.0;
-    ans.set_num_coef(ans.Size() - 1);
+    ans.set_num_coef(std::max(ans.Size() - 1, 1));
     return ans;
   }
 
@@ -232,10 +232,12 @@ Poly<std::max(n1, n2)> operator-(const Poly<n1>& poly1, const Poly<n2>& poly2) {
 template <int n1, int n2>
 Poly<n1 + n2> operator*(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   Poly<n1 + n2> ret;
-  ret.Size() = n1 + n2 + 1;
   for (int i = 0; i < poly1.Size(); i++)
     for (int j = 0; j < poly2.Size(); j++) ret[i + j] += poly1[i] * poly2[j];
-  for (int i = n1 + n2; i > 0 && std::abs(ret[i]) < kEPSILON; i--) ret.Size()--;
+  int rSize;
+  for (rSize = n1 + n2; rSize > 0 && std::abs(ret[rSize]) < kEPSILON; rSize--)
+    ;
+  ret.set_num_coef(rSize + 1);
   return ret;
 }
 
@@ -256,32 +258,27 @@ Poly<n> operator*(const double num, const Poly<n>& poly) {
 // https://en.wikipedia.org/wiki/Polynomial_long_division
 template <int n1, int n2>
 DivsionRet<n1> operator/(const Poly<n1>& poly1, const Poly<n2>& poly2) {
-  if constexpr (n1 < n2) {
-    Poly<n2> quotient, remainder(poly1);
-    return DivsionRet<n2>{quotient, remainder(poly1)};
-  } else {
-    // If poly2 is a constant number
-    if (poly2.Size() == 1) return {Poly<n1>(poly1 / poly2[0]), Poly<n1>()};
+  // If poly2 is a constant number
+  if (poly2.Size() == 1) return {Poly<n1>(poly1 / poly2[0]), Poly<n1>()};
 
-    Poly<n1> quotient;
-    Poly<n1> remainder(poly1);
-    int degree = poly2.Size() - 1, remainder_degree = remainder.Size() - 1;
-    double lead_coef = poly2.lead_coef();
+  Poly<n1> quotient;
+  Poly<n1> remainder(poly1);
+  int degree = poly2.Size() - 1, remainder_degree = remainder.Size() - 1;
+  double lead_coef = poly2.lead_coef();
 
-    while (remainder_degree >= degree) {
-      double division = remainder.lead_coef() / lead_coef;
-      int degree_idx = remainder_degree - degree;
-      quotient[degree_idx] += division;
-      quotient.set_num_coef(std::max(quotient.Size(), degree_idx + 1));
+  while (remainder_degree >= degree) {
+    double division = remainder.lead_coef() / lead_coef;
+    int degree_idx = remainder_degree - degree;
+    quotient[degree_idx] += division;
+    quotient.set_num_coef(std::max(quotient.Size(), degree_idx + 1));
 
-      Poly<n1> sub(poly2);
-      sub >> degree_idx;
-      sub *= division;
-      remainder -= sub;
-      remainder_degree = remainder.Size() - 1;
-    }
-    return DivsionRet<n1>{quotient, remainder};
+    Poly<n1> sub(poly2);
+    sub >> degree_idx;
+    sub *= division;
+    remainder -= sub;
+    remainder_degree = remainder.Size() - 1;
   }
+  return DivsionRet<n1>{quotient, remainder};
 }
 
 // Division of polynomial and a number

@@ -14,6 +14,7 @@
 //    UpperBound          : Upper bound of roots
 //    LowerBound          : Lower bound of roots
 //    IsZero              : Return true if polynomial is zero
+//    Monic               : Return monic polynomial
 //
 // DOING:
 //
@@ -39,8 +40,18 @@
 
 // Return true if polynomial has no non-zero coefficient
 template <int n>
-bool IsZero(Poly<n> poly) {
+bool IsZero(const Poly<n>& poly) {
   return poly.Size() == 1 && std::fabs(poly[0]) <= kEPSILON;
+}
+
+// This function will return a function with highes coefficient as 1
+template <int n>
+Poly<n> Monic(const Poly<n>& poly) {
+  Poly<n> ret;
+  double div = 1 / (poly[poly.Size() - 1]);
+  for (int i = 0; i < poly.Size(); i++) ret[i] = poly[i] * div;
+  ret.set_num_coef(poly.Size());
+  return ret;
 }
 
 // This will return the Greatest Common Divider(GCD) of two polynomials.
@@ -52,16 +63,17 @@ bool IsZero(Poly<n> poly) {
 //    Polynomial b = x - 1
 //    GCD(a, b) should return x - 1
 template <int n1, int n2>
-Poly<n1> GCD(Poly<n1>& poly1, Poly<n2>& poly2) {
+Poly<n1> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   if (IsZero(poly2)) return poly1;
-  auto divans = poly1 / poly2;
+  // auto divans = poly1 / poly2;
+  auto divans = Monic(poly1) / Monic(poly2);
   return Poly<n1>(std::move(GCD(poly2, divans.remainder)));
 }
 
 // This function will decompose a polynomial in to an array of square free
 // polynomials.
 template <int n>
-std::vector<Poly<n>> SquareFreeDecompose(Poly<n> poly) {
+std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
   std::vector<Poly<n>> ans;
 
   auto fd(poly.Derivative());

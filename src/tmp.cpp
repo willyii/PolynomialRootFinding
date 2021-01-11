@@ -16,8 +16,11 @@ int main() {
   //
   //
   //
-  double coef[5] = {.48e-2, -.88e-1, .51, -1.2, 1};  // (x-.1)(x-.3)(x-.4)^2
-  Poly<5> p1(coef, 5);
+  // double coef[5] = {.48e-2 - 1e-12, -.88e-1, .51, -1.2,
+  //                  1};  // (x-.1)(x-.3)(x-.4)^2
+  // Poly<5> p1(coef, 5);
+  double coef[7] = {1.771561, 9.66306, 21.9615, 26.620, 18.15, 6.6, 1};
+  Poly<7> p1(coef, 7);
   auto ans(SquareFreeDecompose(p1));
 
   for (auto p : ans)
