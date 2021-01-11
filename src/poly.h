@@ -189,8 +189,7 @@ class Poly {
   // Right shift operator, move coef right
   inline Poly<n>& operator>>(const int move_num) {
     if (move_num == 0) return *this;
-    for (int i = num_coef_ - move_num; i >= 0; i--)
-      coef_[i + move_num] = coef_[i];
+    for (int i = n - move_num; i >= 0; i--) coef_[i + move_num] = coef_[i];
     for (int i = move_num - 1; i >= 0; i--) coef_[i] = 0.0;
     num_coef_ += move_num;
     return *this;
