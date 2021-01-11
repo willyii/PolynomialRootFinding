@@ -44,11 +44,11 @@ class Poly {
   // Construct a polynomial only idx-th degree has coefficient num
   inline Poly(const double num, const int idx) : coef_{} {
     coef_[idx] = num;
-    num_coef_ = std::max(num_coef_, idx + 1);
+    num_coef_ = idx + 1;
   }
 
   // Construct a polynomial with specified coefficents.
-  Poly(const double* input_coef, const int num_input) : coef_{} {
+  inline Poly(const double* input_coef, const int num_input) : coef_{} {
     assert(num_input <= n + 1);
     for (int i = 0; i < num_input; i++) coef_[i] = input_coef[i];
     num_coef_ = num_input;
@@ -58,7 +58,7 @@ class Poly {
   template <int n1>
   inline Poly(const Poly<n1>& copy_poly) : coef_{} {
     static_assert(n1 <= n);
-    for (int i = 0; i < n1; i++) coef_[i] = copy_poly[i];
+    for (int i = 0; i < copy_poly.Size(); i++) coef_[i] = copy_poly[i];
     num_coef_ = copy_poly.Size();
   }
 
@@ -76,7 +76,7 @@ class Poly {
   template <int n1>
   inline Poly(Poly<n1>&& move_poly) : coef_{} {
     static_assert(n1 <= n);
-    for (int i = 0; i < n1; i++) coef_[i] = move_poly[i];
+    for (int i = 0; i < move_poly.Size(); i++) coef_[i] = move_poly[i];
     num_coef_ = move_poly.Size();
   }
 
@@ -126,7 +126,7 @@ class Poly {
   //
   // --------------------------------------------------------------------------
 
-  // Get i-th coefficient
+  // Get or set i-th coefficient
   inline const double& operator[](int i) const { return coef_[i]; }
   inline double& operator[](int i) { return coef_[i]; }
 

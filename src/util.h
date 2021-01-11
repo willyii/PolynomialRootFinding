@@ -17,10 +17,9 @@
 //    Monic               : Return monic polynomial
 //
 // DOING:
+//    Replace
 //
 // TODO:
-//    GCD # Test
-//    SquareFreeDecompose # Test
 //    Replace
 //    NumSignChange
 //    UpperBound
@@ -44,7 +43,7 @@ bool IsZero(const Poly<n>& poly) {
   return poly.Size() == 1 && std::fabs(poly[0]) <= kEPSILON;
 }
 
-// This function will return a function with highes coefficient as 1
+// This function will return a function with leading coefficient as 1
 template <int n>
 Poly<n> Monic(const Poly<n>& poly) {
   Poly<n> ret;
