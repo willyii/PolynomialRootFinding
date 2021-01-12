@@ -2,16 +2,20 @@
 #include <stdio.h>
 
 #include "poly.h"
-#include "util.h"
 
 int main() {
-  // double coef1[3] = {1.0, -2.0, 1.0};  // x^2 - 2x + 1
-  // Poly<4> p1(coef1, 3);
+  double coef1[3] = {1.0, -2.0, 1.0};  // x^2 - 2x + 1
+  Poly<4> p1(coef1, 3);
 
-  // double coef2[2] = {-1.0, 1.0};  // x - 1
-  // Poly<3> p2(coef2, 2);
+  double coef2[2] = {-1.0, 1.0};  // x - 1
+  Poly<3> p2(coef2, 2);
 
-  // auto ans = p1 / p2;
+  auto ans = DivRemainder(p1, p2);
+  std::cout << "ans quotient " << ans.quotient
+            << " | quotient size = " << ans.quotient.get_degree()
+            << "\n ans remainder " << ans.remainder
+            << " | remainder size = " << ans.remainder.get_degree()
+            << std::endl;
   // auto ans = GCD(p2, p1);
   // auto ans = p1.Derivative();
   //
@@ -20,12 +24,6 @@ int main() {
   // double coef[5] = {.48e-2 - 1e-12, -.88e-1, .51, -1.2,
   //                  1};  // (x-.1)(x-.3)(x-.4)^2
   // Poly<5> p1(coef, 5);
-  double coef[7] = {1.771561, 9.66306, 21.9615, 26.620, 18.15, 6.6, 1};
-  Poly<7> p1(coef, 7);
-  auto ans(SquareFreeDecompose(p1));
-
-  for (auto p : ans)
-    std::cout << "SquareFreeDecompose ans : " << p << std::endl;
 
   return 0;
 }
