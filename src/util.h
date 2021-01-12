@@ -63,10 +63,9 @@ Poly<n> Monic(const Poly<n>& poly) {
 //    GCD(a, b) should return x - 1
 template <int n1, int n2>
 Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
-  if constexpr (n1 < n2) return Poly<n1>(GCD(poly2, poly1));
-  if (IsZero(poly2)) return Poly<std::min(n1, n2)>(poly1);
-  // auto divans = poly1 / poly2;
+  // if (IsZero(poly2)) return Poly<std::min(n1, n2)>(poly1);
   auto divans = DivRemainder(Monic(poly1), Monic(poly2));
+  if (IsZero(divans.remainder)) return Poly<std::min(n1, n2)>(poly2);
   return Poly<std::min(n1, n2)>(GCD(poly2, divans.remainder));
 }
 
