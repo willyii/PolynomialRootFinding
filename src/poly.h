@@ -36,8 +36,7 @@
 //  >> : Accept integer, right shift coefficients with n units
 //
 template <int n>
-class Poly {  // TODO : make every function const
-
+class Poly {
   static_assert(n >= 0);
 
  private:
@@ -60,7 +59,7 @@ class Poly {  // TODO : make every function const
   Poly(const Poly<n1>& copy_poly) : coef_{} {
     static_assert(n1 <= n);
     for (int i = 0; i <= n1; i++) coef_[i] = copy_poly[i];
-    degree_ = copy_poly.degree;
+    degree_ = copy_poly.get_degree();
   }
 
   // Assigned from smaller Poly
@@ -69,7 +68,7 @@ class Poly {  // TODO : make every function const
     static_assert(n1 <= n);
     for (int i = 0; i <= n1; i++) coef_[i] = copy_poly[i];
     for (int i = n1 + 1; i <= n; i++) coef_[i] = 0.0;
-    degree_ = copy_poly.Size();
+    degree_ = copy_poly.get_degree();
     return *this;
   }
 
@@ -99,9 +98,9 @@ class Poly {  // TODO : make every function const
   }
 
   // Get derivative of polynomal
-  const Poly<n - 1> Derivative() const {
+  const Poly<std::max(n - 1, 0)> Derivative() const {
     Poly<std::max(n - 1, 0)> ans;
-    for (int i = 0; i < n; i++) ans[i] = coef_[i + 1] * (i + 1);
+    for (int i = 0; i < degree_; i++) ans[i] = coef_[i + 1] * (i + 1);
     ans.set_degree();
     return ans;
   }
@@ -120,7 +119,7 @@ class Poly {  // TODO : make every function const
   double& operator[](int i) { return coef_[i]; }
 
   // Get sum of this and poly2. Need to guarantee n1 is no more than n.
-  // Then it will reset the num_coef_
+  // Then it will reset the degree
   template <int n1>
   const Poly<n>& operator+=(const Poly<n1>& poly2) {
     static_assert(n1 <= n);
@@ -221,34 +220,34 @@ Poly<n1 + n2> operator*(const Poly<n1>& poly1, const Poly<n2>& poly2) {
 
 // Production of polynomial and a number
 template <int n>
-Poly<n> operator*(const Poly<n>& poly, const double num) {
+Poly<n> operator*(const Poly<n>& poly, double num) {
   return Poly<n>(poly) *= num;
 }
 
 // Production of polynomial and a number
 template <int n>
-Poly<n> operator*(const double num, const Poly<n>& poly) {
+Poly<n> operator*(double num, const Poly<n>& poly) {
   return Poly<n>(poly) *= num;
 }
 
-// Struct for division result.
+// Struct for DivRemainder result.
 // Store both quotient and remainder
-//
-template <int n1>
+// // TODO : remainder should with n2 -1
+template <int n1, int n2>
 struct DivsionRet {
   Poly<n1> quotient;
-  Poly<n1> remainder;
+  Poly<n2> remainder;
 };
 
-// Use poly1 to minus (poly2 right move move_num and times scale )
-// Use pointer to the variable that will be changed
+// Return poly1 - (poly2 >> move_num) * scale
+// poly1 will be modified in this function
 template <int n1, int n2>
 void MinusRightMoveScale(const Poly<n2>& poly2, int move_num, double scale,
-                         Poly<n1>* poly1) {
+                         Poly<n1>& poly1) {
   for (int i = poly2.get_degree(); i >= 0; i--) {
-    (*poly1)[i + move_num] -= poly2[i] * scale;
+    poly1[i + move_num] -= poly2[i] * scale;
   }
-  poly1->set_degree();
+  poly1.set_degree();
 }
 
 // Division of two polynomials
@@ -256,12 +255,12 @@ void MinusRightMoveScale(const Poly<n2>& poly2, int move_num, double scale,
 // https://en.wikipedia.org/wiki/Polynomial_long_division
 // // TODO : remainder should have size n2-1
 template <int n1, int n2>
-DivsionRet<n1> DivRemainder(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+DivsionRet<n1, n2> DivRemainder(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   // If poly2 is a constant number
   if (poly2.get_degree() == 0) {
     Poly<n1> quotient(poly1 / poly2[0]);
-    Poly<n1> remainder;
-    return {quotient, remainder};
+    Poly<n2> remainder;
+    return DivsionRet<n1, n2>{quotient, remainder};
   }
 
   Poly<n1> quotient;
@@ -274,16 +273,23 @@ DivsionRet<n1> DivRemainder(const Poly<n1>& poly1, const Poly<n2>& poly2) {
     int degree_idx = remainder_degree - degree;
     quotient[degree_idx] += division;
 
-    MinusRightMoveScale(poly2, degree_idx, division, &remainder);
+    MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
   quotient.set_degree();
-  return DivsionRet<n1>{quotient, remainder};
+
+  // Set return remainder with type Poly<n2-1>
+  Poly<n2> remainder_ret;
+  for (int i = 0; i <= remainder.get_degree(); i++)
+    remainder_ret[i] = remainder[i];
+  remainder_ret.set_degree();
+
+  return DivsionRet<n1, n2>{quotient, remainder_ret};
 }
 
 // Division of polynomial and a number
 template <int n>
-Poly<n> operator/(const Poly<n>& poly, const double num) {
+Poly<n> operator/(const Poly<n>& poly, double num) {
   return Poly<n>(poly) /= num;
 }
 

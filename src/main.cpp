@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "poly.h"
+#include "util.h"
 
 int main() {
   double coef1[3] = {1.0, -2.0, 1.0};  // x^2 - 2x + 1
@@ -16,7 +17,14 @@ int main() {
             << "\n ans remainder " << ans.remainder
             << " | remainder size = " << ans.remainder.get_degree()
             << std::endl;
-  // auto ans = GCD(p2, p1);
+
+  auto ans2 = p2 * p2;
+  std::cout << "ans2 = " << ans2 << " | ans2 size = " << ans2.get_degree()
+            << std::endl;
+
+  auto ans3 = GCD(p1, p2);
+  std::cout << "ans3 = " << ans3 << " | ans3 size = " << ans3.get_degree()
+            << std::endl;
   // auto ans = p1.Derivative();
   //
   //
