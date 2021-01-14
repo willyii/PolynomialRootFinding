@@ -22,7 +22,7 @@ int main() {
   std::cout << "ans2 = " << ans2 << " | ans2 size = " << ans2.get_degree()
             << std::endl;
 
-  auto ans3 = GCD(p2, p1);
+  auto ans3 = GCD(p1, p2);
   std::cout << "ans3 = " << ans3 << " | ans3 size = " << ans3.get_degree()
             << std::endl;
   // auto ans = p1.Derivative();

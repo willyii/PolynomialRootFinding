@@ -46,10 +46,9 @@ bool IsZero(const Poly<n>& poly) {
 // This function will return a polynomial with leading coefficient as 1
 template <int n>
 Poly<n> Monic(const Poly<n>& poly) {
-  Poly<n> ret;
-  double div = 1 / (poly[poly.get_degree()]);
-  for (int i = 0; i <= poly.get_degree(); i++) ret[i] = poly[i] * div;
-  ret.set_degree();
+  Poly<n> ret(poly);
+  double div = 1 / (ret[ret.get_degree()]);
+  for (int i = 0; i <= ret.get_degree(); i++) ret[i] = ret[i] * div;
   return ret;
 }
 
@@ -63,10 +62,13 @@ Poly<n> Monic(const Poly<n>& poly) {
 //    GCD(a, b) should return x - 1
 template <int n1, int n2>
 Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
-  // if (IsZero(poly2)) return Poly<std::min(n1, n2)>(poly1);
-  auto divans = DivRemainder(Monic(poly1), Monic(poly2));
-  if (IsZero(divans.remainder)) return Poly<std::min(n1, n2)>(poly2);
-  return Poly<std::min(n1, n2)>(GCD(poly2, divans.remainder));
+  if constexpr (n2 > n1)
+    return GCD(poly2, poly1);
+  else {
+    auto divans = DivRemainder(Monic(poly1), Monic(poly2));
+    if (IsZero(divans.remainder)) return Poly<n2>(poly2);
+    return Poly<n2>(GCD(poly2, divans.remainder));
+  }
 }
 
 // This function will decompose a polynomial in to an array of square free

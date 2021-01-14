@@ -33,7 +33,6 @@
 //  /= : Only accept double
 //  *= : Only accept double
 //  [] : Accept integer, return the corresponding coef
-//  >> : Accept integer, right shift coefficients with n units
 //
 template <int n>
 class Poly {
@@ -90,7 +89,7 @@ class Poly {
     return ans;
   }
 
-  // Get gradient of polynomial at point x
+  // Get derivative of polynomial at point x
   const double DerivativeAt(double x) const {
     double ans = coef_[degree_] * (degree_);
     for (int i = degree_ - 1; i >= 1; i--) ans = ans * x + coef_[i] * i;
@@ -140,7 +139,7 @@ class Poly {
   }
 
   // Get difference of this and poly2. Need to guarantee n1 is no more than n.
-  // Then it will reset the num_coef_ if two polynomial have same num of coef
+  // Then it will reset the num_coef_ if two polynomial have degree
   template <int n1>
   const Poly<n>& operator-=(const Poly<n1>& poly2) {
     static_assert(n1 <= n);
@@ -163,28 +162,16 @@ class Poly {
   // Division of a polynomial and a number
   const Poly<n>& operator/=(double num) {
     for (int i = 0; i <= degree_; i++) coef_[i] /= num;
+    set_degree();
     return *this;
   }
 
   // Production of a polynomial and a number
   const Poly<n>& operator*=(double num) {
     for (int i = 0; i < degree_; i++) coef_[i] *= num;
+    set_degree();
     return *this;
   }
-
-  // Right shift operator, move coef right
-  // // TODO : const value parameter and const return
-  // // TODO : shouldn't change in place
-  // // TODO : use anothor function to do it, don't name shfit
-  // // TODO : name sacle by power of x
-  // // TODO : find bug here
-  // inline Poly<n>& operator>>(int move_num) {
-  //  if (move_num == 0) return *this;
-  //  for (int i = n - move_num; i >= 0; i--) coef_[i + move_num] = coef_[i];
-  //  for (int i = move_num - 1; i >= 0; i--) coef_[i] = 0.0;
-  //  num_coef_ += move_num;
-  //  return *this;
-  //}
 };
 
 // Sum of two polynomials
@@ -232,15 +219,15 @@ Poly<n> operator*(double num, const Poly<n>& poly) {
 
 // Struct for DivRemainder result.
 // Store both quotient and remainder
-// // TODO : remainder should with n2 -1
 template <int n1, int n2>
 struct DivsionRet {
   Poly<n1> quotient;
   Poly<n2> remainder;
 };
 
-// Return poly1 - (poly2 >> move_num) * scale
+// poly1 -= (poly2 >> move_num) * scale
 // poly1 will be modified in this function
+// Since this only used in division, it is guaranteed that n2 + move_num <= n1
 template <int n1, int n2>
 void MinusRightMoveScale(const Poly<n2>& poly2, int move_num, double scale,
                          Poly<n1>& poly1) {
@@ -253,17 +240,17 @@ void MinusRightMoveScale(const Poly<n2>& poly2, int move_num, double scale,
 // Division of two polynomials
 // Applied long division method, pls check :
 // https://en.wikipedia.org/wiki/Polynomial_long_division
-// // TODO : remainder should have size n2-1
 template <int n1, int n2>
-DivsionRet<n1, n2> DivRemainder(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+DivsionRet<n1, std::max(n2 - 1, 0)> DivRemainder(const Poly<n1>& poly1,
+                                                 const Poly<n2>& poly2) {
+  DivsionRet<n1, std::max(n2 - 1, 0)> ret;
+
   // If poly2 is a constant number
   if (poly2.get_degree() == 0) {
-    Poly<n1> quotient(poly1 / poly2[0]);
-    Poly<n2> remainder;
-    return DivsionRet<n1, n2>{quotient, remainder};
+    ret.quotient = poly1 / poly2[0];
+    return ret;
   }
 
-  Poly<n1> quotient;
   Poly<n1> remainder(poly1);
   int degree = poly2.get_degree(), remainder_degree = remainder.get_degree();
   double lead_coef = poly2.lead_coef();
@@ -271,20 +258,19 @@ DivsionRet<n1, n2> DivRemainder(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   while (remainder_degree >= degree) {
     double division = remainder.lead_coef() / lead_coef;
     int degree_idx = remainder_degree - degree;
-    quotient[degree_idx] += division;
+    ret.quotient[degree_idx] += division;
 
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
-  quotient.set_degree();
+  ret.quotient.set_degree();
 
-  // Set return remainder with type Poly<n2-1>
-  Poly<n2> remainder_ret;
+  // Set remaineder in return struct
   for (int i = 0; i <= remainder.get_degree(); i++)
-    remainder_ret[i] = remainder[i];
-  remainder_ret.set_degree();
+    ret.remainder[i] = remainder[i];
+  ret.remainder.set_degree();
 
-  return DivsionRet<n1, n2>{quotient, remainder_ret};
+  return ret;
 }
 
 // Division of polynomial and a number
