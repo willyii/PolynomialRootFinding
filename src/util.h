@@ -84,6 +84,10 @@ std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
   auto d(c - b.Derivative());
 
   while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
+    if (IsZero(d)) {
+      ans.emplace_back(b);
+      break;
+    }
     a = GCD(b, d);
     ans.emplace_back(a);
     b = DivRemainder(b, a).quotient;
