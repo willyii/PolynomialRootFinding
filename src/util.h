@@ -73,25 +73,25 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
 
 // This function will decompose a polynomial in to an array of square free
 // polynomials.
-// template <int n>
-// std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
-//  std::vector<Poly<n>> ans;
+template <int n>
+std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
+  std::vector<Poly<n>> ans;
 
-//  auto fd(poly.Derivative());
-//  auto a(GCD(poly, fd));
-//  auto b((poly / a).quotient);
-//  auto c((fd / a).quotient);
-//  auto d(c - b.Derivative());
+  auto fd(poly.Derivative());
+  auto a(GCD(poly, fd));
+  auto b(DivRemainder(poly, a).quotient);
+  auto c(DivRemainder(fd, a).quotient);
+  auto d(c - b.Derivative());
 
-//  while (!(b.Size() == 1 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
-//    a = GCD(b, d);
-//    ans.emplace_back(a);
-//    b = (b / a).quotient;
-//    c = (d / a).quotient;
-//    d = c - b.Derivative();
-//  }
+  while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
+    a = GCD(b, d);
+    ans.emplace_back(a);
+    b = DivRemainder(b, a).quotient;
+    c = DivRemainder(d, a).quotient;
+    d = c - b.Derivative();
+  }
 
-//  return ans;
-//}
+  return ans;
+}
 
 #endif  // POLY_UTIL_H

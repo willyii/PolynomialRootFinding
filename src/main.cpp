@@ -29,9 +29,9 @@ int main() {
   //
   //
   //
-  // double coef[5] = {.48e-2 - 1e-12, -.88e-1, .51, -1.2,
-  //                  1};  // (x-.1)(x-.3)(x-.4)^2
-  // Poly<5> p1(coef, 5);
+  double coef[5] = {.48e-2, -.88e-1, .51, -1.2, 1};  // (x-.1)(x-.3)(x-.4)^2
+  Poly<5> p3(coef, 5);
+  auto ans4 = SquareFreeDecompose(p3);
 
   return 0;
 }
