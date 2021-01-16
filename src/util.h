@@ -10,7 +10,6 @@
 //    GCD                 : GCD of two polynomials
 //    SquareFreeDecompose : Decompose polynomial into square-free
 //    Replace             : Replace the x with polynomial
-//    NumSignChange       : Number of sign change among coefficients
 //    UpperBound          : Upper bound of roots
 //    LowerBound          : Lower bound of roots
 //    IsZero              : Return true if polynomial is zero
@@ -20,10 +19,6 @@
 //    Replace
 //
 // TODO:
-//    Replace
-//    NumSignChange
-//    UpperBound
-//    LowerBound
 //
 //
 // AUTHOR: Xinlong Yi
@@ -33,6 +28,8 @@
 #ifndef POLY_UTIL_H
 #define POLY_UTIL_H
 
+#include <algorithm>
+#include <cmath>
 #include <vector>
 
 #include "poly.h"
@@ -96,6 +93,51 @@ std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
   }
 
   return ans;
+}
+
+// Return the upper bound of value of roots
+// Applied Cauchy's bound.
+// https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#Lagrange's_and_Cauchy's_bounds
+template <int n>
+double UpperBound(Poly<n> poly) {
+  double ans, lc = poly.lead_coef();
+  for (int i = 0; i < poly.get_degree(); i++)
+    ans = std::fmax(ans, std::fabs(poly[i] / lc));
+  return 1 + ans;
+}
+
+// Return the lower bound of value of roots
+// If U is upper bound of     a0 + a1 x + a2 x^2 ... an x^n
+// Then 1/U is lower bound of an + an-1 x + ... a0 x^n
+template <int n>
+double LowerBound(Poly<n> poly) {
+  double ans, lc;
+  int i;
+  for (i = 0; i <= poly.get_degree() && std::fabs(poly[i]) < kEPSILON; i++)
+    ;
+  lc = poly[i];
+  for (i = i + 1; i <= poly.get_degree(); i++)
+    ans = std::fmax(ans, std::fabs(poly[i] / lc));
+  return 1 / (1 + ans);
+}
+
+// This function will replace "x" in original polynomial to replace
+template <int n, int n2>
+Poly<n> Replace(Poly<n> origianl, Poly<n2> replace) {
+  if (replace.get_degree() == 0) {  // replace is a constant number
+    Poly<n> ret;
+    ret[0] = origianl.ValueAt(replace[0]);
+    return ret;
+  }
+
+  Poly<n> ret, tmp(replace);
+  ret[0] = origianl[0];
+  for (int i = 1; i <= origianl.get_degree(); i++) {
+    ret += tmp * origianl[i];
+    tmp *= replace;
+  }
+
+  return ret;
 }
 
 #endif  // POLY_UTIL_H

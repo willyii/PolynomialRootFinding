@@ -107,6 +107,20 @@ class Poly {
   // Get leading coefficent
   const double lead_coef() const { return coef_[degree_]; }
 
+  // Get sign change of coefficients
+  const int SignChange() const {
+    int ret = 0;
+    bool prev = coef_[degree_] > 0;
+    for (int i = degree_ - 1; i >= 0; i--) {
+      if (std::fabs(coef_[i]) >= kEPSILON &&  // larger than 0
+          (coef_[i] > 0 != prev)) {           // sign changed
+        prev = !prev;
+        ret++;
+      }
+    }
+    return ret;
+  }
+
   // --------------------------------------------------------------------------
   //
   // Overload operators
