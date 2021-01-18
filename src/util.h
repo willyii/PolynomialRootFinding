@@ -121,22 +121,23 @@ double LowerBound(Poly<n> poly) {
   return 1 / (1 + ans);
 }
 
-// This function will replace "x" in original polynomial to replace
-template <int n, int n2>
-Poly<n> Replace(Poly<n> origianl, Poly<n2> replace) {
-  if (replace.get_degree() == 0) {  // replace is a constant number
-    Poly<n> ret;
-    ret[0] = origianl.ValueAt(replace[0]);
-    return ret;
+// Change x to x + h. Applied Taylor Expansion to this,
+// p(x+h) = p(h) + p'(h)x + 1/2*p''(h)x^2 ... 1/(n!) * p^n(h)*x^n
+// time complexity: n^2
+// ref: https://math.stackexchange.com/questions/694565/polynomial-shift
+template <int n>
+Poly<n> AddToX(Poly<n> poly, double h) {
+  Poly<n> ret, tmp(poly);
+  ret[0] = tmp.ValueAt(h);
+  double divisor = 1;
+
+  for (int i = 1; i <= poly.get_degree(); i++) {
+    tmp = tmp.Derivative();
+    divisor *= i;
+    ret[i] = tmp.ValueAt(h) * 1 / divisor;
   }
 
-  Poly<n> ret, tmp(replace);
-  ret[0] = origianl[0];
-  for (int i = 1; i <= origianl.get_degree(); i++) {
-    ret += tmp * origianl[i];
-    tmp *= replace;
-  }
-
+  ret.set_degree();
   return ret;
 }
 

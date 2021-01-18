@@ -112,7 +112,7 @@ class Poly {
     int ret = 0;
     bool prev = coef_[degree_] > 0;
     for (int i = degree_ - 1; i >= 0; i--) {
-      if (std::fabs(coef_[i]) >= kEPSILON &&  // larger than 0
+      if (std::fabs(coef_[i]) >= kEPSILON &&  // not 0
           (coef_[i] > 0 != prev)) {           // sign changed
         prev = !prev;
         ret++;
@@ -302,6 +302,7 @@ template <int n>
 static std::ostream& operator<<(std::ostream& out, const Poly<n>& u) {
   for (int i = 0; i <= u.get_degree(); i++) {
     out << " ";
+    if (std::fabs(u[i]) < kEPSILON) continue;
     if (u[i] >= 0) out << '+';
     out << u[i] << "x^" << i;
   }

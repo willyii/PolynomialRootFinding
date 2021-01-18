@@ -43,7 +43,7 @@ int main() {
   std::cout << "Upper Bound : " << UpperBound(p3) << std::endl;
   std::cout << "Lower Bound : " << LowerBound(p3) << std::endl;
 
-  auto ans5 = Replace(p2, p2);
+  auto ans5 = AddToX(p3, .4);
   std::cout << "Replace ans " << ans5 << std::endl;
 
   return 0;
