@@ -36,14 +36,15 @@ bool IsZero(const Poly<n>& poly) {
 // Since we do not need the remainder in this project, so it just return the
 // GCD. Applied Euclid's Algorithm. ref
 // https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor
-template <int n1, int n2>
-void GCD_helper_(const Poly<n1>& poly1, const Poly<n2>& poly2, Poly<n2>& ret) {
+template <int n1, int n2, int n3>
+void GCD_helper_(const Poly<n1>& poly1, const Poly<n2>& poly2, Poly<n3>& ret) {
+  static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
   if (IsZero(remainder)) {
     ret = poly2;
     return;
   }
-  GCD(poly2, remainder);
+  GCD_helper_(poly2, remainder, ret);
 }
 
 // wrap GCD_helper_ function.
@@ -61,11 +62,9 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
 // This function will decompose a polynomial in to an array of square free
 // polynomials. Applied Yun's algorithm, ref:
 // https://en.wikipedia.org/wiki/Square-free_polynomial
-// // TODO : avoid vector. using array of fixed polynomial. take array as
-// arguments and return how many polys decompose out
 template <int n>
-std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
-  std::vector<Poly<n>> ans;
+int SquareFreeDecompose(const Poly<n>& poly, Poly<n>* ans) {
+  int ret;  // number of square free polynomial
 
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd));
@@ -75,17 +74,16 @@ std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
 
   while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
     if (IsZero(d)) {
-      ans.emplace_back(b);
+      ans[ret++] = b;
       break;
     }
     a = GCD(b, d);
-    ans.emplace_back(a);
+    ans[ret++] = a;
     b = Quotient(b, a);
     c = Quotient(d, a);
     d = c - b.Derivative();
   }
-
-  return ans;
+  return ret;
 }
 
 // Return the upper bound of value of roots

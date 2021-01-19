@@ -27,10 +27,11 @@ int main() {
   // double coef[5] = {12, -7, 1};  // (x-3)(x-4)
   // double coef[7] = {-.8e-2, .92e-1, .674, -9.139, 12.59, -6.1, 1};
   Poly<6> p3(coef, 5);
-  auto ans4 = SquareFreeDecompose(p3);
-  std::cout << "Square Free decompose ans: " << std::endl;
-  for (auto tmp : ans4) {
-    std::cout << tmp << std::endl;
+  Poly<6> SQDResult[6];
+  int ans4 = SquareFreeDecompose(p3, SQDResult);
+  std::cout << "Square Free decompose ans: " << ans4 << std::endl;
+  for (int i = 0; i < ans4; i++) {
+    std::cout << SQDResult[i] << std::endl;
   }
 
   // std::cout << "Sign Change in " << p3 << " is " << p3.SignChange()
