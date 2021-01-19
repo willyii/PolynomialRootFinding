@@ -17,7 +17,6 @@
 //
 // ----------------------------------------------------------------------------
 
-// TODO : const referenct
 #ifndef POLY_UTIL_H
 #define POLY_UTIL_H
 
@@ -37,22 +36,24 @@ bool IsZero(const Poly<n>& poly) {
 // Since we do not need the remainder in this project, so it just return the
 // GCD. Applied Euclid's Algorithm. ref
 // https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor
-//
-// EXAMPLE:
-//    Polynomial a = x^2 - 2x + 1
-//    Polynomial b = x - 1
-//    GCD(a, b) should return x - 1
-//
-//    // TODO : Too much copy
-//    pass a poly to store result.
+template <int n1, int n2>
+void GCD_helper_(const Poly<n1>& poly1, const Poly<n2>& poly2, Poly<n2>& ret) {
+  auto remainder = Remainder(poly1, poly2);
+  if (IsZero(remainder)) {
+    ret = poly2;
+    return;
+  }
+  GCD(poly2, remainder);
+}
+
+// wrap GCD_helper_ function.
 template <int n1, int n2>
 Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   if constexpr (n2 > n1)
     return GCD(poly2, poly1);
   else {
-    auto divans = DivRemainder(poly1, poly2);
-    if (IsZero(divans.remainder)) return poly2;
-    Poly<n2> ret(GCD(poly2, divans.remainder));
+    Poly<n2> ret;
+    GCD_helper_(poly1, poly2, ret);
     return ret;
   }
 }
@@ -68,8 +69,8 @@ std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
 
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd));
-  auto b(DivRemainder(poly, a).quotient);
-  auto c(DivRemainder(fd, a).quotient);
+  auto b(Quotient(poly, a));
+  auto c(Quotient(fd, a));
   auto d(c - b.Derivative());
 
   while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
@@ -79,8 +80,8 @@ std::vector<Poly<n>> SquareFreeDecompose(Poly<n>& poly) {
     }
     a = GCD(b, d);
     ans.emplace_back(a);
-    b = DivRemainder(b, a).quotient;
-    c = DivRemainder(d, a).quotient;
+    b = Quotient(b, a);
+    c = Quotient(d, a);
     d = c - b.Derivative();
   }
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include <iostream>
+#include <ostream>
 
 #include "poly.h"
 #include "util.h"
@@ -13,43 +14,38 @@ int main() {
   double coef2[2] = {-1.0, 1.0};  // x - 1
   Poly<3> p2(coef2, 2);
 
-  auto ans = DivRemainder(p1, p2);
-  std::cout << "ans quotient " << ans.quotient
-            << " | quotient size = " << ans.quotient.get_degree()
-            << "\n ans remainder " << ans.remainder
-            << " | remainder size = " << ans.remainder.get_degree()
-            << std::endl;
-
-  auto ans2 = p2 * p2;
-  std::cout << "ans2 = " << ans2 << " | ans2 size = " << ans2.get_degree()
-            << std::endl;
+  // auto ans2 = p2 * p2;
+  // std::cout << "ans2 = " << ans2 << " | ans2 size = " <<
+  // ans2.get_degree()
+  //          << std::endl;
 
   auto ans3 = GCD(p1, p2);
   std::cout << "ans3 = " << ans3 << " | ans3 size = " << ans3.get_degree()
             << std::endl;
-  // double coef[5] = {.48e-2, -.88e-1, .51, -1.2, 1};  // (x-.1)(x-.3)(x-.4)^2
+  double coef[5] = {.48e-2, -.88e-1, .51, -1.2,
+                    1};  // (x - .1)(x - .3)(x - .4) ^ 2
   // double coef[5] = {12, -7, 1};  // (x-3)(x-4)
-  double coef[7] = {-.8e-2, .92e-1, .674, -9.139, 12.59, -6.1, 1};
-  Poly<6> p3(coef, 7);
+  // double coef[7] = {-.8e-2, .92e-1, .674, -9.139, 12.59, -6.1, 1};
+  Poly<6> p3(coef, 5);
   auto ans4 = SquareFreeDecompose(p3);
   std::cout << "Square Free decompose ans: " << std::endl;
   for (auto tmp : ans4) {
     std::cout << tmp << std::endl;
   }
 
-  std::cout << "Sign Change in " << p3 << " is " << p3.SignChange()
-            << std::endl;
+  // std::cout << "Sign Change in " << p3 << " is " << p3.SignChange()
+  //<< std::endl;
 
-  std::cout << "Upper Bound : " << UpperBound(p3) << std::endl;
+  // std::cout << "Upper Bound : " << UpperBound(p3) << std::endl;
 
-  auto ans5 = AddToX(p3, .3);
-  std::cout << "Replace ans " << ans5 << std::endl;
+  // auto ans5 = AddToX(p3, .3);
+  // std::cout << "Replace ans " << ans5 << std::endl;
 
-  auto ans6 = SquareFreeDecompose(ans5);
-  std::cout << "Square Free decompose ans: " << std::endl;
-  for (auto tmp : ans6) {
-    std::cout << tmp << std::endl;
-  }
+  // auto ans6 = SquareFreeDecompose(ans5);
+  // std::cout << "Square Free decompose ans: " << std::endl;
+  // for (auto tmp : ans6) {
+  // std::cout << tmp << std::endl;
+  //}
   return 0;
 }
 
