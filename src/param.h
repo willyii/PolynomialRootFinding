@@ -15,16 +15,10 @@
 // Regard number as 0 when it's smaller than kEPSILON
 static const double kEPSILON = 1e-9;
 
-//#define EPSILON 1e-9
-//#define TESTERROR 1e-5
-//#define MAXITER 100000
-//#define MINRANGE 0.001
-//#define RANGEERROR 1e-7
+// Maxium possible degree of polynomials
+static const int kMAXDEGREE = 6;
 
-//#define DEBUG_GCD false
-//#define DEBUG_SQD false
-//#define DEBUG_BUDAN true
-//#define DEBUG_VINCENT true
-//#define DEBUG_BISECT false
+// Minimum range
+static const double kMINRANGE = 1e-3;
 
 #endif  // POLY_PARAM_H

@@ -1,10 +1,13 @@
-#include "budan.h"
-
+#include <deque>
 #include <iostream>
+#include <vector>
+
+#include "budan_backup.h"
 
 using std::cout;
 using std::deque;
 using std::endl;
+using std::vector;
 
 vector<tuple<double, double>> budanIsoroot(Poly& p) {
   vector<tuple<double, double>> ret;
