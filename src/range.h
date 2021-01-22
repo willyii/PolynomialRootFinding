@@ -17,4 +17,4 @@ struct Range {
   double right_end;
 };
 
-#endif  // POLY_RANGE_H
+#endif // POLY_RANGE_H

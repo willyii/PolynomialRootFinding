@@ -15,19 +15,14 @@
 
 #include <algorithm>
 #include <cmath>
-#include <vector>
 
 #include "poly.h"
+#include "range.h"
 
 /**
  * @brief :return True if all coefficient of poly is zero
- *
- * @tparam n :maximum degree of poly
- * @param poly :polynomial
- * @return :if poly has only zero coef
  */
-template <int n>
-bool IsZero(const Poly<n>& poly) {
+template <int n> bool IsZero(const Poly<n> &poly) {
   return poly.get_degree() == 0 && std::fabs(poly[0]) <= kEPSILON;
 }
 
@@ -44,7 +39,7 @@ bool IsZero(const Poly<n>& poly) {
  * @param ret :store GCD of poly1 and poly2
  */
 template <int n1, int n2, int n3>
-void GCD_helper_(const Poly<n1>& poly1, const Poly<n2>& poly2, Poly<n3>& ret) {
+void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
   if (IsZero(remainder)) {
@@ -63,7 +58,7 @@ void GCD_helper_(const Poly<n1>& poly1, const Poly<n2>& poly2, Poly<n3>& ret) {
  * @param poly2 :polynomial 2
  */
 template <int n1, int n2>
-Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   if constexpr (n2 > n1)
     return GCD(poly2, poly1);
   else {
@@ -83,9 +78,8 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1>& poly1, const Poly<n2>& poly2) {
  * @param ans :array of polynomials used to restore the result
  * @return : number of square free polynomials
  */
-template <int n>
-int SquareFreeDecompose(const Poly<n>& poly, Poly<n>* ans) {
-  int ret = 0;  // number of square free polynomial
+template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
+  int ret = 0; // number of square free polynomial
 
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd));
@@ -93,7 +87,7 @@ int SquareFreeDecompose(const Poly<n>& poly, Poly<n>* ans) {
   auto c(Quotient(fd, a));
   auto d(c - b.Derivative());
 
-  while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) {  // b != 1
+  while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) { // b != 1
     if (IsZero(d)) {
       ans[ret++] = b;
       break;
@@ -119,8 +113,7 @@ int SquareFreeDecompose(const Poly<n>& poly, Poly<n>* ans) {
  * @param poly :polynomial
  * @return :upper bound of roots
  */
-template <int n>
-double UpperBound(const Poly<n>& poly) {
+template <int n> double UpperBound(const Poly<n> &poly) {
   double lc = poly.lead_coef(), ans = std::fabs(poly[0] / lc);
   for (int i = 1; i < poly.get_degree(); i++)
     ans = std::fmax(ans, std::fabs(poly[i] / lc));
@@ -138,9 +131,9 @@ double UpperBound(const Poly<n>& poly) {
  * @param h :number add to x
  * @return :polynomial that replace x in poly to x+h
  */
-template <int n>
-Poly<n> AddToX(const Poly<n>& poly, double h) {
-  if (h == 0) return poly;
+template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
+  if (h == 0)
+    return poly;
   Poly<n> ret, tmp(poly);
   ret[0] = tmp.ValueAt(h);
   double divisor = 1;
@@ -155,4 +148,91 @@ Poly<n> AddToX(const Poly<n>& poly, double h) {
   return ret;
 }
 
-#endif  // POLY_UTIL_H
+/**
+ * @brief :Check if zero is root of polynomial. If it is, remove it. Since It is
+ * square free polynomial. So it at most have one zero root.
+ *
+ * @tparam n :Maximum degree of poly
+ * @param repeat_time :Repeat time of this polynomial in original polynomial
+ * @param poly :Polynomial, might be modified.
+ * @param ranges :Store results, might be modified
+ * @param num_roots :Sotore the number of roots, might be modified
+ */
+template <int n>
+void HandleZeroRoots(int repeat_time, Poly<n> *poly, Range *ranges,
+                     int *num_roots) {
+  // Zero is not root
+  if (std::fabs((*poly)[0]) >= kEPSILON)
+    return;
+
+  // remove zero root
+  for (int i = 1; i <= poly->get_degree(); i++)
+    (*poly)[i - 1] = (*poly)[i];
+  (*poly)[poly->get_degree()] = 0.0;
+  poly->set_degree(poly->get_degree() - 1);
+
+  // add to ranges
+  Range ans{0.0, 0.0};
+  for (int i = 0; i < repeat_time; i++) {
+    ranges[*num_roots] = ans;
+    (*num_roots)++;
+  }
+
+  return;
+}
+
+/**
+ * @brief :Hanle linear polynomial, It has no zero root
+ *
+ * @tparam n :Maximum degree of polynomial
+ * @param poly :Polynomial
+ * @param repeat_time :Repeat time of this polynomial in original polynomial
+ * @param ranges :Store results, might be modified
+ * @param num_roots :Sotore the number of roots, might be modified
+ */
+template <int n>
+void HandleLinear(const Poly<n> &poly, int repeat_time, Range *ranges,
+                  int *num_roots) {
+  double root(-poly[0] / poly[1]);
+  Range ans{root, root};
+  for (int i = 0; i < repeat_time; i++) {
+    ranges[*num_roots] = ans;
+    (*num_roots)++;
+  }
+
+  return;
+}
+
+/**
+ * @brief :Hanle quadratic polynomial, It has no zero root
+ *
+ * @tparam n :Maximum degree of polynomial
+ * @param poly :Polynomial
+ * @param repeat_time :Repeat time of this polynomial in original polynomial
+ * @param ranges :Store results, might be modified
+ * @param num_roots :Sotore the number of roots, might be modified
+ */
+template <int n>
+void HandleQuadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
+                     int *num_roots) {
+  double delta(poly[1] * poly[1] - 4 * poly[0] * poly[2]); // b^2 - 4ac
+
+  if (delta <= 0)
+    return;
+  delta = std::sqrt(delta);
+
+  Range ans1, ans2;
+  ans1.left_end = ans1.right_end = (-poly[1] + delta) / (2 * poly[2]);
+  ans2.left_end = ans2.right_end = (-poly[1] - delta) / (2 * poly[2]);
+
+  for (int i = 0; i < repeat_time; i++) {
+    ranges[*num_roots] = ans1;
+    ranges[(*num_roots) + repeat_time] = ans2;
+    (*num_roots)++;
+  }
+  (*num_roots) += repeat_time;
+
+  return;
+}
+
+#endif // POLY_UTIL_H

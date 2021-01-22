@@ -24,15 +24,14 @@
  *
  * @tparam n: maximum degree of this polynomial.
  */
-template <int n>
-class Poly {
+template <int n> class Poly {
   static_assert(n >= 0);
 
- private:
+private:
   double coef_[n + 1];
   int degree_;
 
- public:
+public:
   Poly() : coef_{} { degree_ = 0; }
 
   /**
@@ -41,26 +40,28 @@ class Poly {
    * @param input_coef: pointer to coefficients array.
    * @param num_input: number of coefficients
    */
-  Poly(const double* input_coef, int num_input) : coef_{} {
+  Poly(const double *input_coef, int num_input) : coef_{} {
     assert(num_input <= n + 1);
-    for (int i = 0; i < num_input; i++) coef_[i] = input_coef[i];
+    for (int i = 0; i < num_input; i++)
+      coef_[i] = input_coef[i];
     degree_ = num_input - 1;
   }
 
   // Copy from smaller Poly
-  template <int n1>
-  Poly(const Poly<n1>& copy_poly) : coef_{} {
+  template <int n1> Poly(const Poly<n1> &copy_poly) : coef_{} {
     static_assert(n1 <= n);
-    for (int i = 0; i <= n1; i++) coef_[i] = copy_poly[i];
+    for (int i = 0; i <= n1; i++)
+      coef_[i] = copy_poly[i];
     degree_ = copy_poly.get_degree();
   }
 
   // Assigned from smaller Poly
-  template <int n1>
-  Poly<n>& operator=(const Poly<n1>& copy_poly) {
+  template <int n1> Poly<n> &operator=(const Poly<n1> &copy_poly) {
     static_assert(n1 <= n);
-    for (int i = 0; i <= n1; i++) coef_[i] = copy_poly[i];
-    for (int i = n1 + 1; i <= n; i++) coef_[i] = 0.0;
+    for (int i = 0; i <= n1; i++)
+      coef_[i] = copy_poly[i];
+    for (int i = n1 + 1; i <= n; i++)
+      coef_[i] = 0.0;
     degree_ = copy_poly.get_degree();
     return *this;
   }
@@ -80,21 +81,24 @@ class Poly {
   // Get value of polynomial at point x
   double ValueAt(double x) const {
     double ans = coef_[degree_];
-    for (int i = degree_ - 1; i >= 0; i--) ans = ans * x + coef_[i];
+    for (int i = degree_ - 1; i >= 0; i--)
+      ans = ans * x + coef_[i];
     return ans;
   }
 
   // Get derivative of polynomial at point x
   double DerivativeAt(double x) const {
     double ans = coef_[degree_] * degree_;
-    for (int i = degree_ - 1; i >= 1; i--) ans = ans * x + coef_[i] * i;
+    for (int i = degree_ - 1; i >= 1; i--)
+      ans = ans * x + coef_[i] * i;
     return ans;
   }
 
   // Get derivative of polynomal
   Poly<std::max(n - 1, 0)> Derivative() const {
     Poly<std::max(n - 1, 0)> ans;
-    for (int i = 0; i < degree_; i++) ans[i] = coef_[i + 1] * (i + 1);
+    for (int i = 0; i < degree_; i++)
+      ans[i] = coef_[i + 1] * (i + 1);
     ans.set_degree(degree_ - 1);
     return ans;
   }
@@ -107,8 +111,8 @@ class Poly {
     int ret = 0;
     bool prev = coef_[degree_] > 0;
     for (int i = degree_ - 1; i >= 0; i--) {
-      if (std::fabs(coef_[i]) >= kEPSILON &&  // not 0
-          (coef_[i] > 0 != prev)) {           // sign changed
+      if (std::fabs(coef_[i]) >= kEPSILON && // not 0
+          (coef_[i] > 0 != prev)) {          // sign changed
         prev = !prev;
         ret++;
       }
@@ -123,12 +127,12 @@ class Poly {
   // --------------------------------------------------------------------------
 
   double operator[](int i) const { return coef_[i]; }
-  double& operator[](int i) { return coef_[i]; }
+  double &operator[](int i) { return coef_[i]; }
 
-  template <int n1>
-  Poly<n>& operator+=(const Poly<n1>& poly2) {
+  template <int n1> Poly<n> &operator+=(const Poly<n1> &poly2) {
     static_assert(n1 <= n);
-    for (int i = 0; i <= poly2.get_degree(); i++) coef_[i] += poly2[i];
+    for (int i = 0; i <= poly2.get_degree(); i++)
+      coef_[i] += poly2[i];
 
     if (degree_ == poly2.get_degree())
       set_degree();
@@ -138,15 +142,15 @@ class Poly {
     return *this;
   }
 
-  Poly<n>& operator+=(double num) {
+  Poly<n> &operator+=(double num) {
     coef_[0] += num;
     return *this;
   }
 
-  template <int n1>
-  Poly<n>& operator-=(const Poly<n1>& poly2) {
+  template <int n1> Poly<n> &operator-=(const Poly<n1> &poly2) {
     static_assert(n1 <= n);
-    for (int i = 0; i <= poly2.get_degree(); i++) coef_[i] -= poly2[i];
+    for (int i = 0; i <= poly2.get_degree(); i++)
+      coef_[i] -= poly2[i];
 
     if (degree_ == poly2.get_degree())
       set_degree();
@@ -156,24 +160,26 @@ class Poly {
     return *this;
   }
 
-  Poly<n>& operator-=(double num) {
+  Poly<n> &operator-=(double num) {
     coef_[0] -= num;
     return *this;
   }
 
-  Poly<n>& operator/=(double num) {
-    for (int i = 0; i <= degree_; i++) coef_[i] /= num;
+  Poly<n> &operator/=(double num) {
+    for (int i = 0; i <= degree_; i++)
+      coef_[i] /= num;
     return *this;
   }
 
-  Poly<n>& operator*=(double num) {
-    for (int i = 0; i < degree_; i++) coef_[i] *= num;
+  Poly<n> &operator*=(double num) {
+    for (int i = 0; i < degree_; i++)
+      coef_[i] *= num;
     return *this;
   }
 };
 
 template <int n1, int n2>
-Poly<std::max(n1, n2)> operator+(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+Poly<std::max(n1, n2)> operator+(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   if constexpr (n1 >= n2) {
     return Poly<n1>(poly1) += poly2;
   } else {
@@ -182,7 +188,7 @@ Poly<std::max(n1, n2)> operator+(const Poly<n1>& poly1, const Poly<n2>& poly2) {
 }
 
 template <int n1, int n2>
-Poly<std::max(n1, n2)> operator-(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+Poly<std::max(n1, n2)> operator-(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   if constexpr (n1 >= n2) {
     return Poly<n1>(poly1) -= poly2;
   } else {
@@ -191,7 +197,7 @@ Poly<std::max(n1, n2)> operator-(const Poly<n1>& poly1, const Poly<n2>& poly2) {
 }
 
 template <int n1, int n2>
-Poly<n1 + n2> operator*(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+Poly<n1 + n2> operator*(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   Poly<n1 + n2> ret;
   for (int i = 0; i <= poly1.get_degree(); i++)
     for (int j = 0; j <= poly1.get_degree(); j++)
@@ -200,13 +206,11 @@ Poly<n1 + n2> operator*(const Poly<n1>& poly1, const Poly<n2>& poly2) {
   return ret;
 }
 
-template <int n>
-Poly<n> operator*(const Poly<n>& poly, double num) {
+template <int n> Poly<n> operator*(const Poly<n> &poly, double num) {
   return Poly<n>(poly) *= num;
 }
 
-template <int n>
-Poly<n> operator*(double num, const Poly<n>& poly) {
+template <int n> Poly<n> operator*(double num, const Poly<n> &poly) {
   return Poly<n>(poly) *= num;
 }
 
@@ -216,8 +220,7 @@ Poly<n> operator*(double num, const Poly<n>& poly) {
  * @tparam n1: maximum degree of quotient
  * @tparam n2: maximum degree of remainder
  */
-template <int n1, int n2>
-struct DivsionRet {
+template <int n1, int n2> struct DivsionRet {
   Poly<n1> quotient;
   Poly<n2> remainder;
 };
@@ -235,8 +238,8 @@ struct DivsionRet {
  * @param poly1: polynomial 1
  */
 template <int n1, int n2>
-void MinusRightMoveScale(const Poly<n2>& poly2, int move_num, double scale,
-                         Poly<n1>& poly1) {
+void MinusRightMoveScale(const Poly<n2> &poly2, int move_num, double scale,
+                         Poly<n1> &poly1) {
   for (int i = poly2.get_degree(); i >= 0; i--) {
     poly1[i + move_num] -= poly2[i] * scale;
   }
@@ -254,8 +257,8 @@ void MinusRightMoveScale(const Poly<n2>& poly2, int move_num, double scale,
  * @param poly2: polynomial 2
  */
 template <int n1, int n2>
-DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1>& poly1,
-                                             const Poly<n2>& poly2) {
+DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
+                                             const Poly<n2> &poly2) {
   DivsionRet<n1, std::max(n2 - 1, 0)> ret;
 
   // If poly2 is a constant number
@@ -295,7 +298,7 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1>& poly1,
  * @param poly2 :polynomial 2
  */
 template <int n1, int n2>
-Poly<n1> Quotient(const Poly<n1>& poly1, const Poly<n2>& poly2) {
+Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   Poly<n1> quotient, remainder(poly1);
 
   // If poly2 is a constant number
@@ -329,13 +332,14 @@ Poly<n1> Quotient(const Poly<n1>& poly1, const Poly<n2>& poly2) {
  * @param poly2 :polynomial 2
  */
 template <int n1, int n2>
-Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1>& poly1,
-                                    const Poly<n2>& poly2) {
+Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
+                                    const Poly<n2> &poly2) {
   Poly<n1> remainder(poly1);
   Poly<std::max(n2 - 1, 0)> remainder_ret;
 
   // If poly2 is a constant number
-  if (poly2.get_degree() == 0) return remainder_ret;
+  if (poly2.get_degree() == 0)
+    return remainder_ret;
 
   int degree = poly2.get_degree(), remainder_degree = remainder.get_degree();
   double lead_coef = poly2.lead_coef();
@@ -356,21 +360,22 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1>& poly1,
   return remainder_ret;
 }
 
-template <int n>
-Poly<n> operator/(const Poly<n>& poly, double num) {
+template <int n> Poly<n> operator/(const Poly<n> &poly, double num) {
   return Poly<n>(poly) /= num;
 }
 
 // Print out polynomial u
 template <int n>
-static std::ostream& operator<<(std::ostream& out, const Poly<n>& u) {
+static std::ostream &operator<<(std::ostream &out, const Poly<n> &u) {
   for (int i = 0; i <= u.get_degree(); i++) {
     out << " ";
-    if (std::fabs(u[i]) < kEPSILON) continue;
-    if (u[i] >= 0) out << '+';
+    if (std::fabs(u[i]) < kEPSILON)
+      continue;
+    if (u[i] >= 0)
+      out << '+';
     out << u[i] << "x^" << i;
   }
   return out;
 }
 
-#endif  // POLY_POLYH_
+#endif // POLY_POLYH_

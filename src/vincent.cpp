@@ -14,7 +14,7 @@ using std::make_tuple;
 using std::reverse;
 using std::swap;
 
-vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
+vector<tuple<double, double>> vincentIsoroot(Poly &p, bool negative) {
   vector<tuple<double, double>> rootlist;
 
   while (p.valueAt(0) == 0 && !negative) {
@@ -31,7 +31,8 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
   s = signChangeNum(p, 0);
   double a, b, c, d, a0 = 16;
   Poly q;
-  if (s == 0) return {rootlist};
+  if (s == 0)
+    return {rootlist};
   if (s == 1) {
     rootlist.emplace_back(make_tuple(0.0, upper));
     return rootlist;
@@ -69,7 +70,8 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
       rootlist.emplace_back(make_tuple(b / d, b / d));
       q /= tmpPoly;
       s = signChangeNum(q, 0);
-      if (s == 0) continue;
+      if (s == 0)
+        continue;
     }
 
     Poly q1 = addToP(q, 1);
@@ -88,7 +90,8 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
     if (s2 > 1) {
       q2 = reverse(q);
       q2 = addToP(q2, 1);
-      if (q2.valueAt(0) == 0) q2 /= tmpPoly;
+      if (q2.valueAt(0) == 0)
+        q2 /= tmpPoly;
       s2 = signChangeNum(q2, 0);
     }
 
@@ -101,7 +104,8 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
       swap(s1, s2);
     }
 
-    if (s1 == 0) continue;
+    if (s1 == 0)
+      continue;
     if (s1 == 1) {
       // if (DEBUG_VINCENT)
       //  std::cout << "DEBUG_VINCENT: a1/c1 = " << a1 / c1
@@ -119,7 +123,8 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
     } else {
       intervals.emplace_back(Interval{a1, b1, c1, d1, q1, s1});
     }
-    if (s2 == 0) continue;
+    if (s2 == 0)
+      continue;
     if (s2 == 1) {
       // if (DEBUG_VINCENT)
       //  std::cout << "DEBUG_VINCENT: a2/c2 = " << a2 / c2
@@ -149,8 +154,9 @@ vector<tuple<double, double>> vincentIsoroot(Poly& p, bool negative) {
   return rootlist;
 }
 
-vector<double> vincentSolve(Poly& p) {
-  if (p.deg() == 1) return {-p[1] / p[0]};
+vector<double> vincentSolve(Poly &p) {
+  if (p.deg() == 1)
+    return {-p[1] / p[0]};
   vector<Poly> plist = squareFreeDecompo(p);
   vector<tuple<double, double>> ranges, tmprange;
   vector<double> roots;
@@ -158,7 +164,8 @@ vector<double> vincentSolve(Poly& p) {
 
   // Postive roots
   for (auto poly : plist) {
-    if (poly.deg() <= 0) continue;
+    if (poly.deg() <= 0)
+      continue;
     tmprange = vincentIsoroot(poly, false);
     for (size_t i = 0; i < tmprange.size(); i++) {
       // if (DEBUG_VINCENT)
@@ -178,13 +185,15 @@ vector<double> vincentSolve(Poly& p) {
                 << std::get<0>(range) << " to " << std::get<1>(range)
                 << std::endl;
     tmp = rootInBound(p, std::get<0>(range), std::get<1>(range));
-    if (tmp != NOTFOUND) roots.emplace_back(tmp);
+    if (tmp != NOTFOUND)
+      roots.emplace_back(tmp);
   }
 
   // Negative roots
   ranges = {};
   for (auto poly : plist) {
-    if (poly.deg() <= 0) continue;
+    if (poly.deg() <= 0)
+      continue;
     Poly tmpp = timeToP(poly, -1);
     tmprange = vincentIsoroot(tmpp, true);
     for (size_t i = 0; i < tmprange.size(); i++) {
@@ -205,12 +214,13 @@ vector<double> vincentSolve(Poly& p) {
                 << -std::get<1>(range) << " to " << -std::get<0>(range)
                 << std::endl;
     tmp = rootInBound(p, -std::get<1>(range), -std::get<0>(range));
-    if (tmp != NOTFOUND) roots.emplace_back(tmp);
+    if (tmp != NOTFOUND)
+      roots.emplace_back(tmp);
   }
   return roots;
 }
 
-Poly reverse(Poly& p) {
+Poly reverse(Poly &p) {
   vector<double> coef = p.getCoef();
   reverse(coef.begin(), coef.end());
   Poly ans = Poly(coef);
@@ -218,7 +228,7 @@ Poly reverse(Poly& p) {
 }
 
 // Refine the range, make the range smaller enough to avoid edge case
-void refineRange(Poly& p, tuple<double, double>& range) {
+void refineRange(Poly &p, tuple<double, double> &range) {
   int lchange = signChangeNum(p, get<0>(range));
   int rchange = signChangeNum(p, get<1>(range));
   while ((get<1>(range) - get<0>(range)) > MINRANGE) {
