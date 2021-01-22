@@ -91,7 +91,7 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
     else if (square_free_polys[i].get_degree() == 2) // quadratic
       HandleQuadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges,
                                   &num_roots);
-    else { // more than quadratic
+    else {
       double right(UpperBound(square_free_polys[i])), left = -right;
       int left_change(AddToX(square_free_polys[i], left).SignChange());
       int right_change(AddToX(square_free_polys[i], right).SignChange());
