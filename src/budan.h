@@ -30,8 +30,8 @@
  * @param left_change : Number of sign change in left end
  * @param right : Right end of search range
  * @param right_change : Number of sign change in right end
- * @param ranges : Array of ranges, store isolation results
- * @param num_roots : Store the number of roots
+ * @param ranges :Store isolation results, might be modified
+ * @param num_roots : Store the number of roots, might be modified
  */
 template <int n>
 void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
@@ -42,11 +42,8 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
     return;
   // exact one root in this range
   else if ((right - left) < kMINRANGE && (left_change - right_change) == 1) {
-    Range ans{left, right};
-    for (int i = 0; i < duplicate_times; i++) {
-      ranges[*num_roots] = ans;
-      (*num_roots)++;
-    }
+
+    AddToRange(duplicate_times, left, right, ranges, num_roots);
     return;
   }
 
@@ -82,15 +79,15 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
   for (int i = 0; i < num_square_free; i++) {
 
     // Handle zero roots
-    HandleZeroRoots(i + 1, &square_free_polys[i], ranges, &num_roots);
+    if (ZeroRoots(&square_free_polys[i]))
+      AddToRange(i + 1, 0.0, 0.0, ranges, &num_roots);
 
     if (square_free_polys[i].get_degree() == 0) // constant
       continue;
     else if (square_free_polys[i].get_degree() == 1) // linear
-      HandleLinear<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
+      Linear<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
     else if (square_free_polys[i].get_degree() == 2) // quadratic
-      HandleQuadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges,
-                                  &num_roots);
+      Quadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
     else {
       double right(UpperBound(square_free_polys[i])), left = -right;
       int left_change(AddToX(square_free_polys[i], left).SignChange());

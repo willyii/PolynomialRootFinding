@@ -11,10 +11,10 @@
 #include "vincent.h"
 
 int main() {
-  double coef[5] = {.48e-2, -.88e-1, .51, -1.2,
-                    1}; // (x - .1)(x - .3)(x - .4) ^ 2
+  // double coef[5] = {.48e-2, -.88e-1, .51, -1.2,
+  // 1}; // (x - .1)(x - .3)(x - .4) ^ 2
   //// double coef[3] = {12, -7, 1}; // (x-3)(x-4)
-  //// double coef[7] = {-.8e-2, .92e-1, .674, -9.139, 12.59, -6.1, 1};
+  // double coef[7] = {-.8e-2, .92e-1, .674, -9.139, 12.59, -6.1, 1};
   // Range roots[6];
   // int num_roots = BudanRootIsolate(coef, 5, roots);
 
@@ -25,15 +25,22 @@ int main() {
   //
   //
 
-  // double coef[6] = {0, 0, 0, 12, -7, 1};
+  // double coef[5] = {0, -.75, 2.75, -3, 1};
+  // double coef[5] = {0, -18, -9, 2, 1};
+  double coef[4] = {.06, .47, 1.2, 1}; // (x-.3)(x-.4)(x-.5)
   Range roots[6];
-  int num_roots(VincentRootIsolate(coef, 5, roots));
 
+  int num_roots(VincentRootIsolate(coef, 4, roots));
   printf("Vincent's Theorem Results: %d \n", num_roots);
   for (int i = 0; i < num_roots; i++) {
     printf("left: %f, right: %f \n", roots[i].left_end, roots[i].right_end);
   }
 
+  num_roots = BudanRootIsolate(coef, 4, roots);
+  printf("Vincent's Budan Results: %d \n", num_roots);
+  for (int i = 0; i < num_roots; i++) {
+    printf("left: %f, right: %f \n", roots[i].left_end, roots[i].right_end);
+  }
   return 0;
 }
 

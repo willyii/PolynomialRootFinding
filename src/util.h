@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <tuple>
 
 #include "poly.h"
 #include "range.h"
@@ -149,21 +150,39 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
 }
 
 /**
- * @brief :Check if zero is root of polynomial. If it is, remove it. Since It is
- * square free polynomial. So it at most have one zero root.
+ * @brief :Add range represented by left and right to ans
  *
- * @tparam n :Maximum degree of poly
- * @param repeat_time :Repeat time of this polynomial in original polynomial
- * @param poly :Polynomial, might be modified.
- * @param ranges :Store results, might be modified
- * @param num_roots :Sotore the number of roots, might be modified
+ * @param repeat_time :Repeat time of this root
+ * @param left :Left end of root range
+ * @param right :Right end of root range
+ * @param ranges :Store isolation results, might be modified
+ * @param num_roots :Store the number of roots, might be modified
  */
-template <int n>
-void HandleZeroRoots(int repeat_time, Poly<n> *poly, Range *ranges,
-                     int *num_roots) {
+void AddToRange(int repeat_time, double left, double right, Range *ranges,
+                int *num_roots) {
+  for (int i = 0; i < repeat_time; i++) {
+    if (right < left)
+      std::swap(left, right);
+    ranges[*num_roots].left_end = left;
+    ranges[*num_roots].right_end = right;
+    (*num_roots)++;
+  }
+  return;
+}
+
+/**
+ * @brief :Return True and remove zero root of polynomial. Since its square
+ * free, there at most 1 zero root
+ * This function won't add range to final ans;
+ *
+ * @tparam n :Maxiumu degree of polynomial
+ * @param poly :Polynomial, might be changed
+ * @return :True if zero is root of polynomial
+ */
+template <int n> bool ZeroRoots(Poly<n> *poly) {
   // Zero is not root
   if (std::fabs((*poly)[0]) >= kEPSILON)
-    return;
+    return false;
 
   // remove zero root
   for (int i = 1; i <= poly->get_degree(); i++)
@@ -171,18 +190,11 @@ void HandleZeroRoots(int repeat_time, Poly<n> *poly, Range *ranges,
   (*poly)[poly->get_degree()] = 0.0;
   poly->set_degree(poly->get_degree() - 1);
 
-  // add to ranges
-  Range ans{0.0, 0.0};
-  for (int i = 0; i < repeat_time; i++) {
-    ranges[*num_roots] = ans;
-    (*num_roots)++;
-  }
-
-  return;
+  return true;
 }
 
 /**
- * @brief :Hanle linear polynomial, It has no zero root
+ * @brief :Handle linear polynomial, It has no zero root
  *
  * @tparam n :Maximum degree of polynomial
  * @param poly :Polynomial
@@ -191,15 +203,11 @@ void HandleZeroRoots(int repeat_time, Poly<n> *poly, Range *ranges,
  * @param num_roots :Sotore the number of roots, might be modified
  */
 template <int n>
-void HandleLinear(const Poly<n> &poly, int repeat_time, Range *ranges,
-                  int *num_roots) {
+void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
+            int *num_roots) {
   double root(-poly[0] / poly[1]);
-  Range ans{root, root};
-  for (int i = 0; i < repeat_time; i++) {
-    ranges[*num_roots] = ans;
-    (*num_roots)++;
-  }
 
+  AddToRange(repeat_time, root, root, ranges, num_roots);
   return;
 }
 
@@ -213,25 +221,18 @@ void HandleLinear(const Poly<n> &poly, int repeat_time, Range *ranges,
  * @param num_roots :Sotore the number of roots, might be modified
  */
 template <int n>
-void HandleQuadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
-                     int *num_roots) {
+void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
+               int *num_roots) {
   double delta(poly[1] * poly[1] - 4 * poly[0] * poly[2]); // b^2 - 4ac
 
   if (delta <= 0)
     return;
   delta = std::sqrt(delta);
 
-  Range ans1, ans2;
-  ans1.left_end = ans1.right_end = (-poly[1] + delta) / (2 * poly[2]);
-  ans2.left_end = ans2.right_end = (-poly[1] - delta) / (2 * poly[2]);
-
-  for (int i = 0; i < repeat_time; i++) {
-    ranges[*num_roots] = ans1;
-    ranges[(*num_roots) + repeat_time] = ans2;
-    (*num_roots)++;
-  }
-  (*num_roots) += repeat_time;
-
+  double root1((-poly[1] + delta) / (2 * poly[2]));
+  AddToRange(repeat_time, root1, root1, ranges, num_roots);
+  double root2((-poly[1] - delta) / (2 * poly[2]));
+  AddToRange(repeat_time, root2, root2, ranges, num_roots);
   return;
 }
 
