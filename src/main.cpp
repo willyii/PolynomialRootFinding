@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
   /// Budan's theorem
   auto budan_start = std::chrono::high_resolution_clock::now();
-  for (int i = 0; i < coefs.size(); i++) {
+  for (size_t i = 0; i < coefs.size(); i++) {
     poly_roots = new Range[kMAXDEGREE];
     int tmp = BudanRootIsolate(coefs[i], num_coefs[i], poly_roots);
     roots.push_back(poly_roots);

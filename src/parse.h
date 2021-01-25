@@ -66,7 +66,7 @@ int ParseItem(string &item_string, double *coef) {
  */
 int ParseSingleLine(const string &polyString, double *coef) {
   string item_string("");
-  int ret;
+  int ret(0);
 
   for (int i = 0; i < polyString.length(); i++) {
     if ((polyString[i] != '+' && polyString[i] != '-') || i == 0 ||
@@ -108,6 +108,7 @@ void ParseFromFile(const char *filename, vector<double *> &coefs,
                      polyString.end());
 
     coef = new double[kMAXDEGREE];
+
     num_coefs.push_back(ParseSingleLine(polyString, coef) + 1);
 
     coefs.push_back(coef);
