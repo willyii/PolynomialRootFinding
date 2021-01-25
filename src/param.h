@@ -19,6 +19,6 @@ static const double kEPSILON = 1e-9;
 static const int kMAXDEGREE = 6;
 
 // Minimum range
-static const double kMINRANGE = 1e-3;
+static const double kMINRANGE = 1e-6;
 
-#endif  // POLY_PARAM_H
+#endif // POLY_PARAM_H

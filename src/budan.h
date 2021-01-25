@@ -19,6 +19,9 @@
 #include "range.h"
 #include "util.h"
 
+// debug
+#include <stdio.h>
+
 /**
  * @brief :Isolate the root of a square free polynomial, Applied bisection
  * method
@@ -40,10 +43,10 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
   // no root in this range
   if (left_change == right_change)
     return;
-  // exact one root in this range
-  else if ((right - left) < kMINRANGE && (left_change - right_change) == 1) {
-
-    AddToRange(duplicate_times, left, right, ranges, num_roots);
+  // search range smaller than threshold
+  else if ((right - left) < kMINRANGE) {
+    if ((left_change - right_change) % 2 == 1)
+      AddToRange(duplicate_times, left, right, ranges, num_roots);
     return;
   }
 
@@ -69,7 +72,9 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
  * @return :Number of roots
  */
 int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
+
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
+  // std::cout << "DEBUG: Original polynomial " << original_poly << std::endl;
   Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
   int num_roots(0);

@@ -124,6 +124,7 @@ template <int n> Poly<n> NegatePoly(const Poly<n> &poly) {
  */
 int VincentRootIsolate(const double *coef, int coef_num, Range *ranges) {
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
+  // std::cout << "DEBUG: Original polynomial " << original_poly << std::endl;
   Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
   // Square free decompose polynomial

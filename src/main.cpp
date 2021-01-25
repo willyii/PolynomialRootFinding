@@ -1,46 +1,60 @@
-
-#include <stdio.h>
-
-#include <iostream>
-#include <ostream>
-
 #include "budan.h"
+#include "parse.h"
 #include "poly.h"
 #include "range.h"
 #include "util.h"
 #include "vincent.h"
 
-int main() {
-  // double coef[5] = {.48e-2, -.88e-1, .51, -1.2,
-  // 1}; // (x - .1)(x - .3)(x - .4) ^ 2
-  //// double coef[3] = {12, -7, 1}; // (x-3)(x-4)
-  // double coef[7] = {-.8e-2, .92e-1, .674, -9.139, 12.59, -6.1, 1};
-  // Range roots[6];
-  // int num_roots = BudanRootIsolate(coef, 5, roots);
+#include <cassert>
+#include <chrono>
+#include <cstddef>
+#include <iostream>
+#include <vector>
 
-  // printf("Budan's Theorem Results: %d \n", num_roots);
-  // for (int i = 0; i < num_roots; i++) {
-  //  printf("left: %f, right: %f \n", roots[i].left_end, roots[i].right_end);
-  //}
-  //
-  //
+int main(int argc, char *argv[]) {
 
-  // double coef[5] = {0, -.75, 2.75, -3, 1};
-  // double coef[5] = {0, -18, -9, 2, 1};
-  double coef[4] = {.06, .47, 1.2, 1}; // (x-.3)(x-.4)(x-.5)
-  Range roots[6];
+  vector<double *> coefs;
+  vector<int> num_coefs;
+  vector<Range *> roots;
+  Range *poly_roots(nullptr);
+  ParseFromFile(argv[1], coefs, num_coefs);
 
-  int num_roots(VincentRootIsolate(coef, 4, roots));
-  printf("Vincent's Theorem Results: %d \n", num_roots);
-  for (int i = 0; i < num_roots; i++) {
-    printf("left: %f, right: %f \n", roots[i].left_end, roots[i].right_end);
+  // check num of polynoals
+  assert(coefs.size() == num_coefs.size());
+
+  /// Budan's theorem
+  auto budan_start = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < coefs.size(); i++) {
+    poly_roots = new Range[kMAXDEGREE];
+    int tmp = BudanRootIsolate(coefs[i], num_coefs[i], poly_roots);
+    roots.push_back(poly_roots);
   }
+  auto budan_end = std::chrono::high_resolution_clock::now();
 
-  num_roots = BudanRootIsolate(coef, 4, roots);
-  printf("Vincent's Budan Results: %d \n", num_roots);
-  for (int i = 0; i < num_roots; i++) {
-    printf("left: %f, right: %f \n", roots[i].left_end, roots[i].right_end);
+  auto budan_duration = std::chrono::duration_cast<std::chrono::microseconds>(
+      budan_end - budan_start);
+
+  std::cout << "Buand Method takes " << budan_duration.count() << " ms for "
+            << coefs.size() << " polynomials" << std::endl;
+  std::cout << "Average time : " << budan_duration.count() / coefs.size()
+            << "ms" << std::endl;
+
+  /// continued fration theorem
+  auto vincent_start = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < coefs.size(); i++) {
+    poly_roots = new Range[kMAXDEGREE];
+    int tmp = VincentRootIsolate(coefs[i], num_coefs[i], poly_roots);
+    roots.push_back(poly_roots);
   }
+  auto vincent_end = std::chrono::high_resolution_clock::now();
+
+  auto vincent_duration = std::chrono::duration_cast<std::chrono::microseconds>(
+      vincent_end - vincent_start);
+
+  std::cout << "Vincent Method takes " << vincent_duration.count() << " ms for "
+            << coefs.size() << " polynomials" << std::endl;
+  std::cout << "Average time : " << vincent_duration.count() / coefs.size()
+            << "ms" << std::endl;
   return 0;
 }
 
