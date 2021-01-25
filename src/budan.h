@@ -23,16 +23,16 @@
 #include <stdio.h>
 
 /**
- * @brief :Isolate the root of a square free polynomial, Applied bisection
- * method
+ * Isolate the root of a square free polynomial, and store it to ranges.
+ * Applied bisection method
  *
  * @tparam n :Maximum degree of polynomial
  * @param poly :Polynomial
- * @param duplicate_times :How many times thie poly repeat in original poly
- * @param left : Left end of search range
- * @param left_change : Number of sign change in left end
- * @param right : Right end of search range
- * @param right_change : Number of sign change in right end
+ * @param duplicate_times :Repeat time of polynomial in original polynomial
+ * @param left :Left end of search range
+ * @param left_change : Number of sign change of p(x+left_end)
+ * @param right :Right end of search range
+ * @param right_change : Number of sign change of p(x+right_end)
  * @param ranges :Store isolation results, might be modified
  * @param num_roots : Store the number of roots, might be modified
  */
@@ -62,19 +62,24 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
 }
 
 /**
- * @brief Use Budan' Theorem to get range of every root of polynomial that
+ * Apply Budan' Theorem to get range of every root of polynomial that
  * represented by coef and coef_num. Duplicated roots will represented by
  * same range.
  *
- * @param coef :Coefficients of polynomial
+ * @param coef :Pointer to coefficients of polynomial
  * @param coef_num :Number of coefficients
- * @param ranges :Array of ranges store the isolation results
+ * @param ranges :Store isolation results, might be modified
  * @return :Number of roots
  */
 int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
 
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
-  // std::cout << "DEBUG: Original polynomial " << original_poly << std::endl;
+  // std::cout << "DEBUG Budan : Original polynomial " << original_poly
+  //          << std::endl;
+  // std::cout << "DEBUG Budan : Original polynomial degree "
+  //          << original_poly.get_degree() << std::endl;
+  // std::cout << "DEBUG Budan : num of coef " << coef_num << std::endl;
+
   Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
   int num_roots(0);

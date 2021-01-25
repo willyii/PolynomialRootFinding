@@ -68,7 +68,7 @@ int ParseSingleLine(const string &polyString, double *coef) {
   string item_string("");
   int ret(0);
 
-  for (int i = 0; i < polyString.length(); i++) {
+  for (size_t i = 0; i < polyString.length(); i++) {
     if ((polyString[i] != '+' && polyString[i] != '-') || i == 0 ||
         polyString[i - 1] == 'e')
       item_string += polyString[i];
@@ -97,6 +97,7 @@ void ParseFromFile(const char *filename, vector<double *> &coefs,
                    vector<int> &num_coefs) {
   string polyString;
   double *coef(nullptr);
+  int line_count = 1;
 
   // std::ifstream fileString("src/test.poly");
   std::ifstream fileString(filename);
@@ -107,7 +108,10 @@ void ParseFromFile(const char *filename, vector<double *> &coefs,
     polyString.erase(std::remove(polyString.begin(), polyString.end(), ' '),
                      polyString.end());
 
-    coef = new double[kMAXDEGREE];
+    /* Print out current polynomial */
+    std::cout << line_count++ << ": " << polyString << std::endl;
+
+    coef = new double[kMAXDEGREE + 1];
 
     num_coefs.push_back(ParseSingleLine(polyString, coef) + 1);
 

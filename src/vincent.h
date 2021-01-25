@@ -25,11 +25,12 @@ struct Mobius {
 };
 
 /**
- * @brief :Help function used in VincentSquareFreeSolve, It will change change
- * p(x) to (x+1)^m p(1/(x+1)), where m is the degree of poly
+ * Help function used in VincentSquareFreeSolve, It will change change
+ * p(x) to (x+1)^m p(1/(x+1)), where m is the degree of polynomial
  *
  * @tparam n :Maximum degree of poly
  * @param poly :Polynomial
+ * @return :Polynomial after transformation
  */
 template <int n> Poly<n> Vincent_helper(const Poly<n> &poly) {
   Poly<n> ret;
@@ -41,12 +42,11 @@ template <int n> Poly<n> Vincent_helper(const Poly<n> &poly) {
 }
 
 /**
- * @brief :Isolate the roots of square free polynomial using continued
- * fractions
+ * Isolate the roots of square free polynomial using continued fractions
  *
  * @tparam n :Maximum degree of polynomial
  * @param poly :Polynomial
- * @param duplicate_times :How many times thie poly repeat in original poly
+ * @param duplicate_times :Repeat time of this poly repeat in original poly
  * @param mobuis :Mobius transormation to x in poly
  * @param ranges : Store isolation results, might be modified
  * @param num_roots : Store the number of roots, might be modified
@@ -102,10 +102,10 @@ void VincentSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
 }
 
 /**
- * @brief :Multiply -1 to x
+ * Transform p(x) to p(-x)
  *
  * @tparam n :Maximum degree of polynomial
- * @param poly :Polynomial
+ * @param poly :Polynomial after transformation
  */
 template <int n> Poly<n> NegatePoly(const Poly<n> &poly) {
   Poly<n> ret(poly);
@@ -115,12 +115,12 @@ template <int n> Poly<n> NegatePoly(const Poly<n> &poly) {
 }
 
 /**
- * @brief :Isolate roots using continued fractions
+ * Root isolation using continued fractions
  *
- * @param coef :Coefficent of polynomial
+ * @param coef :Pointer to coefficients of polynomial
  * @param coef_num :Number of coefficients
  * @param ranges :Store isolation results, might be modified
- * @param num_roots : Store the number of roots, might be modified
+ * @return :Number of roots
  */
 int VincentRootIsolate(const double *coef, int coef_num, Range *ranges) {
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
@@ -150,7 +150,7 @@ int VincentRootIsolate(const double *coef, int coef_num, Range *ranges) {
       Mobius inital_mobius{1, 0, 0, 1};
       VincentSquareFreeSolve(square_free_polys[i], i + 1, inital_mobius, ranges,
                              &num_roots);
-      // Negative
+      // Negative roots
       inital_mobius.a = -1;
       VincentSquareFreeSolve(NegatePoly(square_free_polys[i]), i + 1,
                              inital_mobius, ranges, &num_roots);

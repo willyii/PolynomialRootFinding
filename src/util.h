@@ -21,23 +21,23 @@
 #include "range.h"
 
 /**
- * @brief :return True if all coefficient of poly is zero
+ * Return True if all coefficients of poly is zero
  */
 template <int n> bool IsZero(const Poly<n> &poly) {
   return poly.get_degree() == 0 && std::fabs(poly[0]) <= kEPSILON;
 }
 
 /**
- * @brief Calculate GCD of poly1 and poly2, and save it into ret
+ * Calculate GCD of poly1 and poly2, and save it into ret
  * Applied Euclid's Algorithm. ref:
  * https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor
  *
- * @tparam n1 :maximum degree of poly1
- * @tparam n2 :maximum degree of poly2
- * @tparam n3 :maximum degree of ret
- * @param poly1 :polynomial 1
- * @param poly2 :polynomial 2
- * @param ret :store GCD of poly1 and poly2
+ * @tparam n1 :Maximum degree of poly1
+ * @tparam n2 :Maximum degree of poly2
+ * @tparam n3 :Maximum degree of ret
+ * @param poly1 :Polynomial 1
+ * @param poly2 :Polynomial 2
+ * @param ret :Store GCD of poly1 and poly2, might be modified
  */
 template <int n1, int n2, int n3>
 void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
@@ -51,12 +51,13 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
 }
 
 /**
- * @brief :Warp GCD_helper_ function return the GCD of two polynomials
+ * Warp GCD_helper_ function return the GCD of two polynomials
  *
- * @tparam n1 :maximum degree of poly1
- * @tparam n2 :maximum degree of poly2
- * @param poly1 :polynomial 1
- * @param poly2 :polynomial 2
+ * @tparam n1 :Maximum degree of poly1
+ * @tparam n2 :Maximum degree of poly2
+ * @param poly1 :Polynomial 1
+ * @param poly2 :Polynomial 2
+ * @return :GCD of two polynomials
  */
 template <int n1, int n2>
 Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
@@ -70,14 +71,15 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
 }
 
 /**
- * @brief Decopose a polynomial into an array of square free polynomials
+ * Decopose a polynomial into an array of square free polynomials
  * Applied Yun's algrithm, ref:
  * https://en.wikipedia.org/wiki/Square-free_polynomial
  *
- * @tparam n :maximum degree of polynomal
- * @param poly : polynomial
- * @param ans :array of polynomials used to restore the result
- * @return : number of square free polynomials
+ * @tparam n :Maximum degree of polynomal
+ * @param poly :Polynomial to be decomposed
+ * @param ans :Pointer to array of polynomials to restore the result, might be
+ *             modifed
+ * @return :Number of square free polynomials
  */
 template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   int ret = 0; // number of square free polynomial
@@ -103,16 +105,16 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
 }
 
 /**
- * @brief Calculate the upper bound of value of roots
+ * Calculate the upper bound of roots
  * Applied Cauchy's bound.
  * p(x) = a0 + a1x + a2 x^2 ... + an x^n
  * upperbound = 1 + max(abs(a0/an), abs(a1/an).... abs(an-1/an))
  * ref:
  * https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#Lagrange's_and_Cauchy's_bounds
  *
- * @tparam n :maximum degree of polynomial
- * @param poly :polynomial
- * @return :upper bound of roots
+ * @tparam n :Maximum degree of polynomial
+ * @param poly :Polynomial
+ * @return :Upper bound of roots
  */
 template <int n> double UpperBound(const Poly<n> &poly) {
   double lc = poly.lead_coef(), ans = std::fabs(poly[0] / lc);
@@ -122,15 +124,15 @@ template <int n> double UpperBound(const Poly<n> &poly) {
 }
 
 /**
- * @brief Replace "x" in poly with "x+h"
+ * Replace "x" in polynomial with "x+h"
  * Applied Taylor Expansion to this.
  * p(x+h) = p(h) + p'(h)x + 1/2*p''(h)x^2 ... 1/(n!) * p^n(h)*x^n
  * ref: https://math.stackexchange.com/questions/694565/polynomial-shift
  *
- * @tparam n :maximum degree of poly
- * @param poly :polynomial
- * @param h :number add to x
- * @return :polynomial that replace x in poly to x+h
+ * @tparam n :Maximum degree of poly
+ * @param poly :Polynomial
+ * @param h :Number add to x
+ * @return :Polynomial that replace x in poly to x+h
  */
 template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
   if (h == 0)
@@ -150,33 +152,36 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
 }
 
 /**
- * @brief :Add range represented by left and right to ans
+ * Add range represented by left and right to ans
  *
  * @param repeat_time :Repeat time of this root
- * @param left :Left end of root range
- * @param right :Right end of root range
+ * @param left :Left end of this root range
+ * @param right :Right end of this root range
  * @param ranges :Store isolation results, might be modified
  * @param num_roots :Store the number of roots, might be modified
  */
 void AddToRange(int repeat_time, double left, double right, Range *ranges,
                 int *num_roots) {
   for (int i = 0; i < repeat_time; i++) {
-    if (right < left)
-      std::swap(left, right);
-    ranges[*num_roots].left_end = left;
-    ranges[*num_roots].right_end = right;
+    if (right < left) {
+      ranges[*num_roots].left_end = right;
+      ranges[*num_roots].right_end = left;
+    } else {
+      ranges[*num_roots].left_end = left;
+      ranges[*num_roots].right_end = right;
+    }
     (*num_roots)++;
   }
   return;
 }
 
 /**
- * @brief :Return True and remove zero root of polynomial. Since its square
- * free, there at most 1 zero root
- * This function won't add range to final ans;
+ * Return if zero is root of poly and remove zero root of polynomial. Since its
+ * square free, there at most 1 zero root.
+ * This function won't add zero to final ans;
  *
  * @tparam n :Maxiumu degree of polynomial
- * @param poly :Polynomial, might be changed
+ * @param poly :Polynomial, might be modified
  * @return :True if zero is root of polynomial
  */
 template <int n> bool ZeroRoots(Poly<n> *poly) {
@@ -188,13 +193,13 @@ template <int n> bool ZeroRoots(Poly<n> *poly) {
   for (int i = 1; i <= poly->get_degree(); i++)
     (*poly)[i - 1] = (*poly)[i];
   (*poly)[poly->get_degree()] = 0.0;
-  poly->set_degree(poly->get_degree() - 1);
+  poly->set_degree(std::max(poly->get_degree() - 1, 0));
 
   return true;
 }
 
 /**
- * @brief :Handle linear polynomial, It has no zero root
+ * Solve linear polynomial, It has no zero root
  *
  * @tparam n :Maximum degree of polynomial
  * @param poly :Polynomial
@@ -212,7 +217,7 @@ void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
 }
 
 /**
- * @brief :Hanle quadratic polynomial, It has no zero root
+ * Solve quadratic polynomial, It has no zero root
  *
  * @tparam n :Maximum degree of polynomial
  * @param poly :Polynomial

@@ -21,4 +21,7 @@ static const int kMAXDEGREE = 7;
 // Minimum range
 static const double kMINRANGE = 1e-6;
 
+// Store file path for generated random polynomials
+static const char *kRANDOM_FILE = "src/random_poly.txt";
+
 #endif // POLY_PARAM_H

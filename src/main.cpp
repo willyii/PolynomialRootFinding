@@ -1,6 +1,7 @@
 #include "budan.h"
 #include "parse.h"
 #include "poly.h"
+#include "randompoly.h"
 #include "range.h"
 #include "util.h"
 #include "vincent.h"
@@ -11,13 +12,22 @@
 #include <iostream>
 #include <vector>
 
-int main(int argc, char *argv[]) {
-
+/**
+ * Get polynomials from file, solve use budan't theorem and continued fractions.
+ * print running time of these two methods
+ *
+ * @param file_path :Path to file
+ */
+void RunningTime(const char *file_path) {
   vector<double *> coefs;
   vector<int> num_coefs;
-  vector<Range *> roots;
+  vector<Range *> budan_roots;
+  vector<int> budan_root_num;
+  vector<Range *> vincent_roots;
+  vector<int> vincent_root_num;
+
   Range *poly_roots(nullptr);
-  ParseFromFile(argv[1], coefs, num_coefs);
+  ParseFromFile(file_path, coefs, num_coefs);
 
   // check num of polynoals
   assert(coefs.size() == num_coefs.size());
@@ -26,46 +36,49 @@ int main(int argc, char *argv[]) {
   auto budan_start = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < coefs.size(); i++) {
     poly_roots = new Range[kMAXDEGREE];
-    int tmp = BudanRootIsolate(coefs[i], num_coefs[i], poly_roots);
-    roots.push_back(poly_roots);
+    budan_root_num.push_back(
+        BudanRootIsolate(coefs[i], num_coefs[i], poly_roots));
+    budan_roots.push_back(poly_roots);
   }
   auto budan_end = std::chrono::high_resolution_clock::now();
 
   auto budan_duration = std::chrono::duration_cast<std::chrono::microseconds>(
       budan_end - budan_start);
 
+  // Print budan time
   std::cout << "Buand Method takes " << budan_duration.count() << " ms for "
             << coefs.size() << " polynomials" << std::endl;
   std::cout << "Average time : " << budan_duration.count() / coefs.size()
             << "ms" << std::endl;
 
-  /// continued fration theorem
+  /// continued fration
   auto vincent_start = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < coefs.size(); i++) {
     poly_roots = new Range[kMAXDEGREE];
-    int tmp = VincentRootIsolate(coefs[i], num_coefs[i], poly_roots);
-    roots.push_back(poly_roots);
+    vincent_root_num.push_back(
+        VincentRootIsolate(coefs[i], num_coefs[i], poly_roots));
+    vincent_roots.push_back(poly_roots);
   }
   auto vincent_end = std::chrono::high_resolution_clock::now();
 
   auto vincent_duration = std::chrono::duration_cast<std::chrono::microseconds>(
       vincent_end - vincent_start);
 
-  std::cout << "Vincent Method takes " << vincent_duration.count() << " ms for "
+  // Print continued fraction time
+  std::cout << "Vincent Method takes " << vincent_duration.count() << " ms "
             << coefs.size() << " polynomials" << std::endl;
   std::cout << "Average time : " << vincent_duration.count() / coefs.size()
             << "ms" << std::endl;
-  return 0;
+  return;
 }
 
-// x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 
-// x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 + 1e-6
-// x^4-1.2*x^3+.51*x^2-.88e-1*x+.48e-2 - 1e-6
-//.3e-1*x^6-600.018*x^5+3000059.9898*x^4+1200083.99832*x^3+180015.599883*x^2+12001.139997*x+300.030000
-// x^6+6.6*x^5+18.15*x^4+26.620*x^3+21.9615*x^2+9.66306*x+1.771561
-// x^6+92.3521*x^2-19.22*x^4
-// x^6+.3*x^5-.61*x^4-.127*x^3+.900e-1*x^2+.964e-2*x-.1680e-2
-// x^6+4.2*x^4+5.88*x^2+2.744
-// x^6-.196e-1+2.79*x^4+1.932*x^2
-// x^6-6.1*x^5+12.59*x^4-9.139*x^3+.674*x^2+.92e-1*x-.8e-2
-//- 2*x + 1 + 2*x^2
+int main(int argc, char *argv[]) {
+  if (argc == 1) { // get random polys
+    RandomPolyToFile();
+    RunningTime(kRANDOM_FILE);
+  } else if (argc == 2) {
+    RunningTime(argv[1]);
+  }
+
+  return 0;
+}
