@@ -23,7 +23,7 @@
 /**
  * Get random integer in range min to max
  */
-int rand_int(int min, int max) { return rand() % max + min; }
+int rand_int(int min, int max) { return rand() % (max - min) + min; }
 
 /**
  * Get random double in range min to max
@@ -38,7 +38,8 @@ double rand_double(double min, double max) {
  *
  */
 Poly<kMAXDEGREE> RandomPoly() {
-  int degree = rand_int(1, kMAXDEGREE - 1);
+  /* TODO : Generate polynomial with specific root */
+  int degree = rand_int(3, kMAXDEGREE - 1);
   double coef[kMAXDEGREE + 1];
 
   for (int i = 0; i <= degree; i++)
@@ -69,7 +70,7 @@ template <int n> std::string PolyToString(const Poly<n> &poly) {
  *
  * @param num_polys :Number of polynomials to generate
  */
-void RandomPolyToFile(int num_polys = 100) {
+void RandomPolyToFile(int num_polys = 100000) {
   srand(time(NULL));
 
   std::ofstream write_file;

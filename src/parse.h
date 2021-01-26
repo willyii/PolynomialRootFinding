@@ -68,6 +68,9 @@ int ParseSingleLine(const string &polyString, double *coef) {
   string item_string("");
   int ret(0);
 
+  for (int i = 0; i <= kMAXDEGREE; i++)
+    coef[i] = 0.0;
+
   for (size_t i = 0; i < polyString.length(); i++) {
     if ((polyString[i] != '+' && polyString[i] != '-') || i == 0 ||
         polyString[i - 1] == 'e')

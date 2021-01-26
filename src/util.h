@@ -27,6 +27,12 @@ template <int n> bool IsZero(const Poly<n> &poly) {
   return poly.get_degree() == 0 && std::fabs(poly[0]) <= kEPSILON;
 }
 
+template <int n> void Monic(Poly<n> &poly) {
+  double div(1 / poly.lead_coef());
+  for (int i = 0; i <= poly.get_degree(); i++)
+    poly[i] *= div;
+}
+
 /**
  * Calculate GCD of poly1 and poly2, and save it into ret
  * Applied Euclid's Algorithm. ref:
@@ -66,6 +72,7 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   else {
     Poly<n2> ret;
     GCD_helper_(poly1, poly2, ret);
+    // Monic(ret);
     return ret;
   }
 }
@@ -82,10 +89,14 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
  * @return :Number of square free polynomials
  */
 template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
-  int ret = 0; // number of square free polynomial
+  int ret(0); // number of square free polynomial
 
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd));
+  if (a.get_degree() == 0) {
+    ans[ret++] = poly;
+    return ret;
+  }
   auto b(Quotient(poly, a));
   auto c(Quotient(fd, a));
   auto d(c - b.Derivative());

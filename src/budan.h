@@ -44,7 +44,7 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
   if (left_change == right_change)
     return;
   // search range smaller than threshold
-  else if ((right - left) < kMINRANGE) {
+  else if ((right - left) < kMINRANGE || (left_change - right_change) == 1) {
     if ((left_change - right_change) % 2 == 1)
       AddToRange(duplicate_times, left, right, ranges, num_roots);
     return;
@@ -74,19 +74,18 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
 int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
 
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
-  // std::cout << "DEBUG Budan : Original polynomial " << original_poly
-  //          << std::endl;
-  // std::cout << "DEBUG Budan : Original polynomial degree "
-  //          << original_poly.get_degree() << std::endl;
-  // std::cout << "DEBUG Budan : num of coef " << coef_num << std::endl;
 
-  Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
+  // std::cout << "DEBUG: original poly " << original_poly << std::endl;
+  Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE + 1];
 
   int num_roots(0);
   int num_square_free(
       SquareFreeDecompose<kMAXDEGREE>(original_poly, square_free_polys));
 
   for (int i = 0; i < num_square_free; i++) {
+
+    // std::cout << "DEBUG: square free poly " << square_free_polys[i]
+    //          << std::endl;
 
     // Handle zero roots
     if (ZeroRoots(&square_free_polys[i]))

@@ -386,8 +386,8 @@ template <int n> Poly<n> operator/(const Poly<n> &poly, double num) {
 template <int n>
 static std::ostream &operator<<(std::ostream &out, const Poly<n> &u) {
   for (int i = 0; i <= n; i++) {
-    // if (std::fabs(u[i]) < kEPSILON)
-    //  continue;
+    if (std::fabs(u[i]) < kEPSILON)
+      continue;
     if (u[i] >= 0)
       out << '+';
     out << u[i] << "*x^" << i;

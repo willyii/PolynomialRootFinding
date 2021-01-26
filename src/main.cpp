@@ -74,8 +74,10 @@ void RunningTime(const char *file_path) {
 
 int main(int argc, char *argv[]) {
   if (argc == 1) { // get random polys
-    RandomPolyToFile();
-    RunningTime(kRANDOM_FILE);
+    for (int i = 0; i < 100; i++) {
+      RandomPolyToFile();
+      RunningTime(kRANDOM_FILE);
+    }
   } else if (argc == 2) {
     RunningTime(argv[1]);
   }
