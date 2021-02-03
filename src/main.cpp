@@ -23,8 +23,9 @@
 //
 // ----------------------------------------------------------------------------
 #include "interval.h"
-#include "param.h"
-#include "testfunction.h"
+#include "poly.h"
+//#include "param.h"
+//#include "testfunction.h"
 
 #include <iomanip>
 #include <ios>
@@ -101,8 +102,16 @@ int main(int argc, char *argv[]) {
   printf("* operator c left %f b right %f \n", c.left, c.right);
   c = 3 - c;
   printf("- operator c left %f b right %f \n", c.left, c.right);
+  c = c / -3;
+  printf("/ operator c left %f b right %f \n", c.left, c.right);
   c = 3 / c;
   printf("/ operator c left %f b right %f \n", c.left, c.right);
+
+  double coef[3] = {1, -2, 1};
+  Poly<4> p1(coef, 3);
+  double coef2[2] = {-1, 1};
+  Poly<3> p2(coef, 2);
+  std::cout << Quotient(p1, p2) << std::endl;
 
   return 0;
 }

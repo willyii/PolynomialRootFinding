@@ -17,7 +17,6 @@
 #include <cmath>
 #include <iostream>
 
-#include "interval.h"
 #include "param.h"
 
 /**
@@ -30,7 +29,7 @@ template <int n> class Poly {
   static_assert(n >= 0);
 
 private:
-  interval coef_[n + 1];
+  double coef_[n + 1];
   int degree_;
 
 public:
@@ -77,7 +76,7 @@ public:
 
   void set_degree() {
     for (degree_ = n;
-         degree_ > 0 && coef_[degree_].left < 0 && coef_[degree_].right > 0;
+         degree_ > 0 && std::fabs(coef_[degree_]) < kMAXDEGREE * kEPSILON;
          degree_--)
       coef_[degree_] = 0.0;
   }
@@ -94,7 +93,6 @@ public:
     double ans = coef_[degree_];
     for (int i = degree_ - 1; i >= 0; i--)
       ans = ans * x + coef_[i];
-
     return ans;
   }
 
@@ -122,7 +120,7 @@ public:
     return ans;
   }
 
-  double lead_coef() const { return (*this)[degree_]; }
+  double lead_coef() const { return coef_[degree_]; }
 
   /**
    * Get number of sign changes in coefficients
@@ -148,10 +146,8 @@ public:
    * --------------------------------------------------------------------------
    */
 
-  double operator[](int i) const {
-    return (coef_[i].left + coef_[i].right) * 0.5;
-  }
-  interval &operator[](int i) { return coef_[i]; }
+  double operator[](int i) const { return coef_[i]; }
+  double &operator[](int i) { return coef_[i]; }
 
   template <int n1> Poly<n> &operator+=(const Poly<n1> &poly2) {
     static_assert(n1 <= n);

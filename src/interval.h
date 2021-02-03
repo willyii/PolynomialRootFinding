@@ -17,6 +17,8 @@
 #include <fstream>
 #include <limits>
 
+#include "param.h"
+
 struct interval {
   double left;
   double right;
@@ -24,6 +26,12 @@ struct interval {
   inline interval &operator=(interval a) {
     left = a.left;
     right = a.right;
+    return *this;
+  }
+
+  inline interval &operator=(double a) {
+    left = a - kEPSILON;
+    right = a + kEPSILON;
     return *this;
   }
 
@@ -86,9 +94,11 @@ struct interval {
   }
 
   inline interval &operator/=(double a) {
-    double tmp = left / a;
-    left = right / a;
-    right = tmp;
+    left /= a;
+    right /= a;
+    if (a < 0) {
+      std::swap(left, right);
+    }
     return *this;
   }
 };
