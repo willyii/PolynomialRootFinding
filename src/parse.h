@@ -51,8 +51,9 @@ int ParseItem(string &item_string, double *coef) {
       item_string = "-1*" + item_string;
   }
 
-  int d = std::stoi(item_string.substr(item_string.length() - 1));
-  coef[d] += std::stod(item_string.substr(0, item_string.length() - 4));
+  pos = item_string.find('x');
+  int d = std::stoi(item_string.substr(pos + 2));
+  coef[d] += std::stod(item_string.substr(0, pos));
 
   return d;
 }

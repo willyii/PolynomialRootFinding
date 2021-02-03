@@ -1,86 +1,108 @@
-#include "budan.h"
-#include "parse.h"
-#include "poly.h"
-#include "randompoly.h"
-#include "range.h"
-#include "util.h"
-#include "vincent.h"
+// ----------------------------------------------------------------------------
+//
+// FILENAME: main.cpp
+//
+// DESCRIPTION:
+//    This file define the program entrance of this project. It takes several
+//    parameters
+//
+// PARAMETERS:
+//    No parameter: test random generated polynomials, print running time
+//    One parameter: Usually take polynomial file path as parameter. If use
+//                   "valid" as  parameter, it will test random polynomials and
+//                   print out the results
+//    Two parameters:First parameter should be the path to poly file.
+//                   If second parameter is "valid", it will print out the
+//                   result get from two methods.
+//                   Else second parameter will be regard as path to solution of
+//                   first file
+//
+//
+//
+// AUTHOR: Xinlong Yi
+//
+// ----------------------------------------------------------------------------
+#include "interval.h"
+#include "param.h"
+#include "testfunction.h"
 
-#include <cassert>
-#include <chrono>
-#include <cstddef>
-#include <iostream>
-#include <vector>
+#include <iomanip>
+#include <ios>
+#include <string>
 
 /**
- * Get polynomials from file, solve use budan't theorem and continued fractions.
- * print running time of these two methods
- *
- * @param file_path :Path to file
+ * Return true if file exists
  */
-void RunningTime(const char *file_path) {
-  vector<double *> coefs;
-  vector<int> num_coefs;
-  vector<Range *> budan_roots;
-  vector<int> budan_root_num;
-  vector<Range *> vincent_roots;
-  vector<int> vincent_root_num;
-
-  Range *poly_roots(nullptr);
-  ParseFromFile(file_path, coefs, num_coefs);
-
-  // check num of polynoals
-  assert(coefs.size() == num_coefs.size());
-
-  /// Budan's theorem
-  auto budan_start = std::chrono::high_resolution_clock::now();
-  for (size_t i = 0; i < coefs.size(); i++) {
-    poly_roots = new Range[kMAXDEGREE];
-    budan_root_num.push_back(
-        BudanRootIsolate(coefs[i], num_coefs[i], poly_roots));
-    budan_roots.push_back(poly_roots);
-  }
-  auto budan_end = std::chrono::high_resolution_clock::now();
-
-  auto budan_duration = std::chrono::duration_cast<std::chrono::microseconds>(
-      budan_end - budan_start);
-
-  // Print budan time
-  std::cout << "Buand Method takes " << budan_duration.count() << " ms for "
-            << coefs.size() << " polynomials" << std::endl;
-  std::cout << "Average time : " << budan_duration.count() / coefs.size()
-            << "ms" << std::endl;
-
-  /// continued fration
-  auto vincent_start = std::chrono::high_resolution_clock::now();
-  for (int i = 0; i < coefs.size(); i++) {
-    poly_roots = new Range[kMAXDEGREE];
-    vincent_root_num.push_back(
-        VincentRootIsolate(coefs[i], num_coefs[i], poly_roots));
-    vincent_roots.push_back(poly_roots);
-  }
-  auto vincent_end = std::chrono::high_resolution_clock::now();
-
-  auto vincent_duration = std::chrono::duration_cast<std::chrono::microseconds>(
-      vincent_end - vincent_start);
-
-  // Print continued fraction time
-  std::cout << "Vincent Method takes " << vincent_duration.count() << " ms "
-            << coefs.size() << " polynomials" << std::endl;
-  std::cout << "Average time : " << vincent_duration.count() / coefs.size()
-            << "ms" << std::endl;
-  return;
+bool is_file_exist(const char *fileName) {
+  std::ifstream infile(fileName);
+  return infile.good();
 }
 
 int main(int argc, char *argv[]) {
-  if (argc == 1) { // get random polys
-    for (int i = 0; i < 100; i++) {
-      RandomPolyToFile();
-      RunningTime(kRANDOM_FILE);
-    }
-  } else if (argc == 2) {
-    RunningTime(argv[1]);
-  }
+  std::cout << std::setprecision(16);
+  // if (argc == 1) {
+  /**
+   * Generate random polynomials and write to file
+   * Then read from file and record the running time
+   */
+  //  RandomPolyToFile(kNUMPOLY);
+  //  RunningTimeTest(kRANDOM_FILE);
+  //} else if (argc == 2) {
+  //  if (std::string(argv[1]) == "valid") {
+  /**
+   * Generate random polynomials and corresponding results
+   * Save to file then read and slove, print out the result
+   */
+  //    RandomPolyToFile(kNUMPOLY);
+  //    RunningCorrectTest(kRANDOM_FILE, kRANDOM_FILE_SOL);
+  //    return 0;
+  //  }
+
+  /**
+   * Test running time of polynomals in files
+   */
+  //  RunningTimeTest(argv[1]);
+  //} else if (argc == 3) {
+  /**
+   * Test with specific file, and print out the result
+   */
+  //  if (std::string(argv[2]) == "valid") {
+  //    RunningCorrectTest(argv[1]);
+  //    return 0;
+  //  }
+
+  /**
+   * Test with specific file and corresponding solution file
+   */
+  //  RunningCorrectTest(argv[1], argv[2]);
+
+  //  return 0;
+  //} else {
+  //  printf("Invalid parameters\n");
+  //  return 1;
+  //}
+
+  interval a = {-1.0, 2.0};
+  interval b = a;
+  printf("= operator b left %f b right %f \n", b.left, b.right);
+  b += a;
+  printf("+ operator b left %f b right %f \n", b.left, b.right);
+  b -= a;
+  printf("- operator b left %f b right %f \n", b.left, b.right);
+  b *= a;
+  printf("* operator b left %f b right %f \n", b.left, b.right);
+  b /= a;
+  printf("/ operator b left %f b right %f \n", b.left, b.right);
+
+  printf("====================================================\n");
+  interval c = a + a;
+  printf("+ operator c left %f b right %f \n", c.left, c.right);
+  c *= -9;
+  printf("* operator c left %f b right %f \n", c.left, c.right);
+  c = 3 - c;
+  printf("- operator c left %f b right %f \n", c.left, c.right);
+  c = 3 / c;
+  printf("/ operator c left %f b right %f \n", c.left, c.right);
 
   return 0;
 }

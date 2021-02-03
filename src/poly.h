@@ -75,7 +75,8 @@ public:
   int get_degree() const { return degree_; }
 
   void set_degree() {
-    for (degree_ = n; degree_ > 0 && std::fabs(coef_[degree_]) < kEPSILON;
+    for (degree_ = n;
+         degree_ > 0 && std::fabs(coef_[degree_]) < kMAXDEGREE * kEPSILON;
          degree_--)
       coef_[degree_] = 0.0;
   }
@@ -112,6 +113,9 @@ public:
     Poly<std::max(n - 1, 0)> ans;
     for (int i = 0; i < degree_; i++)
       ans[i] = coef_[i + 1] * (i + 1);
+    for (int i = degree_; i <= n; i++) {
+      ans[i] = 0;
+    }
     ans.set_degree(degree_ - 1);
     return ans;
   }
@@ -188,7 +192,7 @@ public:
   }
 
   Poly<n> &operator*=(double num) {
-    for (int i = 0; i < degree_; i++)
+    for (int i = 0; i <= degree_; i++)
       coef_[i] *= num;
     return *this;
   }
