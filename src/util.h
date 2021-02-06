@@ -23,37 +23,21 @@
 #include "poly.h"
 #include "range.h"
 
-template <int n> double TestFunction(const Poly<n> &poly) {
-  double ret(std::fabs(poly[0]));
-  for (int i = 1; i < poly.get_degree(); i++) {
-    if (std::fabs(poly[i]) < kEPSILON)
-      continue;
-    ret = std::fmin(ret, fabs(poly[i]));
-  }
-  printf("Ret in TestFunction : %f \n", ret);
-  return ret;
-}
-
 /**
  * Return True if all coefficients of poly is zero
  */
 template <int n> bool IsZero(const Poly<n> &poly) {
-  return poly.get_degree() == 0 && std::fabs(poly[0]) <= kEPSILON;
+  return poly.get_degree() == 0 && poly[0].value() == 0;
 }
 
 /**
- * Return True if all coefficients of poly is zero
+ * Make a polynomial monic
+ *
+ * @tparam n :Maximum degree of polynomial
+ * @param poly :Polynomial, might be modified.
  */
-template <int n> bool TerminateGCD(const Poly<n> &poly, double upperbound) {
-  for (int i = poly.get_degree(); i >= 0; i--) {
-    if (std::fabs(poly[i]) > kEPSILON * i * kMAXDEGREE)
-      return false;
-  }
-  return true;
-}
-
 template <int n> void Monic(Poly<n> &poly) {
-  double div(1 / poly.lead_coef());
+  double div(1 / poly.lead_coef().value());
   for (int i = 0; i <= poly.get_degree(); i++)
     poly[i] *= div;
 }
@@ -71,15 +55,14 @@ template <int n> void Monic(Poly<n> &poly) {
  * @param ret :Store GCD of poly1 and poly2, might be modified
  */
 template <int n1, int n2, int n3>
-void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
-                 double upperbound) {
+void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
-  if (TerminateGCD(remainder, upperbound)) {
+  if (IsZero(remainder)) {
     ret = poly2;
     return;
   }
-  GCD_helper_(poly2, remainder, ret, upperbound);
+  GCD_helper_(poly2, remainder, ret);
 }
 
 /**
@@ -92,13 +75,12 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
  * @return :GCD of two polynomials
  */
 template <int n1, int n2>
-Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2,
-                           double upperbound) {
+Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   if constexpr (n2 > n1)
-    return GCD(poly2, poly1, upperbound);
+    return GCD(poly2, poly1);
   else {
     Poly<n2> ret;
-    GCD_helper_(poly1, poly2, ret, upperbound);
+    GCD_helper_(poly1, poly2, ret);
     Monic(ret);
     return ret;
   }
@@ -118,12 +100,10 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2,
 template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   int ret(0); // number of square free polynomial
 
-  double temp(TestFunction(poly));
-
   // std::cout << "DEBUGE poly " << poly << std::endl;
 
   auto fd(poly.Derivative());
-  auto a(GCD(poly, fd, UpperBound(poly))); /* TODO : DEBUG should be cubic */
+  auto a(GCD(poly, fd)); /* TODO : DEBUG should be cubic*/
   if (a.get_degree() == 0) {
     ans[ret++] = poly;
     return ret;
@@ -140,13 +120,13 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   std::cout << "DEBUG: c " << c << std::endl;
   std::cout << "DEBUG: d " << d << std::endl;
   std::cout << "================" << std::endl;
-  while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) { // b != 1
-    if (TerminateGCD(d, temp)) {
+  while (!(b.get_degree() == 0)) { // b !=1
+    if (IsZero(d)) {
       assert(ret < kMAXDEGREE);
       ans[ret++] = b;
       break;
     }
-    a = GCD(b, d, temp);
+    a = GCD(b, d);
 
     assert(ret <= kMAXDEGREE);
     ans[ret++] = a;
@@ -180,9 +160,9 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
  * @return :Upper bound of roots
  */
 template <int n> double UpperBound(const Poly<n> &poly) {
-  double lc = poly.lead_coef(), ans = std::fabs(poly[0] / lc);
+  double lc = poly.lead_coef().value(), ans = std::fabs(poly[0].value() / lc);
   for (int i = 1; i < poly.get_degree(); i++)
-    ans = std::fmax(ans, std::fabs(poly[i] / lc));
+    ans = std::fmax(ans, std::fabs(poly[i].value() / lc));
   return 1 + ans;
 }
 
@@ -223,6 +203,7 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
  * @param ranges :Store isolation results, might be modified
  * @param num_roots :Store the number of roots, might be modified
  */
+/* TODO : verify  */
 void AddToRange(int repeat_time, double left, double right, Range *ranges,
                 int *num_roots) {
   if (repeat_time == 0)
@@ -250,9 +231,10 @@ void AddToRange(int repeat_time, double left, double right, Range *ranges,
  * @param poly :Polynomial, might be modified
  * @return :True if zero is root of polynomial
  */
+/* TODO : verify */
 template <int n> int ZeroRoots(Poly<n> *poly) {
   // Zero is not root
-  if (std::fabs((*poly)[0]) >= kEPSILON)
+  if (std::fabs((*poly)[0].value()) == kEPSILON)
     return 0;
 
   // remove zero root
@@ -276,14 +258,14 @@ template <int n> int ZeroRoots(Poly<n> *poly) {
  * @param ranges :Store results, might be modified
  * @param num_roots :Sotore the number of roots, might be modified
  */
-template <int n>
-void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
-            int *num_roots) {
-  double root(-poly[0] / poly[1]);
+// template <int n>
+// void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
+//            int *num_roots) {
+//  double root(-poly[0] / poly[1]);
 
-  AddToRange(repeat_time, root, root, ranges, num_roots);
-  return;
-}
+//  AddToRange(repeat_time, root, root, ranges, num_roots);
+//  return;
+//}
 
 /**
  * Solve quadratic polynomial, It has no zero root
@@ -294,20 +276,20 @@ void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
  * @param ranges :Store results, might be modified
  * @param num_roots :Sotore the number of roots, might be modified
  */
-template <int n>
-void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
-               int *num_roots) {
-  double delta(poly[1] * poly[1] - 4 * poly[0] * poly[2]); // b^2 - 4ac
+// template <int n>
+// void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
+//               int *num_roots) {
+//  double delta(poly[1] * poly[1] - 4 * poly[0] * poly[2]); // b^2 - 4ac
 
-  if (delta < 0)
-    return;
-  delta = std::sqrt(delta);
+//  if (delta < 0)
+//    return;
+//  delta = std::sqrt(delta);
 
-  double root1((-poly[1] + delta) / (2 * poly[2]));
-  AddToRange(repeat_time, root1, root1, ranges, num_roots);
-  double root2((-poly[1] - delta) / (2 * poly[2]));
-  AddToRange(repeat_time, root2, root2, ranges, num_roots);
-  return;
-}
+//  double root1((-poly[1] + delta) / (2 * poly[2]));
+//  AddToRange(repeat_time, root1, root1, ranges, num_roots);
+//  double root2((-poly[1] - delta) / (2 * poly[2]));
+//  AddToRange(repeat_time, root2, root2, ranges, num_roots);
+//  return;
+//}
 
 #endif // POLY_UTIL_H

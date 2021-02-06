@@ -24,6 +24,7 @@
 // ----------------------------------------------------------------------------
 #include "interval.h"
 #include "poly.h"
+#include "util.h"
 //#include "param.h"
 //#include "testfunction.h"
 
@@ -83,35 +84,81 @@ int main(int argc, char *argv[]) {
   //  return 1;
   //}
 
-  interval a = {-1.0, 2.0};
-  interval b = a;
-  printf("= operator b left %f b right %f \n", b.left, b.right);
-  b += a;
-  printf("+ operator b left %f b right %f \n", b.left, b.right);
-  b -= a;
-  printf("- operator b left %f b right %f \n", b.left, b.right);
-  b *= a;
-  printf("* operator b left %f b right %f \n", b.left, b.right);
-  b /= a;
-  printf("/ operator b left %f b right %f \n", b.left, b.right);
-
-  printf("====================================================\n");
-  interval c = a + a;
-  printf("+ operator c left %f b right %f \n", c.left, c.right);
-  c *= -9;
-  printf("* operator c left %f b right %f \n", c.left, c.right);
-  c = 3 - c;
-  printf("- operator c left %f b right %f \n", c.left, c.right);
-  c = c / -3;
-  printf("/ operator c left %f b right %f \n", c.left, c.right);
-  c = 3 / c;
-  printf("/ operator c left %f b right %f \n", c.left, c.right);
-
   double coef[3] = {1, -2, 1};
   Poly<4> p1(coef, 3);
   double coef2[2] = {-1, 1};
-  Poly<3> p2(coef, 2);
-  std::cout << Quotient(p1, p2) << std::endl;
+  Poly<3> p2(coef2, 2);
+  std::cout << "Test: P2 = " << p2 << std::endl;
+
+  Poly<5> p3(p2);
+  std::cout << "Test: P3 = " << p3 << std::endl;
+
+  Poly<5> p4;
+  p4 = p2;
+  std::cout << "Test: P4 = " << p4 << std::endl;
+
+  std::cout << "Test: P4(x=2) = " << p4.ValueAt(2) << std::endl;
+
+  std::cout << "Test: P4 derivate at 2 = " << p4.DerivativeAt(2) << std::endl;
+
+  std::cout << "Test: P4 derivate = " << p4.Derivative() << std::endl;
+
+  p4 += p1;
+  std::cout << "Test: P4 + p1 " << p4 << std::endl;
+
+  p4 += 1;
+  std::cout << "Test: P4 + 1 " << p4 << std::endl;
+
+  p4 -= 1;
+  std::cout << "Test: P4 - 1 " << p4 << std::endl;
+
+  p4 -= p1;
+  std::cout << "Test: P4 - p1 " << p4 << std::endl;
+
+  p4 /= 2;
+  std::cout << "Test: P4 / 2  " << p4 << std::endl;
+
+  p4 *= 2;
+  std::cout << "Test: P4 * 2  " << p4 << std::endl;
+
+  auto p5 = p4 + p1;
+  std::cout << "Test: P5  " << p5 << std::endl;
+
+  auto p6 = p5 - p1;
+  std::cout << "Test: P6  " << p6 << std::endl;
+
+  auto p7 = p4 * p4;
+  std::cout << "Test: P7  " << p7 << std::endl;
+
+  auto p8 = p4 * 4;
+  std::cout << "Test: P8  " << p8 << std::endl;
+
+  auto p9 = Division(p1, p2);
+  std::cout << "Test: p1/p2 \n "
+            << " quotient: " << p9.quotient << " \n remainder: " << std::endl;
+
+  auto p10 = Quotient(p1, p2);
+  std::cout << "Test: p10 " << p10 << std::endl;
+
+  auto p11 = Remainder(p1, p2);
+  std::cout << "Test: p11 " << p11 << "  IsZero: " << IsZero(p11) << std::endl;
+
+  auto p12 = GCD(p1, p2);
+  std::cout << "Test: p12 " << p12 << std::endl;
+
+  double test_coef[kMAXDEGREE] = {.48e-2 + 1e-6, -.88e-1, .51, -1.2, 1};
+  Poly<kMAXDEGREE> poly(test_coef, 5);
+  Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
+  int num_square = SquareFreeDecompose(poly, square_free_polys);
+
+  for (int i = 0; i < num_square; i++) {
+    std::cout << "Test: Square Free Polynomial: " << square_free_polys[i]
+              << std::endl;
+  }
+
+  std::cout << "Test: upperbound of poly " << UpperBound(poly) << std::endl;
+
+  std::cout << "Test: add 1 to x " << AddToX(poly, 1) << std::endl;
 
   return 0;
 }

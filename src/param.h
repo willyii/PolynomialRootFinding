@@ -13,7 +13,7 @@
 #define POLY_PARAM_H
 
 // Regard number as 0 when it's smaller than kEPSILON
-double kEPSILON = 1e-4;
+double kEPSILON = 1e-15;
 
 // Maxium possible degree of polynomials
 static const int kMAXDEGREE = 7;

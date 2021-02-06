@@ -19,9 +19,21 @@
 
 #include "param.h"
 
+static const double kROUNDOFF = kEPSILON;
+
 struct interval {
   double left;
   double right;
+
+  interval() : left(-kROUNDOFF), right(kROUNDOFF){};
+  interval(double num) : left(num - kROUNDOFF), right(num + kROUNDOFF){};
+  interval(double num1, double num2) : left(num1), right(num2){};
+
+  double value() {
+    if (left < 0 && right > 0)
+      return 0.0;
+    return (left + right) / 2;
+  }
 
   inline interval &operator=(interval a) {
     left = a.left;
@@ -30,8 +42,8 @@ struct interval {
   }
 
   inline interval &operator=(double a) {
-    left = a - kEPSILON;
-    right = a + kEPSILON;
+    left = a - kROUNDOFF;
+    right = a + kROUNDOFF;
     return *this;
   }
 
@@ -148,7 +160,7 @@ interval operator/(const interval &interval1, double num) {
 }
 
 interval operator/(double num, const interval &interval1) {
-  interval tmp{num, num};
+  interval tmp(num);
   return interval(tmp) /= interval1;
 }
 #endif // POLY_INTERVAL_H_
