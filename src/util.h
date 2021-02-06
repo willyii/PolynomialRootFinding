@@ -98,15 +98,21 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
  * @return :Number of square free polynomials
  */
 template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
-  int ret(0); // number of square free polynomial
+  int ret = 0; // number of square free polynomial
 
-  // std::cout << "DEBUGE poly " << poly << std::endl;
+  std::cout << "DEBUGE poly " << poly << std::endl;
+  std::cout << "DEBUGE initial ret " << ret << std::endl;
+  ret++;
+  std::cout << "DEBUGE ret++ " << ret << std::endl;
 
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd)); /* TODO : DEBUG should be cubic*/
+  std::cout << "DEBUG: a " << a << " , degree " << a.get_degree() << std::endl;
   if (a.get_degree() == 0) {
-    ans[ret++] = poly;
-    return ret;
+    std::cout << "DEBUG: ret " << ret << std::endl;
+    ans[0] = poly;
+    std::cout << "DEBUG: ret " << ret << std::endl;
+    return 1;
   }
   auto b(Quotient(poly, a));
   auto c(Quotient(fd, a));
@@ -122,14 +128,18 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   std::cout << "================" << std::endl;
   while (!(b.get_degree() == 0)) { // b !=1
     if (IsZero(d)) {
+      std::cout << "DEBUG: ret " << ret << std::endl;
       assert(ret < kMAXDEGREE);
-      ans[ret++] = b;
+      ans[ret] = b;
+      ret += 1;
       break;
     }
     a = GCD(b, d);
 
+    std::cout << "DEBUG: ret " << ret << std::endl;
     assert(ret <= kMAXDEGREE);
-    ans[ret++] = a;
+    ans[ret] = a;
+    ret += 1;
     b = Quotient(b, a);
     c = Quotient(d, a);
     auto tmp = b.Derivative();
@@ -231,22 +241,18 @@ void AddToRange(int repeat_time, double left, double right, Range *ranges,
  * @param poly :Polynomial, might be modified
  * @return :True if zero is root of polynomial
  */
-/* TODO : verify */
-template <int n> int ZeroRoots(Poly<n> *poly) {
+template <int n> bool ZeroRoots(Poly<n> *poly) {
   // Zero is not root
-  if (std::fabs((*poly)[0].value()) == kEPSILON)
-    return 0;
+  if (std::fabs((*poly)[0].value()) != 0)
+    return false;
 
   // remove zero root
-  int idx = 1;
-  for (; idx <= poly->get_degree() && std::fabs((*poly)[idx]) < kEPSILON; idx++)
-    ;
-  for (int i = idx; i <= poly->get_degree(); i++)
-    (*poly)[i - idx] = (*poly)[i];
+  for (int i = 1; i <= poly->get_degree(); i++)
+    (*poly)[i - 1] = (*poly)[i];
   (*poly)[poly->get_degree()] = 0.0;
   poly->set_degree(std::max(poly->get_degree() - 1, 0));
 
-  return idx;
+  return true;
 }
 
 /**

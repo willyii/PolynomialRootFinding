@@ -146,9 +146,10 @@ int main(int argc, char *argv[]) {
   auto p12 = GCD(p1, p2);
   std::cout << "Test: p12 " << p12 << std::endl;
 
-  double test_coef[kMAXDEGREE] = {.48e-2 + 1e-6, -.88e-1, .51, -1.2, 1};
+  double test_coef[kMAXDEGREE] = {.48e-2, -.88e-1, .51, -1.2, 1};
   Poly<kMAXDEGREE> poly(test_coef, 5);
   Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
+  std::cout << "Test: poly " << poly << std::endl;
   int num_square = SquareFreeDecompose(poly, square_free_polys);
 
   for (int i = 0; i < num_square; i++) {
@@ -159,6 +160,10 @@ int main(int argc, char *argv[]) {
   std::cout << "Test: upperbound of poly " << UpperBound(poly) << std::endl;
 
   std::cout << "Test: add 1 to x " << AddToX(poly, 1) << std::endl;
+
+  double coef3[3] = {0, 1, 2};
+  Poly<kMAXDEGREE> poly2(coef3, 3);
+  // std::cout << "Test: zero root test " << ZeroRoots(&poly2) << std::endl;
 
   return 0;
 }
