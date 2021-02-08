@@ -19,7 +19,8 @@
 
 #include "param.h"
 
-static const double kROUNDOFF = kEPSILON;
+/* TODO : Use library to do interval */
+static const double kROUNDOFF = 1e-13;
 
 struct interval {
   double left;
@@ -29,10 +30,11 @@ struct interval {
   interval(double num) : left(num - kROUNDOFF), right(num + kROUNDOFF){};
   interval(double num1, double num2) : left(num1), right(num2){};
 
-  double value() {
+  double value() const {
     if (left < 0 && right > 0)
       return 0.0;
     return (left + right) / 2;
+    // return left;
   }
 
   inline interval &operator=(interval a) {

@@ -27,7 +27,37 @@
  * Return True if all coefficients of poly is zero
  */
 template <int n> bool IsZero(const Poly<n> &poly) {
-  return poly.get_degree() == 0 && poly[0].value() == 0;
+  // if (poly.get_degree() == 0) {
+  // if (poly[0].value() == 0.0)
+  // return true;
+  // if (poly[0].left > 0 && poly[0].right < 1e-8)
+  // return true;
+  // if (poly[0].right < 0 && poly[0].left > -1e-8)
+  // return true;
+  //}
+  for (int i = 0; i <= poly.get_degree(); i++) {
+    if (poly[i].value() == 0.0) /* TODO : useless , if it contains zero,  */
+      continue;
+    else if (poly[i].left > 0 && poly[i].right < 1e-8)
+      continue;
+    else if (poly[i].right < 0 && poly[i].left > -1e-8)
+      continue;
+    return false;
+  }
+  return true;
+}
+
+template <int n> bool endGCD(const Poly<n> &poly) {
+  if (poly.get_degree() == 0) {
+    if (poly[0].value() == 0.0)
+      return true;
+    if (poly[0].left > 0 && poly[0].right < 1e-8)
+      return true;
+    if (poly[0].right < 0 && poly[0].left > -1e-8)
+      return true;
+  }
+  return false;
+  // return poly.get_degree() == 0 && (poly[0].value()) == 0;
 }
 
 /**
@@ -58,7 +88,7 @@ template <int n1, int n2, int n3>
 void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
-  if (IsZero(remainder)) {
+  if (endGCD(remainder)) {
     ret = poly2;
     return;
   }
@@ -100,19 +130,11 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
 template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   int ret = 0; // number of square free polynomial
 
-  std::cout << "DEBUGE poly " << poly << std::endl;
-  std::cout << "DEBUGE initial ret " << ret << std::endl;
-  ret++;
-  std::cout << "DEBUGE ret++ " << ret << std::endl;
-
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd)); /* TODO : DEBUG should be cubic*/
-  std::cout << "DEBUG: a " << a << " , degree " << a.get_degree() << std::endl;
   if (a.get_degree() == 0) {
-    std::cout << "DEBUG: ret " << ret << std::endl;
-    ans[0] = poly;
-    std::cout << "DEBUG: ret " << ret << std::endl;
-    return 1;
+    ans[ret++] = poly;
+    return ret;
   }
   auto b(Quotient(poly, a));
   auto c(Quotient(fd, a));
@@ -130,20 +152,18 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
     if (IsZero(d)) {
       std::cout << "DEBUG: ret " << ret << std::endl;
       assert(ret < kMAXDEGREE);
-      ans[ret] = b;
-      ret += 1;
+      ans[ret++] = b;
       break;
     }
     a = GCD(b, d);
 
     std::cout << "DEBUG: ret " << ret << std::endl;
     assert(ret <= kMAXDEGREE);
-    ans[ret] = a;
-    ret += 1;
+    ans[ret++] = a;
     b = Quotient(b, a);
     c = Quotient(d, a);
     auto tmp = b.Derivative();
-    Monic(tmp);
+    // Monic(tmp);
     d = c - tmp;
     // d = c - b.Derivative();
     std::cout << "DEBUG: a " << a << std::endl;
@@ -151,6 +171,8 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
     std::cout << "DEBUG: b " << b << std::endl;
     std::cout << "DEBUG: d/a remainder " << Remainder(d, a) << std::endl;
     std::cout << "DEBUG: c " << c << std::endl;
+    std::cout << "DEBUG: b.derivate " << tmp << " degree " << tmp.get_degree()
+              << std::endl;
     std::cout << "DEBUG: d " << d << std::endl;
     std::cout << "================" << std::endl;
   }
@@ -192,7 +214,7 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
     return poly;
   Poly<n> ret, tmp(poly);
   ret[0] = tmp.ValueAt(h);
-  double divisor = 1;
+  interval divisor(1, 1);
 
   for (int i = 1; i <= poly.get_degree(); i++) {
     tmp = tmp.Derivative();
@@ -213,7 +235,6 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
  * @param ranges :Store isolation results, might be modified
  * @param num_roots :Store the number of roots, might be modified
  */
-/* TODO : verify  */
 void AddToRange(int repeat_time, double left, double right, Range *ranges,
                 int *num_roots) {
   if (repeat_time == 0)
@@ -228,7 +249,6 @@ void AddToRange(int repeat_time, double left, double right, Range *ranges,
     }
     (*num_roots)++;
   }
-  std::cout << "DEBUG: ret = " << *num_roots << std::endl;
   return;
 }
 
@@ -264,14 +284,14 @@ template <int n> bool ZeroRoots(Poly<n> *poly) {
  * @param ranges :Store results, might be modified
  * @param num_roots :Sotore the number of roots, might be modified
  */
-// template <int n>
-// void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
-//            int *num_roots) {
-//  double root(-poly[0] / poly[1]);
+template <int n>
+void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
+            int *num_roots) {
+  double root((-poly[0].value() / poly[1].value()));
 
-//  AddToRange(repeat_time, root, root, ranges, num_roots);
-//  return;
-//}
+  AddToRange(repeat_time, root, root, ranges, num_roots);
+  return;
+}
 
 /**
  * Solve quadratic polynomial, It has no zero root
@@ -282,20 +302,21 @@ template <int n> bool ZeroRoots(Poly<n> *poly) {
  * @param ranges :Store results, might be modified
  * @param num_roots :Sotore the number of roots, might be modified
  */
-// template <int n>
-// void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
-//               int *num_roots) {
-//  double delta(poly[1] * poly[1] - 4 * poly[0] * poly[2]); // b^2 - 4ac
+template <int n>
+void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
+               int *num_roots) {
+  double delta((poly[1].value() * poly[1].value() -
+                4 * poly[0].value() * poly[2].value())); // b^2 - 4ac
 
-//  if (delta < 0)
-//    return;
-//  delta = std::sqrt(delta);
+  if (delta < 0)
+    return;
+  delta = std::sqrt(delta);
 
-//  double root1((-poly[1] + delta) / (2 * poly[2]));
-//  AddToRange(repeat_time, root1, root1, ranges, num_roots);
-//  double root2((-poly[1] - delta) / (2 * poly[2]));
-//  AddToRange(repeat_time, root2, root2, ranges, num_roots);
-//  return;
-//}
+  double root1(-((poly[1].value() + delta) / (2 * poly[2].value())));
+  AddToRange(repeat_time, root1, root1, ranges, num_roots);
+  double root2(-((poly[1].value() - delta) / (2 * poly[2].value())));
+  AddToRange(repeat_time, root2, root2, ranges, num_roots);
+  return;
+}
 
 #endif // POLY_UTIL_H

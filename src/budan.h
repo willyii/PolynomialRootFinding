@@ -40,21 +40,18 @@ template <int n>
 void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
                           int left_change, double right, int right_change,
                           Range *ranges, int *num_roots) {
+
   // no root in this range
   if (left_change == right_change)
     return;
   // search range smaller than threshold
-  else if ((right - left) < kMINRANGE || (left_change - right_change) == 1) {
-    if ((left_change - right_change) % 2 == 1)
+  else if ((right - left) < kMINRANGE) {
+    if ((left_change - right_change) == 1)
       AddToRange(duplicate_times, left, right, ranges, num_roots);
     return;
   }
 
   double mid((left + right) / 2.0);
-  if (std::fabs(poly.ValueAt(mid)) < kEPSILON) {
-    AddToRange(duplicate_times, mid, mid, ranges, num_roots);
-    return;
-  }
   int mid_change(AddToX(poly, mid).SignChange());
 
   // left side

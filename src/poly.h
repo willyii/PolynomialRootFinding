@@ -75,6 +75,7 @@ public:
 
   int get_degree() const { return degree_; }
 
+  /* TODO : avoid == 0 */
   void set_degree() {
     for (degree_ = n; degree_ > 0 && coef_[degree_].value() == 0.0; degree_--)
       coef_[degree_] = 0.0;
@@ -88,6 +89,7 @@ public:
   /**
    * Value of polynomial at point x
    */
+  /* TODO : interval */
   double ValueAt(interval x) const {
     interval ans = coef_[degree_];
     for (int i = degree_ - 1; i >= 0; i--)
@@ -136,13 +138,21 @@ public:
    */
   int SignChange() const {
     int ret = 0;
-    bool prev = coef_[degree_] > 0;
+    double prev = coef_[degree_].value();
     for (int i = degree_ - 1; i >= 0; i--) {
-      if (coef_[i].value() != 0.0 && (coef_[i] > 0 != prev)) { // sign changed
-        prev = !prev;
+      if (coef_[i].value() * prev < 0.0) {
+        prev = coef_[i].value();
         ret++;
       }
     }
+    // bool prev = coef_[degree_].value() > 0;
+    // for (int i = degree_ - 1; i >= 0; i--) {
+    //  if (coef_[i].value() != 0.0 &&
+    //      (coef_[i].value() > 0 != prev)) { // sign changed
+    //    prev = !prev;
+    //    ret++;
+    //  }
+    //}
     return ret;
   }
 
@@ -353,7 +363,7 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
 
   // If poly2 is a constant number
   if (poly2.get_degree() == 0) {
-    quotient = poly1 / poly2[0];
+    quotient = poly1 / poly2[0]; /* TODO : */
     return quotient;
   }
 
@@ -368,7 +378,8 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
-  quotient.set_degree(poly1.get_degree() - poly2.get_degree());
+  // quotient.set_degree(poly1.get_degree() - poly2.get_degree());
+  quotient.set_degree();
 
   return quotient;
 }
@@ -430,6 +441,8 @@ static std::ostream &operator<<(std::ostream &out, const Poly<n> &u) {
       out << '+';
     out << u[i].value() << "*x^" << i;
   }
+
+  out << " degre = " << u.get_degree();
   return out;
 }
 

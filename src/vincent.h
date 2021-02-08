@@ -110,7 +110,7 @@ void VincentSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
 template <int n> Poly<n> NegatePoly(const Poly<n> &poly) {
   Poly<n> ret(poly);
   for (int i = 1; i <= poly.get_degree(); i += 2)
-    ret[i] = -ret[i];
+    ret[i] = -1 * ret[i];
   return ret;
 }
 

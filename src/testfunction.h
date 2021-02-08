@@ -70,15 +70,15 @@ RandomPolyRet RandomPoly() {
   double root;
 
   int num_roots = rand_int(2, kMAXDEGREE);
-  root = rand_double(-10, 10);
-  ret.poly[1] = 1;
-  ret.poly[0] = -root;
+  root = rand_double(-1, 1);
+  ret.poly[1] = interval(1, 1);
+  ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
   ret.roots.emplace_back(root);
 
   for (int i = 1; i < num_roots; i++) {
     if (rand_double(0, 1) < 0.5)
-      root = rand_double(50, 100);
+      root = rand_double(-1, 1);
 
     Poly<kMAXDEGREE> backup(ret.poly);
     // Right shift ans by 1
@@ -100,11 +100,11 @@ RandomPolyRet RandomPoly() {
 template <int n> std::string PolyToString(const Poly<n> &poly) {
   std::string ret = "";
   for (int i = 0; i <= n; i++) {
-    if (std::fabs(poly[i]) < kEPSILON)
+    if (std::fabs(poly[i].value()) < kEPSILON)
       continue;
-    if (poly[i] >= 0)
+    if (poly[i].value() >= 0)
       ret += '+';
-    ret += std::to_string(poly[i]) + "*x^" + std::to_string(i);
+    ret += std::to_string(poly[i].value()) + "*x^" + std::to_string(i);
   }
   return ret;
 }
@@ -267,7 +267,7 @@ void RunningCorrectTest(const char *test_file_path,
     for (int j = 0; j < root_num; j++)
       printf("From %f to %f \n", poly_roots[j].left_end,
              poly_roots[j].right_end);
-    // delete poly_roots;
+    delete poly_roots;
     printf("\n");
 
     /// ----------------------
@@ -279,7 +279,7 @@ void RunningCorrectTest(const char *test_file_path,
     for (int j = 0; j < root_num; j++)
       printf("From %f to %f \n", poly_roots[j].left_end,
              poly_roots[j].right_end);
-    // delete poly_roots;
+    delete poly_roots;
     printf("\n \n \n");
   }
   for (int i = 0; i < coefs.size(); i++) {

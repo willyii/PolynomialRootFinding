@@ -1,7 +1,7 @@
 [
 {
-  "directory": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++17 -o CMakeFiles/Poly.dir/src/main.cpp.o -c /Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/main.cpp",
-  "file": "/Users/yixinlong/Documents/GitHub/PolynomialRootFinding/src/main.cpp"
+  "directory": "/home/xinlong/Documents/Github/PolynomialRootFinding/build",
+  "command": "/usr/bin/c++    -g   -std=gnu++17 -o CMakeFiles/Poly.dir/src/main.cpp.o -c /home/xinlong/Documents/Github/PolynomialRootFinding/src/main.cpp",
+  "file": "/home/xinlong/Documents/Github/PolynomialRootFinding/src/main.cpp"
 }
 ]
