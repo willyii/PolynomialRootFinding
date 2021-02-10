@@ -23,7 +23,6 @@
 //
 // ----------------------------------------------------------------------------
 #include "budan.h"
-#include "interval.h"
 #include "param.h"
 #include "poly.h"
 #include "testfunction.h"

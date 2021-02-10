@@ -100,11 +100,12 @@ RandomPolyRet RandomPoly() {
 template <int n> std::string PolyToString(const Poly<n> &poly) {
   std::string ret = "";
   for (int i = 0; i <= n; i++) {
-    if (std::fabs(poly[i].value()) < kEPSILON)
+    if (poly.containZero(i))
       continue;
-    if (poly[i].value() >= 0)
+    if (poly[i] >= 0)
       ret += '+';
-    ret += std::to_string(poly[i].value()) + "*x^" + std::to_string(i);
+    ret += std::to_string(boost::numeric::median(poly[i])) + "*x^" +
+           std::to_string(i);
   }
   return ret;
 }

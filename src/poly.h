@@ -13,11 +13,16 @@
 #ifndef POLY_POLY_H_
 #define POLY_POLY_H_
 
+#include <boost/numeric/interval.hpp>
 #include <cassert>
 #include <cmath>
 #include <iostream>
 
 #include "param.h"
+
+typedef boost::numeric::interval<double> interval;
+
+static const double kROUNDOFF = 1e-9; /* TODO : remove tolerance */
 
 /**
  * Class represent polynomials with maximum degree n. Actual degree might be
@@ -29,7 +34,7 @@ template <int n> class Poly {
   static_assert(n >= 0);
 
 private:
-  double coef_[n + 1];
+  interval coef_[n + 1];
   int degree_;
 
 public:
@@ -44,7 +49,7 @@ public:
   Poly(const double *input_coef, int num_input) : coef_{} {
     assert(num_input <= n + 1);
     for (int i = 0; i < num_input; i++)
-      coef_[i] = input_coef[i];
+      coef_[i].assign(input_coef[i] - kROUNDOFF, input_coef[i] + kROUNDOFF);
     set_degree();
     // degree_ = num_input - 1;
   }
@@ -75,9 +80,7 @@ public:
   int get_degree() const { return degree_; }
 
   void set_degree() {
-    for (degree_ = n;
-         degree_ > 0 && std::fabs(coef_[degree_]) < kMAXDEGREE * kEPSILON;
-         degree_--)
+    for (degree_ = n; degree_ > 0 && containZero(degree_); degree_--)
       coef_[degree_] = 0.0;
   }
 
@@ -89,21 +92,31 @@ public:
   /**
    * Value of polynomial at point x
    */
-  double ValueAt(double x) const {
-    double ans = coef_[degree_];
+  interval ValueAt(interval x) const {
+    interval ans = coef_[degree_];
     for (int i = degree_ - 1; i >= 0; i--)
       ans = ans * x + coef_[i];
     return ans;
   }
 
+  interval ValueAt(double x) const {
+    interval x_interval(x);
+    return ValueAt(x_interval);
+  }
+
   /**
    * Derivative of polynomial at point x
    */
-  double DerivativeAt(double x) const {
-    double ans = coef_[degree_] * degree_;
+  interval DerivativeAt(interval x) const {
+    interval ans = coef_[degree_] * double(degree_);
     for (int i = degree_ - 1; i >= 1; i--)
-      ans = ans * x + coef_[i] * i;
+      ans = ans * x + coef_[i] * double(i);
     return ans;
+  }
+
+  interval DerivativeAt(double x) const {
+    interval x_interval(x);
+    return DerivativeAt(x_interval);
   }
 
   /**
@@ -112,7 +125,7 @@ public:
   Poly<std::max(n - 1, 0)> Derivative() const {
     Poly<std::max(n - 1, 0)> ans;
     for (int i = 0; i < degree_; i++)
-      ans[i] = coef_[i + 1] * (i + 1);
+      ans[i] = coef_[i + 1] * double(i + 1);
     for (int i = degree_; i <= n; i++) {
       ans[i] = 0;
     }
@@ -120,17 +133,16 @@ public:
     return ans;
   }
 
-  double lead_coef() const { return coef_[degree_]; }
+  interval lead_coef() const { return coef_[degree_]; }
 
   /**
    * Get number of sign changes in coefficients
    */
   int SignChange() const {
     int ret = 0;
-    bool prev = coef_[degree_] > 0;
+    bool prev = coef_[degree_].lower() > 0;
     for (int i = degree_ - 1; i >= 0; i--) {
-      if (std::fabs(coef_[i]) >= kEPSILON && // not 0
-          (coef_[i] > 0 != prev)) {          // sign changed
+      if (!containZero(i) && (coef_[i].lower() > 0 != prev)) { // sign changed
         prev = !prev;
         ret++;
       }
@@ -138,6 +150,15 @@ public:
     return ret;
   }
 
+  bool containZero(int i) const {
+    if (coef_[i].lower() <= 0.0 && coef_[i].upper() >= 0.0)
+      return true;
+    else if (coef_[i].lower() > 0 && coef_[i].upper() < kEPSILON)
+      return true;
+    else if (coef_[i].upper() < 0 && coef_[i].lower() > -kEPSILON)
+      return true;
+    return false;
+  }
   /**
    * --------------------------------------------------------------------------
    *
@@ -146,8 +167,8 @@ public:
    * --------------------------------------------------------------------------
    */
 
-  double operator[](int i) const { return coef_[i]; }
-  double &operator[](int i) { return coef_[i]; }
+  interval operator[](int i) const { return coef_[i]; }
+  interval &operator[](int i) { return coef_[i]; }
 
   template <int n1> Poly<n> &operator+=(const Poly<n1> &poly2) {
     static_assert(n1 <= n);
@@ -159,6 +180,11 @@ public:
     else
       degree_ = std::max(degree_, poly2.get_degree());
 
+    return *this;
+  }
+
+  Poly<n> &operator+=(interval num) {
+    coef_[0] += num;
     return *this;
   }
 
@@ -180,14 +206,31 @@ public:
     return *this;
   }
 
+  Poly<n> &operator-=(interval num) {
+    coef_[0] -= num;
+    return *this;
+  }
+
   Poly<n> &operator-=(double num) {
     coef_[0] -= num;
+    return *this;
+  }
+
+  Poly<n> &operator/=(interval num) {
+    for (int i = 0; i <= degree_; i++)
+      coef_[i] /= num;
     return *this;
   }
 
   Poly<n> &operator/=(double num) {
     for (int i = 0; i <= degree_; i++)
       coef_[i] /= num;
+    return *this;
+  }
+
+  Poly<n> &operator*=(interval num) {
+    for (int i = 0; i <= degree_; i++)
+      coef_[i] *= num;
     return *this;
   }
 
@@ -198,6 +241,9 @@ public:
   }
 };
 
+/*
+ * + operator
+ */
 template <int n1, int n2>
 Poly<std::max(n1, n2)> operator+(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   if constexpr (n1 >= n2) {
@@ -207,6 +253,25 @@ Poly<std::max(n1, n2)> operator+(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   }
 }
 
+template <int n> Poly<n> operator+(const Poly<n> &poly, double num) {
+  return Poly<n>(poly) += num;
+}
+
+template <int n> Poly<n> operator+(double num, const Poly<n> &poly) {
+  return Poly<n>(poly) += num;
+}
+
+template <int n> Poly<n> operator+(const Poly<n> &poly, interval num) {
+  return Poly<n>(poly) += num;
+}
+
+template <int n> Poly<n> operator+(interval num, const Poly<n> &poly) {
+  return Poly<n>(poly) += num;
+}
+
+/*
+ * - operator
+ */
 template <int n1, int n2>
 Poly<std::max(n1, n2)> operator-(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   if constexpr (n1 >= n2) {
@@ -216,6 +281,25 @@ Poly<std::max(n1, n2)> operator-(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   }
 }
 
+template <int n> Poly<n> operator-(const Poly<n> &poly, double num) {
+  return Poly<n>(poly) -= num;
+}
+
+template <int n> Poly<n> operator-(double num, const Poly<n> &poly) {
+  return Poly<n>(poly * -1) += num;
+}
+
+template <int n> Poly<n> operator-(const Poly<n> &poly, interval num) {
+  return Poly<n>(poly) -= num;
+}
+
+template <int n> Poly<n> operator-(interval num, const Poly<n> &poly) {
+  return Poly<n>(poly * -1) += num;
+}
+
+/*
+ * * operator
+ */
 template <int n1, int n2>
 Poly<n1 + n2> operator*(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   Poly<n1 + n2> ret;
@@ -231,6 +315,14 @@ template <int n> Poly<n> operator*(const Poly<n> &poly, double num) {
 }
 
 template <int n> Poly<n> operator*(double num, const Poly<n> &poly) {
+  return Poly<n>(poly) *= num;
+}
+
+template <int n> Poly<n> operator*(const Poly<n> &poly, interval num) {
+  return Poly<n>(poly) *= num;
+}
+
+template <int n> Poly<n> operator*(interval num, const Poly<n> &poly) {
   return Poly<n>(poly) *= num;
 }
 
@@ -258,7 +350,7 @@ template <int n1, int n2> struct DivsionRet {
  * @param poly1 :Polynomial 1, might be modified
  */
 template <int n1, int n2>
-void MinusRightMoveScale(const Poly<n2> &poly2, int move_num, double scale,
+void MinusRightMoveScale(const Poly<n2> &poly2, int move_num, interval scale,
                          Poly<n1> &poly1) {
   for (int i = poly2.get_degree(); i >= 0; i--) {
     poly1[i + move_num] -= poly2[i] * scale;
@@ -289,10 +381,10 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
 
   Poly<n1> remainder(poly1);
   int degree = poly2.get_degree(), remainder_degree = remainder.get_degree();
-  double lead_coef = poly2.lead_coef();
+  interval lead_coef = poly2.lead_coef();
 
   while (remainder_degree >= degree) {
-    double division = remainder.lead_coef() / lead_coef;
+    interval division = remainder.lead_coef() / lead_coef;
     int degree_idx = remainder_degree - degree;
     ret.quotient[degree_idx] = division;
 
@@ -328,10 +420,10 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   }
 
   int degree = poly2.get_degree(), remainder_degree = remainder.get_degree();
-  double lead_coef = poly2.lead_coef();
+  interval lead_coef = poly2.lead_coef();
 
   while (remainder_degree >= degree) {
-    double division = remainder.lead_coef() / lead_coef;
+    interval division = remainder.lead_coef() / lead_coef;
     int degree_idx = remainder_degree - degree;
     quotient[degree_idx] = division;
 
@@ -362,10 +454,10 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
     return remainder_ret;
 
   int degree = poly2.get_degree(), remainder_degree = remainder.get_degree();
-  double lead_coef = poly2.lead_coef();
+  interval lead_coef = poly2.lead_coef();
 
   while (remainder_degree >= degree) {
-    double division = remainder.lead_coef() / lead_coef;
+    interval division = remainder.lead_coef() / lead_coef;
     int degree_idx = remainder_degree - degree;
 
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
@@ -384,17 +476,21 @@ template <int n> Poly<n> operator/(const Poly<n> &poly, double num) {
   return Poly<n>(poly) /= num;
 }
 
+template <int n> Poly<n> operator/(const Poly<n> &poly, interval num) {
+  return Poly<n>(poly) /= num;
+}
+
 /**
  * Print out polynomial u
  */
 template <int n>
 static std::ostream &operator<<(std::ostream &out, const Poly<n> &u) {
   for (int i = 0; i <= n; i++) {
-    if (std::fabs(u[i]) < kEPSILON)
+    if (u.containZero(i))
       continue;
-    if (u[i] >= 0)
+    if (boost::numeric::median(u[i]) >= 0)
       out << '+';
-    out << u[i] << "*x^" << i;
+    out << boost::numeric::median(u[i]) << "*x^" << i;
   }
   return out;
 }
