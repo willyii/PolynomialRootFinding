@@ -70,7 +70,7 @@ RandomPolyRet RandomPoly() {
   double root;
 
   int num_roots = rand_int(2, kMAXDEGREE);
-  root = rand_double(-1, 1);
+  root = rand_double(-100, 100);
   ret.poly[1] = interval(1, 1);
   ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
@@ -78,7 +78,7 @@ RandomPolyRet RandomPoly() {
 
   for (int i = 1; i < num_roots; i++) {
     if (rand_double(0, 1) < 0.5)
-      root = rand_double(-1, 1);
+      root = rand_double(-100, 100);
 
     Poly<kMAXDEGREE> backup(ret.poly);
     // Right shift ans by 1

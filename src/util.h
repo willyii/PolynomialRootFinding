@@ -14,6 +14,7 @@
 #define POLY_UTIL_H
 
 #include <algorithm>
+#include <boost/numeric/interval/utility_fwd.hpp>
 #include <cassert>
 #include <cmath>
 #include <math.h>
@@ -37,7 +38,7 @@ template <int n> bool IsZero(const Poly<n> &poly) {
  * @param poly :Polynomial, might be modified.
  */
 template <int n> void Monic(Poly<n> &poly) {
-  interval div(1.0 / poly.lead_coef());
+  double div(1.0 / boost::numeric::median(poly.lead_coef()));
   for (int i = 0; i <= poly.get_degree(); i++)
     poly[i] *= div;
 }
@@ -110,6 +111,8 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   auto c(Quotient(fd, a));
   auto d(c - b.Derivative());
 
+  std::cout << "DEBUG: f " << poly << std::endl;
+  std::cout << "DEBUG: fd " << fd << std::endl;
   std::cout << "DEBUG: a " << a << std::endl;
   std::cout << "DEBUG: poly/a remainder " << Remainder(poly, a) << std::endl;
 
@@ -120,29 +123,25 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   std::cout << "================" << std::endl;
   while (!(b.get_degree() == 0)) { // b !=1
     if (IsZero(d)) {
-      std::cout << "DEBUG: ret " << ret << std::endl;
-      assert(ret < kMAXDEGREE);
       ans[ret++] = b;
+      std::cout << "DEBUG: ret " << ret << std::endl;
+      assert(ret <= kMAXDEGREE);
       break;
     }
     a = GCD(b, d);
 
+    ans[ret++] = a;
     std::cout << "DEBUG: ret " << ret << std::endl;
     assert(ret <= kMAXDEGREE);
-    ans[ret++] = a;
     b = Quotient(b, a);
     c = Quotient(d, a);
-    auto tmp = b.Derivative();
-    Monic(tmp);
-    d = c - tmp;
+    d = c - b.Derivative();
     // d = c - b.Derivative();
     std::cout << "DEBUG: a " << a << std::endl;
     std::cout << "DEBUG: b/a remainder " << Remainder(b, a) << std::endl;
     std::cout << "DEBUG: b " << b << std::endl;
     std::cout << "DEBUG: d/a remainder " << Remainder(d, a) << std::endl;
     std::cout << "DEBUG: c " << c << std::endl;
-    std::cout << "DEBUG: b.derivate " << tmp << " degree " << tmp.get_degree()
-              << std::endl;
     std::cout << "DEBUG: d " << d << std::endl;
     std::cout << "================" << std::endl;
   }
@@ -161,11 +160,11 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
  * @param poly :Polynomial
  * @return :Upper bound of roots
  */
-template <int n> double UpperBound(const Poly<n> &poly) {
+template <int n> interval UpperBound(const Poly<n> &poly) {
   interval lc = poly.lead_coef(), ans = boost::numeric::abs(poly[0] / lc);
   for (int i = 1; i < poly.get_degree(); i++)
     ans = boost::numeric::max(ans, boost::numeric::abs(poly[i] / lc));
-  return 1 + ans.upper();
+  return 1.0 + ans;
 }
 
 /**
@@ -179,6 +178,23 @@ template <int n> double UpperBound(const Poly<n> &poly) {
  * @param h :Number add to x
  * @return :Polynomial that replace x in poly to x+h
  */
+template <int n> Poly<n> AddToX(const Poly<n> &poly, interval h) {
+  // if (h == 0.0)
+  //  return poly;
+  Poly<n> ret, tmp(poly);
+  ret[0] = tmp.ValueAt(h);
+  interval divisor(1);
+
+  for (int i = 1; i <= poly.get_degree(); i++) {
+    tmp = tmp.Derivative();
+    divisor *= i;
+    ret[i] = tmp.ValueAt(h) / divisor;
+  }
+
+  ret.set_degree();
+  return ret;
+}
+
 template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
   if (h == 0)
     return poly;
@@ -205,18 +221,15 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, double h) {
  * @param ranges :Store isolation results, might be modified
  * @param num_roots :Store the number of roots, might be modified
  */
-void AddToRange(int repeat_time, double left, double right, Range *ranges,
+void AddToRange(int repeat_time, interval left, interval right, Range *ranges,
                 int *num_roots) {
   if (repeat_time == 0)
     return;
   for (int i = 0; i < repeat_time; i++) {
-    if (right < left) {
-      ranges[*num_roots].left_end = right;
-      ranges[*num_roots].right_end = left;
-    } else {
-      ranges[*num_roots].left_end = left;
-      ranges[*num_roots].right_end = right;
-    }
+    ranges[*num_roots].left_end = std::min(right.lower(), left.lower());
+    ranges[*num_roots].right_end = std::max(right.upper(), left.upper());
+    // ranges[*num_roots].left_end = std::min(num1, num2);
+    // ranges[*num_roots].right_end = std::max(num1, num2);
     (*num_roots)++;
   }
   return;
@@ -257,7 +270,7 @@ template <int n> bool ZeroRoots(Poly<n> *poly) {
 template <int n>
 void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
             int *num_roots) {
-  double root(boost::numeric::median((-poly[0] / poly[1])));
+  interval root((-poly[0] / poly[1]));
 
   AddToRange(repeat_time, root, root, ranges, num_roots);
   return;
@@ -277,13 +290,13 @@ void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
                int *num_roots) {
   interval delta((poly[1] * poly[1] - 4.0 * poly[0] * poly[2])); // b^2 - 4ac
 
-  if (!(delta.lower() < 0))
+  if ((delta.upper() < 0))
     return;
   delta = boost::numeric::sqrt(delta);
 
-  double root1(boost::numeric::median(-((poly[1] + delta) / (2.0 * poly[2]))));
+  interval root1(-((poly[1] + delta) / (2.0 * poly[2])));
   AddToRange(repeat_time, root1, root1, ranges, num_roots);
-  double root2(boost::numeric::median(-((poly[1] - delta) / (2.0 * poly[2]))));
+  interval root2(-((poly[1] - delta) / (2.0 * poly[2])));
   AddToRange(repeat_time, root2, root2, ranges, num_roots);
   return;
 }

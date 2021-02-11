@@ -13,16 +13,18 @@
 #ifndef POLY_POLY_H_
 #define POLY_POLY_H_
 
+#include <algorithm>
 #include <boost/numeric/interval.hpp>
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <math.h>
 
 #include "param.h"
 
 typedef boost::numeric::interval<double> interval;
 
-static const double kROUNDOFF = 1e-9; /* TODO : remove tolerance */
+static const double kROUNDOFF = 1e-15; /* TODO : remove tolerance */
 
 /**
  * Class represent polynomials with maximum degree n. Actual degree might be
@@ -46,10 +48,22 @@ public:
    * @param input_coef: Pointer to coefficients array.
    * @param num_input: Number of coefficients
    */
-  Poly(const double *input_coef, int num_input) : coef_{} {
+  Poly(const double *input_coef, int num_input, double error = kROUNDOFF)
+      : coef_{} {
     assert(num_input <= n + 1);
-    for (int i = 0; i < num_input; i++)
-      coef_[i].assign(input_coef[i] - kROUNDOFF, input_coef[i] + kROUNDOFF);
+
+    double max_ele = std::abs(input_coef[0]);
+    for (int i = 1; i < num_input; i++)
+      max_ele += max_ele, std::abs(input_coef[i]);
+
+    error *= max_ele;
+    std::cout << "DEBUG: error = " << error << std::endl;
+
+    for (int i = num_input - 1; i >= 0; i--) {
+      error = std::pow(10, -2 * (num_input + 1));
+      std::cout << "DEBUG: error = " << error << std::endl;
+      coef_[i].assign(input_coef[i] - error, input_coef[i] + error);
+    }
     set_degree();
     // degree_ = num_input - 1;
   }
@@ -153,10 +167,10 @@ public:
   bool containZero(int i) const {
     if (coef_[i].lower() <= 0.0 && coef_[i].upper() >= 0.0)
       return true;
-    else if (coef_[i].lower() > 0 && coef_[i].upper() < kEPSILON)
-      return true;
-    else if (coef_[i].upper() < 0 && coef_[i].lower() > -kEPSILON)
-      return true;
+    // else if (coef_[i].lower() > 0 && coef_[i].upper() < kEPSILON)
+    //  return true;
+    // else if (coef_[i].upper() < 0 && coef_[i].lower() > -kEPSILON)
+    //  return true;
     return false;
   }
   /**
@@ -306,7 +320,7 @@ Poly<n1 + n2> operator*(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   for (int i = 0; i <= poly1.get_degree(); i++)
     for (int j = 0; j <= poly1.get_degree(); j++)
       ret[i + j] += poly1[i] * poly2[j];
-  ret.set_degree(poly1.get_degree() - poly2.get_degree());
+  ret.set_degree(poly1.get_degree() + poly2.get_degree());
   return ret;
 }
 
@@ -391,7 +405,9 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
-  ret.quotient.set_degree(poly1.get_degree() - poly2.get_degree());
+  /* TODO : s  */
+  // ret.quotient.set_degree(poly1.get_degree() - poly2.get_degree());
+  ret.quotient.set_degree();
 
   // Set remaineder in return struct
   for (int i = 0; i <= remainder.get_degree(); i++)
@@ -430,7 +446,9 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
-  quotient.set_degree(poly1.get_degree() - poly2.get_degree());
+  /* TODO : */
+  // quotient.set_degree(poly1.get_degree() - poly2.get_degree());
+  quotient.set_degree();
 
   return quotient;
 }
@@ -492,6 +510,7 @@ static std::ostream &operator<<(std::ostream &out, const Poly<n> &u) {
       out << '+';
     out << boost::numeric::median(u[i]) << "*x^" << i;
   }
+  out << " degree = " << u.get_degree();
   return out;
 }
 

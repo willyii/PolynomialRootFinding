@@ -55,6 +55,8 @@ poly.h
 /home/xinlong/Documents/Github/PolynomialRootFinding/src/poly.h
 
 /home/xinlong/Documents/Github/PolynomialRootFinding/src/poly.h
+algorithm
+-
 boost/numeric/interval.hpp
 -
 cassert
@@ -62,6 +64,8 @@ cassert
 cmath
 -
 iostream
+-
+math.h
 -
 param.h
 /home/xinlong/Documents/Github/PolynomialRootFinding/src/param.h
@@ -106,6 +110,8 @@ vincent.h
 
 /home/xinlong/Documents/Github/PolynomialRootFinding/src/util.h
 algorithm
+-
+boost/numeric/interval/utility_fwd.hpp
 -
 cassert
 -

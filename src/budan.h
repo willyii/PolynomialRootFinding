@@ -37,21 +37,24 @@
  * @param num_roots : Store the number of roots, might be modified
  */
 template <int n>
-void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times, double left,
-                          int left_change, double right, int right_change,
-                          Range *ranges, int *num_roots) {
+void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
+                          interval left, int left_change, interval right,
+                          int right_change, Range *ranges, int *num_roots) {
+
+  printf("DEBUG: Search from %f to %f, change %d \n", left.lower(),
+         right.upper(), left_change - right_change);
+  return;
 
   // no root in this range
   if (left_change == right_change)
     return;
   // search range smaller than threshold
-  else if ((right - left) < kMINRANGE) {
-    if ((left_change - right_change) == 1)
-      AddToRange(duplicate_times, left, right, ranges, num_roots);
+  else if ((left_change - right_change) == 1) {
+    AddToRange(duplicate_times, left, right, ranges, num_roots);
     return;
   }
 
-  double mid((left + right) / 2.0);
+  interval mid((left + right) / 2.0);
   int mid_change(AddToX(poly, mid).SignChange());
 
   // left side
@@ -76,8 +79,8 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
 
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
 
-  // std::cout << "DEBUG: original poly " << original_poly << std::endl;
-  Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE + 1];
+  std::cout << "DEBUG: original poly " << original_poly << std::endl;
+  Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
   int num_roots(0);
   int num_square_free(
@@ -99,13 +102,12 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
     else if (square_free_polys[i].get_degree() == 2) // quadratic
       Quadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
     else {
-      double right(UpperBound(square_free_polys[i])), left = -right;
+      interval right(UpperBound(square_free_polys[i])), left = -right;
       int left_change(AddToX(square_free_polys[i], left).SignChange());
       int right_change(AddToX(square_free_polys[i], right).SignChange());
 
-      BudanSquareFreeSolve<kMAXDEGREE>(square_free_polys[i], i + 1, left,
-                                       left_change, right, right_change, ranges,
-                                       &num_roots);
+      BudanSquareFreeSolve(square_free_polys[i], i + 1, left, left_change,
+                           right, right_change, ranges, &num_roots);
     }
   }
 
