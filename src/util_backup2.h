@@ -26,13 +26,13 @@
  * Return True if all coefficients of poly is zero
  */
 template <int n> bool IsZero(const Poly<n> &poly) {
-  for (int i = poly.get_degree(); i >= 0; i--) {
-    if (std::fabs(poly[i]) > kEPSILON)
-      return false;
-  }
-  return true;
+  // for (int i = poly.get_degree(); i >= 0; i--) {
+  // if (std::fabs(poly[i]) > kEPSILON)
+  // return false;
+  //}
+  // return true;
 
-  // return poly.get_degree() == 0 && std::fabs(poly[0]) <= kEPSILON;
+  return poly.get_degree() == 0 && std::fabs(poly[0]) <= kEPSILON;
 }
 
 template <int n> void Monic(Poly<n> &poly) {
@@ -118,7 +118,8 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   std::cout << "DEBUG: fd/a remainder " << Remainder(fd, a) << std::endl;
   std::cout << "DEBUG: c " << c << std::endl;
   std::cout << "DEBUG: d " << d << std::endl;
-  while (!(b.get_degree() == 0 && std::fabs(b[0] - 1) <= kEPSILON)) { // b != 1
+  while (!(b.get_degree() == 0 && 1.0 < b[0].upper() &&
+           b[0].lower() < 1.0)) { // b != 1
     if (IsZero(d)) {
       assert(ret < kMAXDEGREE);
       ans[ret++] = b;

@@ -76,8 +76,7 @@ int main() {
 
   double coef7[2] = {-1, 1};
   Poly<2> tmp(coef7, 2);
-  auto p7 = Division(p2, tmp);
-  std::cout << "Test: p2 * tmp: quotient " << p7.quotient
-            << " remainder=" << p7.remainder << std::endl;
+  auto p7 = Quotient(p2, tmp);
+  std::cout << "Test: p2 / tmp: quotient " << p7 << std::endl;
   return 0;
 }

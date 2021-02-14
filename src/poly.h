@@ -24,7 +24,7 @@
 
 typedef boost::numeric::interval<double> interval;
 
-static const double kROUNDOFF = 1e-15; /* TODO : remove tolerance */
+static const double kROUNDOFF = 1e-9; /* TODO : remove tolerance */
 
 /**
  * Class represent polynomials with maximum degree n. Actual degree might be
@@ -48,24 +48,56 @@ public:
    * @param input_coef: Pointer to coefficients array.
    * @param num_input: Number of coefficients
    */
-  Poly(const double *input_coef, int num_input, double error = kROUNDOFF)
+  Poly(const double *input_coef, int num_input, double percision = 0.1)
       : coef_{} {
     assert(num_input <= n + 1);
 
     double max_ele = std::abs(input_coef[0]);
     for (int i = 1; i < num_input; i++)
-      max_ele += max_ele, std::abs(input_coef[i]);
+      max_ele = std::max(max_ele, std::abs(input_coef[i]));
 
-    error *= max_ele;
-    std::cout << "DEBUG: error = " << error << std::endl;
-
-    for (int i = num_input - 1; i >= 0; i--) {
-      error = std::pow(10, -2 * (num_input + 1));
-      std::cout << "DEBUG: error = " << error << std::endl;
-      coef_[i].assign(input_coef[i] - error, input_coef[i] + error);
+    // regular
+    if (max_ele < 10) {
+      double error = kROUNDOFF;
+      for (int i = num_input - 1; i >= 0; i--) {
+        coef_[i].assign(input_coef[i] - error, input_coef[i] + error);
+        error *= percision;
+      }
+    } else {
+      max_ele = std::pow(10, num_input - 1);
+      double error = kROUNDOFF / max_ele;
+      for (int i = num_input - 1; i >= 0; i--) {
+        coef_[i].assign(input_coef[i] / max_ele * std::pow(10, i) - error,
+                        input_coef[i] / max_ele * std::pow(10, i) + error);
+        error *= percision;
+      }
     }
     set_degree();
-    // degree_ = num_input - 1;
+
+    // double max_ele = std::abs(input_coef[0]);
+    // for (int i = 1; i < num_input; i++) {
+    //  max_ele = std::max(std::abs(input_coef[i]), max_ele);
+    //}
+
+    // if (max_ele > 10)
+    //  max_ele = std::pow(10, num_input - 1);
+    // else
+    //  max_ele = 1;
+
+    // double error = kROUNDOFF;
+
+    // for (int i = num_input - 1; i >= 0; i--) {
+    //  coef_[i].assign(input_coef[i] / max_ele - kROUNDOFF,
+    //                  input_coef[i] / max_ele + kROUNDOFF);
+    //  error *= percision;
+    //}
+
+    // set_degree();
+    // if (max_ele != 1) {
+    //  for (int i = 0; i <= num_input - 1; i++) {
+    //    coef_[i] *= std::pow(10, i);
+    //  }
+    //}
   }
 
   /**
@@ -167,10 +199,6 @@ public:
   bool containZero(int i) const {
     if (coef_[i].lower() <= 0.0 && coef_[i].upper() >= 0.0)
       return true;
-    // else if (coef_[i].lower() > 0 && coef_[i].upper() < kEPSILON)
-    //  return true;
-    // else if (coef_[i].upper() < 0 && coef_[i].lower() > -kEPSILON)
-    //  return true;
     return false;
   }
   /**
@@ -230,18 +258,6 @@ public:
     return *this;
   }
 
-  Poly<n> &operator/=(interval num) {
-    for (int i = 0; i <= degree_; i++)
-      coef_[i] /= num;
-    return *this;
-  }
-
-  Poly<n> &operator/=(double num) {
-    for (int i = 0; i <= degree_; i++)
-      coef_[i] /= num;
-    return *this;
-  }
-
   Poly<n> &operator*=(interval num) {
     for (int i = 0; i <= degree_; i++)
       coef_[i] *= num;
@@ -251,6 +267,18 @@ public:
   Poly<n> &operator*=(double num) {
     for (int i = 0; i <= degree_; i++)
       coef_[i] *= num;
+    return *this;
+  }
+
+  Poly<n> &operator/=(interval num) {
+    for (int i = 0; i <= degree_; i++)
+      coef_[i] /= num;
+    return *this;
+  }
+
+  Poly<n> &operator/=(double num) {
+    for (int i = 0; i <= degree_; i++)
+      coef_[i] /= num;
     return *this;
   }
 };
@@ -300,7 +328,7 @@ template <int n> Poly<n> operator-(const Poly<n> &poly, double num) {
 }
 
 template <int n> Poly<n> operator-(double num, const Poly<n> &poly) {
-  return Poly<n>(poly * -1) += num;
+  return Poly<n>(poly * -1.0) += num;
 }
 
 template <int n> Poly<n> operator-(const Poly<n> &poly, interval num) {
@@ -308,7 +336,7 @@ template <int n> Poly<n> operator-(const Poly<n> &poly, interval num) {
 }
 
 template <int n> Poly<n> operator-(interval num, const Poly<n> &poly) {
-  return Poly<n>(poly * -1) += num;
+  return Poly<n>(poly * -1.0) += num;
 }
 
 /*
@@ -464,6 +492,24 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
 template <int n1, int n2>
 Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
                                     const Poly<n2> &poly2) {
+
+  // auto quotient(Quotient(poly1, poly2));
+
+  //// MMC of quotient
+  // interval mmc = boost::numeric::abs(quotient[0]);
+  // for (int i = 1; i < quotient.get_degree(); i++)
+  //  mmc = boost::numeric::max(mmc, boost::numeric::abs(quotient[i]));
+  // auto remainder = (poly1 - quotient * poly2);
+
+  // Poly<std::max(n2 - 1, 0)> remainder_ret;
+
+  //// Set remaineder should returned
+  // for (int i = 0; i <= std::max(n2 - 1, 0); i++)
+  //  remainder_ret[i] = remainder[i];
+  // remainder_ret.set_degree();
+
+  // return remainder_ret;
+
   Poly<n1> remainder(poly1);
   Poly<std::max(n2 - 1, 0)> remainder_ret;
 
@@ -477,7 +523,6 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
   while (remainder_degree >= degree) {
     interval division = remainder.lead_coef() / lead_coef;
     int degree_idx = remainder_degree - degree;
-
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
@@ -486,7 +531,6 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
   for (int i = 0; i <= remainder.get_degree(); i++)
     remainder_ret[i] = remainder[i];
   remainder_ret.set_degree(remainder.get_degree());
-
   return remainder_ret;
 }
 
@@ -508,7 +552,9 @@ static std::ostream &operator<<(std::ostream &out, const Poly<n> &u) {
       continue;
     if (boost::numeric::median(u[i]) >= 0)
       out << '+';
-    out << boost::numeric::median(u[i]) << "*x^" << i;
+    // out << boost::numeric::median(u[i]) << "*x^" << i;
+    out << boost::numeric::median(u[i]) << "[" << u[i].upper() - u[i].lower()
+        << "]*x^" << i;
   }
   out << " degree = " << u.get_degree();
   return out;

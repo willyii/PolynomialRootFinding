@@ -67,18 +67,22 @@ struct RandomPolyRet {
  */
 RandomPolyRet RandomPoly() {
   RandomPolyRet ret;
-  double root;
+  double root = 0.0;
 
   int num_roots = rand_int(2, kMAXDEGREE);
-  root = rand_double(-100, 100);
+  while (root == 0.0)
+    root = rand_double(-10, 10);
   ret.poly[1] = interval(1, 1);
   ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
   ret.roots.emplace_back(root);
 
   for (int i = 1; i < num_roots; i++) {
-    if (rand_double(0, 1) < 0.5)
-      root = rand_double(-100, 100);
+    if (rand_double(0, 1) < 0.5) {
+      root = 0.0;
+      while (root == 0.0)
+        root = rand_double(-1, 1);
+    }
 
     Poly<kMAXDEGREE> backup(ret.poly);
     // Right shift ans by 1

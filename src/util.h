@@ -28,7 +28,21 @@
  * Return True if all coefficients of poly is zero
  */
 template <int n> bool IsZero(const Poly<n> &poly) {
-  return poly.get_degree() == 0 && poly.containZero(0);
+  for (int i = 0; i <= poly.get_degree(); i++)
+    if (!poly.containZero(i))
+      return false;
+  return true;
+  // return (poly.get_degree() == 0 && poly.containZero(0));
+}
+
+template <int n> bool EndGCD(const Poly<n> &poly) {
+  // if (IsZero(poly))
+  //  return true;
+  // double mmc = boost::numeric::abs(poly[0]).lower();
+  // for (int i = 1; i < poly.get_degree(); i++)
+  //  mmc = std::max(boost::numeric::abs(poly[i]).lower(), mmc);
+  // return mmc < 1e-10;
+  return IsZero(poly);
 }
 
 /**
@@ -59,7 +73,8 @@ template <int n1, int n2, int n3>
 void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
-  if (IsZero(remainder)) {
+  // std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
+  if (EndGCD(remainder)) {
     ret = poly2;
     return;
   }
@@ -77,12 +92,16 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
  */
 template <int n1, int n2>
 Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
+  // std::cout << "\n========GCD===========\n"
+  //          << poly1 << "\n"
+  //          << poly2 << std::endl;
   if constexpr (n2 > n1)
     return GCD(poly2, poly1);
   else {
     Poly<n2> ret;
     GCD_helper_(poly1, poly2, ret);
     Monic(ret);
+    // std::cout << "\n ========== END GCD ========= \n " << std::endl;
     return ret;
   }
 }
@@ -111,17 +130,19 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
   auto c(Quotient(fd, a));
   auto d(c - b.Derivative());
 
-  std::cout << "DEBUG: f " << poly << std::endl;
-  std::cout << "DEBUG: fd " << fd << std::endl;
+  // std::cout << "DEBUG: f " << poly << std::endl;
+  // std::cout << "DEBUG: fd " << fd << std::endl;
   std::cout << "DEBUG: a " << a << std::endl;
   std::cout << "DEBUG: poly/a remainder " << Remainder(poly, a) << std::endl;
+  std::cout << "DEBUG: quo*a + rem " << b * a + Remainder(poly, a) << std::endl;
 
   std::cout << "DEBUG: b " << b << std::endl;
-  std::cout << "DEBUG: fd/a remainder " << Remainder(fd, a) << std::endl;
-  std::cout << "DEBUG: c " << c << std::endl;
+  // std::cout << "DEBUG: fd/a remainder " << Remainder(fd, a) << std::endl;
+  // std::cout << "DEBUG: c " << c << std::endl;
   std::cout << "DEBUG: d " << d << std::endl;
   std::cout << "================" << std::endl;
-  while (!(b.get_degree() == 0)) { // b !=1
+  while (!(b.get_degree() == 0 && 1.0 < b[0].upper() &&
+           1.0 >= b[0].lower())) { // b !=1
     if (IsZero(d)) {
       ans[ret++] = b;
       std::cout << "DEBUG: ret " << ret << std::endl;
@@ -136,12 +157,11 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
     b = Quotient(b, a);
     c = Quotient(d, a);
     d = c - b.Derivative();
-    // d = c - b.Derivative();
     std::cout << "DEBUG: a " << a << std::endl;
     std::cout << "DEBUG: b/a remainder " << Remainder(b, a) << std::endl;
     std::cout << "DEBUG: b " << b << std::endl;
-    std::cout << "DEBUG: d/a remainder " << Remainder(d, a) << std::endl;
-    std::cout << "DEBUG: c " << c << std::endl;
+    // std::cout << "DEBUG: d/a remainder " << Remainder(d, a) << std::endl;
+    // std::cout << "DEBUG: c " << c << std::endl;
     std::cout << "DEBUG: d " << d << std::endl;
     std::cout << "================" << std::endl;
   }
