@@ -41,7 +41,8 @@ template <int n> bool EndGCD(const Poly<n> &poly, int spacial) {
     double mid = boost::numeric::median(poly[i]);
     double tolerance = (poly[i].upper() - poly[i].lower()) / 2.0;
     tolerance *= std::pow(10, spacial);
-    if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0))
+    if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0) &&
+        std::abs(mid) > 1e-8)
       return false;
   }
   return true;
@@ -56,10 +57,10 @@ template <int n> bool EndGCD(const Poly<n> &poly, int spacial) {
  */
 template <int n> void Monic(Poly<n> &poly) {
 
-  interval max_coef = poly[0];
-  for (int i = 1; i <= poly.get_degree(); i++)
-    max_coef = boost::numeric::max(max_coef, poly[i]);
-  max_coef = poly.lead_coef();
+  // interval max_coef = poly[0];
+  // for (int i = 1; i <= poly.get_degree(); i++)
+  // max_coef = boost::numeric::max(max_coef, poly[i]);
+  interval max_coef = poly.lead_coef();
   for (int i = 0; i <= poly.get_degree(); i++)
     poly[i] /= max_coef;
 }
@@ -81,7 +82,7 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
                  int spacial) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
-  // std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
+  std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
   if (EndGCD(remainder, spacial)) {
     ret = poly2;
     return;
@@ -101,16 +102,17 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
 template <int n1, int n2>
 Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2,
                            int spacial) {
-  // std::cout << "\n========GCD===========\n"
-  //<< poly1 << "\n"
-  //<< poly2 << std::endl;
+  std::cout << "\n========GCD===========\n"
+            << poly1 << "\n"
+            << poly2 << std::endl;
   if constexpr (n2 > n1)
     return GCD(poly2, poly1, spacial);
   else {
     Poly<n2> ret;
+    spacial = tmp(poly1);
     GCD_helper_(poly1, poly2, ret, spacial);
     Monic(ret);
-    // std::cout << "\n ========== END GCD ========= \n " << std::endl;
+    std::cout << "\n ========== END GCD ========= \n " << std::endl;
     return ret;
   }
 }
@@ -133,45 +135,55 @@ template <int n> int tmp(const Poly<n> &poly) {
  *             modifed
  * @return :Number of square free polynomials
  */
-template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
+template <int n> int SquareFreeDecompose(const Poly<n> &poly_in, Poly<n> *ans) {
+  Poly<n> poly(poly_in);
+  Monic(poly);
   int ret = 0; // number of square free polynomial
+  int end_degree = 0;
 
   int spacial = tmp(poly);
   std::cout << " FUCK : " << spacial << std::endl;
   auto fd(poly.Derivative());
   auto a(GCD(poly, fd, spacial));
-  if (a.get_degree() == 0) {
-    ans[ret++] = poly;
-    return ret;
-  }
+  // if (a.get_degree() == 0) {
+  //  ans[ret++] = poly;
+  //  return ret;
+  //}
   auto b(Quotient(poly, a));
+  end_degree += b.get_degree();
   auto c(Quotient(fd, a));
   auto d(c - b.Derivative());
 
-  // std::cout << "DEBUG: a " << a << std::endl;
+  std::cout << "DEBUG: a " << a << std::endl;
 
-  // std::cout << "DEBUG: b " << b << std::endl;
-  // std::cout << "DEBUG: c " << c << std::endl;
-  // std::cout << "DEBUG: d " << d << std::endl;
-  // std::cout << "================" << std::endl;
+  std::cout << "DEBUG: b " << b << std::endl;
+  std::cout << "DEBUG: c " << c << std::endl;
+  std::cout << "DEBUG: d " << d << std::endl;
+  std::cout << "================" << std::endl;
   while (!(b.get_degree() == 0)) { // b !=1
-    if (IsZero(d)) {
+    if (end_degree >= poly.get_degree()) {
       ans[ret++] = b;
       assert(ret <= kMAXDEGREE);
       break;
     }
+    // if (IsZero(d)) {
+    // ans[ret++] = b;
+    // assert(ret <= kMAXDEGREE);
+    // break;
+    //}
     a = GCD(b, d, spacial);
 
     ans[ret++] = a;
     assert(ret <= kMAXDEGREE);
     b = Quotient(b, a);
+    end_degree += b.get_degree();
     c = Quotient(d, a);
     d = c - b.Derivative();
-    // std::cout << "DEBUG: a " << a << std::endl;
-    // std::cout << "DEBUG: b " << b << std::endl;
-    // std::cout << "DEBUG: c " << c << std::endl;
-    // std::cout << "DEBUG: d " << d << std::endl;
-    // std::cout << "================" << std::endl;
+    std::cout << "DEBUG: a " << a << std::endl;
+    std::cout << "DEBUG: b " << b << std::endl;
+    std::cout << "DEBUG: c " << c << std::endl;
+    std::cout << "DEBUG: d " << d << std::endl;
+    std::cout << "================" << std::endl;
   }
   return ret;
 }

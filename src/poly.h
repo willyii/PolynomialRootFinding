@@ -56,8 +56,8 @@ public:
     double div = std::pow(10, int(std::log10(max_ele)));
 
     for (int i = num_input - 1; i >= 0; i--) {
-      coef_[i] = 1.0;
-      coef_[i] *= input_coef[i];
+      // coef_[i] = 1.0;
+      coef_[i] = input_coef[i];
     }
     set_degree();
   }

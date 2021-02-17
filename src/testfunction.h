@@ -49,7 +49,7 @@ int rand_int(int min, int max) { return rand() % (max - min) + min; }
 double rand_double(double min, double max) {
   double f = (double)rand() / RAND_MAX;
   f = min + f * (max - min);
-  f = std::ceil(f * 10) / 10;
+  f = std::ceil(f * 1000) / 1000;
   return f;
 }
 
@@ -71,7 +71,7 @@ RandomPolyRet RandomPoly() {
 
   int num_roots = rand_int(2, kMAXDEGREE);
   while (root == 0.0)
-    root = rand_double(-50, 50);
+    root = rand_double(50, 100);
   ret.poly[1] = interval(1, 1);
   ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
@@ -81,7 +81,7 @@ RandomPolyRet RandomPoly() {
     if (rand_double(0, 1) < 0.3) {
       root = 0.0;
       while (root == 0.0)
-        root = rand_double(-50, 50);
+        root = rand_double(50, 100);
     }
 
     Poly<kMAXDEGREE> backup(ret.poly);
@@ -122,7 +122,7 @@ template <int n> std::string PolyToString(const Poly<n> &poly) {
 void RandomPolyToFile(int num_polys) {
 
   // srand(time(NULL));
-  srand(2059);
+  srand(2081);
   std::ofstream write_file_poly, write_file_solution;
   write_file_poly.open(kRANDOM_FILE);
   write_file_solution.open(kRANDOM_FILE_SOL);
