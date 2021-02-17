@@ -12,11 +12,15 @@
 #ifndef POLY_RANGE_H
 #define POLY_RANGE_H
 
+#include <boost/numeric/interval.hpp>
+#include <boost/numeric/interval/interval.hpp>
 #include <iostream>
 
+typedef boost::numeric::interval<double> interval;
+
 struct Range {
-  double left_end;
-  double right_end;
+  interval left_end;
+  interval right_end;
 };
 
 /**
@@ -24,7 +28,8 @@ struct Range {
  */
 template <int n>
 static std::ostream &operator<<(std::ostream &out, const Range &u) {
-  out << "left : " << u.left_end << " to right : " << u.right_end;
+  out << "left : " << boost::numeric::median(u.left_end)
+      << " to right : " << boost::numeric::median(u.right_end);
   return out;
 }
 

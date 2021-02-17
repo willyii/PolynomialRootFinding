@@ -21,7 +21,7 @@
  * struct Mobius - represent Mobius transformation, map x to (ax + b)/(cx+d)
  */
 struct Mobius {
-  double a, b, c, d;
+  interval a, b, c, d;
 };
 
 /**
@@ -70,7 +70,7 @@ void VincentSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
 
   // Rational root
   if (ZeroRoots(&poly2)) {
-    double root((mobius.a + mobius.b) / (mobius.c + mobius.d));
+    interval root((mobius.a + mobius.b) / (mobius.c + mobius.d));
     AddToRange(duplicate_times, root, root, ranges, num_roots);
     sign_change_dif--;
   }
@@ -84,8 +84,8 @@ void VincentSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
   if (sign_change_dif == 0) // no root in (0,b)
     return;
   else if (sign_change_dif == 1) { // one root in (0,b)
-    double left(mobius.b / mobius.d);
-    double right((mobius.a + mobius.b) / (mobius.c + mobius.d));
+    interval left(mobius.b / mobius.d);
+    interval right((mobius.a + mobius.b) / (mobius.c + mobius.d));
     AddToRange(duplicate_times, left, right, ranges, num_roots);
   } else { // more than one roots in  (0,b)
 
@@ -145,6 +145,8 @@ int VincentRootIsolate(const double *coef, int coef_num, Range *ranges) {
     else if (square_free_polys[i].get_degree() == 2) // quadratic
       Quadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
     else {
+
+      /* TODO : divied by 0 */
 
       // Positive roots
       Mobius inital_mobius{1, 0, 0, 1};
