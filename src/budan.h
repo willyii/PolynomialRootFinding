@@ -77,37 +77,45 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
  */
 int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
 
-  Poly<kMAXDEGREE> original_poly(coef, coef_num);
-
-  std::cout << "DEBUG: original poly " << original_poly << std::endl;
-  Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
-
   int num_roots(0);
-  int num_square_free(
-      SquareFreeDecompose<kMAXDEGREE>(original_poly, square_free_polys));
+  Poly<kMAXDEGREE> original_poly(coef, coef_num);
+  std::cout << "DEBUG: original poly " << original_poly << std::endl;
 
-  for (int i = 0; i < num_square_free; i++) {
+  if (original_poly.get_degree() == 0)
+    return 0;
+  else if (original_poly.get_degree() == 1)
+    Linear<kMAXDEGREE>(original_poly, 1, ranges, &num_roots);
+  else if (original_poly.get_degree() == 2)
+    Quadratic<kMAXDEGREE>(original_poly, 1, ranges, &num_roots);
+  else {
+    Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
-    std::cout << "DEBUG: square free poly " << square_free_polys[i]
-              << std::endl;
+    int num_square_free(
+        SquareFreeDecompose<kMAXDEGREE>(original_poly, square_free_polys));
 
-    // Handle zero roots
-    if (ZeroRoots(&square_free_polys[i]))
-      AddToRange(i + 1, 0.0, 0.0, ranges, &num_roots);
+    for (int i = 0; i < num_square_free; i++) {
 
-    if (square_free_polys[i].get_degree() == 0) // constant
-      continue;
-    else if (square_free_polys[i].get_degree() == 1) // linear
-      Linear<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
-    else if (square_free_polys[i].get_degree() == 2) // quadratic
-      Quadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
-    else {
-      interval right(UpperBound(square_free_polys[i])), left = -right;
-      int left_change(AddToX(square_free_polys[i], left).SignChange());
-      int right_change(AddToX(square_free_polys[i], right).SignChange());
+      std::cout << "DEBUG: square free poly " << square_free_polys[i]
+                << std::endl;
 
-      BudanSquareFreeSolve(square_free_polys[i], i + 1, left, left_change,
-                           right, right_change, ranges, &num_roots);
+      // Handle zero roots
+      if (ZeroRoots(&square_free_polys[i]))
+        AddToRange(i + 1, 0.0, 0.0, ranges, &num_roots);
+
+      if (square_free_polys[i].get_degree() == 0) // constant
+        continue;
+      else if (square_free_polys[i].get_degree() == 1) // linear
+        Linear<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
+      else if (square_free_polys[i].get_degree() == 2) // quadratic
+        Quadratic<kMAXDEGREE>(square_free_polys[i], i + 1, ranges, &num_roots);
+      else {
+        interval right(UpperBound(square_free_polys[i])), left = -right;
+        int left_change(AddToX(square_free_polys[i], left).SignChange());
+        int right_change(AddToX(square_free_polys[i], right).SignChange());
+
+        BudanSquareFreeSolve(square_free_polys[i], i + 1, left, left_change,
+                             right, right_change, ranges, &num_roots);
+      }
     }
   }
 
