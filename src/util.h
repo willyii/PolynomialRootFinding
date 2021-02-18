@@ -24,29 +24,32 @@
 #include "poly.h"
 #include "range.h"
 
+// Debug
+const static bool debug_GCD = true;
+
 /**
  * Return True if all coefficients of poly is zero
  */
 template <int n> bool IsZero(const Poly<n> &poly) {
   for (int i = poly.get_degree(); i >= 0; i--) {
     if (!poly.containZero(i)) {
+      std::cout << poly[i].lower() * poly[i].upper() << std::endl;
       return false;
     }
   }
   return true;
 }
 
-template <int n> bool EndGCD(const Poly<n> &poly, int spacial) {
+template <int n> bool EndGCD(const Poly<n> &poly, int count) {
   for (int i = 0; i <= poly.get_degree(); i++) {
+    double tolerance = boost::numeric::width(poly[i]) / 2;
+    tolerance *= std::pow(10, i + 1 + 2);
     double mid = boost::numeric::median(poly[i]);
-    double tolerance = (poly[i].upper() - poly[i].lower()) / 2.0;
-    tolerance *= std::pow(10, spacial);
-    if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0) &&
-        std::abs(mid) > 1e-8)
+
+    if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0))
       return false;
   }
   return true;
-  return IsZero(poly);
 }
 
 /**
@@ -56,10 +59,9 @@ template <int n> bool EndGCD(const Poly<n> &poly, int spacial) {
  * @param poly :Polynomial, might be modified.
  */
 template <int n> void Monic(Poly<n> &poly) {
+  if (IsZero(poly))
+    return;
 
-  // interval max_coef = poly[0];
-  // for (int i = 1; i <= poly.get_degree(); i++)
-  // max_coef = boost::numeric::max(max_coef, poly[i]);
   interval max_coef = poly.lead_coef();
   for (int i = 0; i <= poly.get_degree(); i++)
     poly[i] /= max_coef;
@@ -79,15 +81,16 @@ template <int n> void Monic(Poly<n> &poly) {
  */
 template <int n1, int n2, int n3>
 void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
-                 int spacial) {
+                 int count = 1) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
-  std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
-  if (EndGCD(remainder, spacial)) {
+  if (debug_GCD)
+    std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
+  if (EndGCD(remainder, count)) {
     ret = poly2;
     return;
   }
-  GCD_helper_(poly2, remainder, ret, spacial);
+  GCD_helper_(poly2, remainder, ret, count + 1);
 }
 
 /**
@@ -100,28 +103,21 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
  * @return :GCD of two polynomials
  */
 template <int n1, int n2>
-Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2,
-                           int spacial) {
-  std::cout << "\n========GCD===========\n"
-            << poly1 << "\n"
-            << poly2 << std::endl;
+Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
+  if (debug_GCD)
+    std::cout << "\n========GCD===========\n"
+              << poly1 << "\n"
+              << poly2 << std::endl;
   if constexpr (n2 > n1)
-    return GCD(poly2, poly1, spacial);
+    return GCD(poly2, poly1);
   else {
     Poly<n2> ret;
-    spacial = tmp(poly1);
-    GCD_helper_(poly1, poly2, ret, spacial);
+    GCD_helper_(poly1, poly2, ret);
     Monic(ret);
-    std::cout << "\n ========== END GCD ========= \n " << std::endl;
+    if (debug_GCD)
+      std::cout << "\n ========== END GCD ========= \n " << std::endl;
     return ret;
   }
-}
-
-template <int n> int tmp(const Poly<n> &poly) {
-  double ret = std::abs(boost::numeric::median(poly[0]));
-  for (int i = 1; i < poly.get_degree(); i++)
-    ret = std::max(ret, std::abs(boost::numeric::median(poly[i])));
-  return std::max(0, int(std::log10(std::abs(ret))) - 1);
 }
 
 /**
@@ -138,40 +134,38 @@ template <int n> int tmp(const Poly<n> &poly) {
 template <int n> int SquareFreeDecompose(const Poly<n> &poly_in, Poly<n> *ans) {
   Poly<n> poly(poly_in);
   Monic(poly);
-  int ret = 0; // number of square free polynomial
-  int end_degree = 0;
+  int ret = 0, end_degree = 0; // number of square free polynomial
 
-  int spacial = tmp(poly);
-  std::cout << " FUCK : " << spacial << std::endl;
   auto fd(poly.Derivative());
-  auto a(GCD(poly, fd, spacial));
-  // if (a.get_degree() == 0) {
-  //  ans[ret++] = poly;
-  //  return ret;
-  //}
+  auto a(GCD(poly, fd));
   auto b(Quotient(poly, a));
   end_degree += b.get_degree();
   auto c(Quotient(fd, a));
   auto d(c - b.Derivative());
+  if (a.get_degree() == 0) {
+    ans[ret++] = poly;
+    return ret;
+  }
 
-  std::cout << "DEBUG: a " << a << std::endl;
+  if (debug_GCD) {
+    std::cout << "DEBUG: a " << a << std::endl;
 
-  std::cout << "DEBUG: b " << b << std::endl;
-  std::cout << "DEBUG: c " << c << std::endl;
-  std::cout << "DEBUG: d " << d << std::endl;
-  std::cout << "================" << std::endl;
-  while (!(b.get_degree() == 0)) { // b !=1
-    if (end_degree >= poly.get_degree()) {
+    std::cout << "DEBUG: b " << b << std::endl;
+    std::cout << "DEBUG: c " << c << std::endl;
+    std::cout << "DEBUG: d " << d << std::endl;
+    std::cout << "================" << std::endl;
+  }
+
+  while (1) { // b !=1
+    if (end_degree == poly.get_degree()) {
       ans[ret++] = b;
       assert(ret <= kMAXDEGREE);
       break;
+    } else if (end_degree > poly.get_degree()) { // GCD Failed
+      ans[0] = poly_in;
+      return 1;
     }
-    // if (IsZero(d)) {
-    // ans[ret++] = b;
-    // assert(ret <= kMAXDEGREE);
-    // break;
-    //}
-    a = GCD(b, d, spacial);
+    a = GCD(b, d);
 
     ans[ret++] = a;
     assert(ret <= kMAXDEGREE);
@@ -179,11 +173,13 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly_in, Poly<n> *ans) {
     end_degree += b.get_degree();
     c = Quotient(d, a);
     d = c - b.Derivative();
-    std::cout << "DEBUG: a " << a << std::endl;
-    std::cout << "DEBUG: b " << b << std::endl;
-    std::cout << "DEBUG: c " << c << std::endl;
-    std::cout << "DEBUG: d " << d << std::endl;
-    std::cout << "================" << std::endl;
+    if (debug_GCD) {
+      std::cout << "DEBUG: a " << a << std::endl;
+      std::cout << "DEBUG: b " << b << std::endl;
+      std::cout << "DEBUG: c " << c << std::endl;
+      std::cout << "DEBUG: d " << d << std::endl;
+      std::cout << "================" << std::endl;
+    }
   }
   return ret;
 }
@@ -244,14 +240,13 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, interval h) {
  * @param ranges :Store isolation results, might be modified
  * @param num_roots :Store the number of roots, might be modified
  */
-/* TODO : median */
 void AddToRange(int repeat_time, interval left, interval right, Range *ranges,
                 int *num_roots) {
   if (repeat_time == 0)
     return;
   for (int i = 0; i < repeat_time; i++) {
-    ranges[*num_roots].left_end = std::min(right.lower(), left.lower());
-    ranges[*num_roots].right_end = std::max(right.upper(), left.upper());
+    ranges[*num_roots].left_end = boost::numeric::min(right, left);
+    ranges[*num_roots].right_end = boost::numeric::max(right, left);
     (*num_roots)++;
   }
   return;

@@ -1,5 +1,4 @@
 // ----------------------------------------------------------------------------
-//
 // FILENAME: testfunction.h
 //
 // DESCRIPTION:
@@ -49,7 +48,7 @@ int rand_int(int min, int max) { return rand() % (max - min) + min; }
 double rand_double(double min, double max) {
   double f = (double)rand() / RAND_MAX;
   f = min + f * (max - min);
-  f = std::ceil(f * 1000) / 1000;
+  f = std::ceil(f * 100) / 100;
   return f;
 }
 
@@ -71,17 +70,17 @@ RandomPolyRet RandomPoly() {
 
   int num_roots = rand_int(2, kMAXDEGREE);
   while (root == 0.0)
-    root = rand_double(50, 100);
+    root = rand_double(-1000, 1000);
   ret.poly[1] = interval(1, 1);
   ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
   ret.roots.emplace_back(root);
 
   for (int i = 1; i < num_roots; i++) {
-    if (rand_double(0, 1) < 0.3) {
+    if (rand_double(0, 1) < .8) {
       root = 0.0;
       while (root == 0.0)
-        root = rand_double(50, 100);
+        root = rand_double(-1000, 1000);
     }
 
     Poly<kMAXDEGREE> backup(ret.poly);
@@ -121,8 +120,8 @@ template <int n> std::string PolyToString(const Poly<n> &poly) {
  */
 void RandomPolyToFile(int num_polys) {
 
-  // srand(time(NULL));
-  srand(2081);
+  srand(time(NULL));
+  // srand(2116);
   std::ofstream write_file_poly, write_file_solution;
   write_file_poly.open(kRANDOM_FILE);
   write_file_solution.open(kRANDOM_FILE_SOL);

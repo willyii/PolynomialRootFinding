@@ -49,15 +49,9 @@ public:
   Poly(const double *input_coef, int num_input) : coef_{} {
     assert(num_input <= n + 1);
 
-    double max_ele = input_coef[0];
-    for (int i = 1; i < num_input; i++)
-      max_ele = std::max(max_ele, input_coef[i]);
-
-    double div = std::pow(10, int(std::log10(max_ele)));
-
     for (int i = num_input - 1; i >= 0; i--) {
-      // coef_[i] = 1.0;
-      coef_[i] = input_coef[i];
+      coef_[i] = 1.0;
+      coef_[i] *= input_coef[i];
     }
     set_degree();
   }
@@ -148,11 +142,7 @@ public:
     return ret;
   }
 
-  bool containZero(int i) const {
-    if (coef_[i].lower() <= 0.0 && coef_[i].upper() >= 0.0)
-      return true;
-    return false;
-  }
+  bool containZero(int i) const { return boost::numeric::zero_in(coef_[i]); }
   /**
    * --------------------------------------------------------------------------
    *
