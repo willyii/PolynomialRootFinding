@@ -33,7 +33,6 @@ const static bool debug_GCD = false;
 template <int n> bool IsZero(const Poly<n> &poly) {
   for (int i = poly.get_degree(); i >= 0; i--) {
     if (!poly.containZero(i)) {
-      std::cout << poly[i].lower() * poly[i].upper() << std::endl;
       return false;
     }
   }
@@ -41,9 +40,11 @@ template <int n> bool IsZero(const Poly<n> &poly) {
 }
 
 template <int n> bool EndGCD(const Poly<n> &poly, int count) {
+  // return IsZero(poly);
+  double tmp = std::pow(10, count);
   for (int i = 0; i <= poly.get_degree(); i++) {
     double tolerance = boost::numeric::width(poly[i]) / 2;
-    tolerance *= std::pow(10, i + 1 + 2);
+    tolerance *= tmp;
     double mid = boost::numeric::median(poly[i]);
 
     if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0))
@@ -200,7 +201,7 @@ template <int n> interval UpperBound(const Poly<n> &poly) {
   interval lc = poly.lead_coef(), ans = boost::numeric::abs(poly[0] / lc);
   for (int i = 1; i < poly.get_degree(); i++)
     ans = boost::numeric::max(ans, boost::numeric::abs(poly[i] / lc));
-  return 1.0 + ans;
+  return 1.0 + ans.upper();
 }
 
 /**

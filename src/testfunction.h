@@ -70,7 +70,7 @@ RandomPolyRet RandomPoly() {
 
   int num_roots = rand_int(2, kMAXDEGREE);
   while (root == 0.0)
-    root = rand_double(-100, 100);
+    root = rand_double(-1000, 1000);
   ret.poly[1] = interval(1, 1);
   ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
@@ -80,7 +80,7 @@ RandomPolyRet RandomPoly() {
     if (rand_double(0, 1) < .8) {
       root = 0.0;
       while (root == 0.0)
-        root = rand_double(-100, 100);
+        root = rand_double(-1000, 1000);
     }
 
     Poly<kMAXDEGREE> backup(ret.poly);
@@ -170,7 +170,7 @@ void RunningTimeTest(const char *file_path) {
     budan_root_num.push_back(
         BudanRootIsolate(coefs[i], num_coefs[i], poly_roots));
     budan_roots.push_back(poly_roots);
-    // delete poly_roots;
+    delete[] poly_roots;
   }
   auto budan_end = std::chrono::high_resolution_clock::now();
 
@@ -184,7 +184,7 @@ void RunningTimeTest(const char *file_path) {
     vincent_root_num.push_back(
         VincentRootIsolate(coefs[i], num_coefs[i], poly_roots));
     vincent_roots.push_back(poly_roots);
-    // delete poly_roots;
+    delete[] poly_roots;
   }
   auto vincent_end = std::chrono::high_resolution_clock::now();
 
@@ -268,6 +268,7 @@ void RunningCorrectTest(const char *test_file_path,
     /// ----------------------
     poly_roots = new Range[kMAXDEGREE];
     root_num = BudanRootIsolate(coefs[i], num_coefs[i], poly_roots);
+    std::cout << "root num " << root_num << std::endl;
     printf("Budan Theorem resuts: \n");
     for (int j = 0; j < root_num; j++)
       printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),
@@ -279,14 +280,13 @@ void RunningCorrectTest(const char *test_file_path,
     /// ----------------------
     /// Continued fractions
     /// ----------------------
-    // poly_roots = new Range[kMAXDEGREE];
-    // root_num = VincentRootIsolate(coefs[i], num_coefs[i], poly_roots);
-    // printf("Continued Fraction resuts: \n");
-    // for (int j = 0; j < root_num; j++)
-    //  printf("From %f to %f \n",
-    //  boost::numeric::median(poly_roots[j].left_end),
-    //         boost::numeric::median(poly_roots[j].right_end));
-    // delete[] poly_roots;
+    poly_roots = new Range[kMAXDEGREE];
+    root_num = VincentRootIsolate(coefs[i], num_coefs[i], poly_roots);
+    printf("Continued Fraction resuts: \n");
+    for (int j = 0; j < root_num; j++)
+      printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),
+             boost::numeric::median(poly_roots[j].right_end));
+    delete[] poly_roots;
     printf("\n \n \n");
   }
   return;

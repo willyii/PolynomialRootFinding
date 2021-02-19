@@ -28,8 +28,8 @@ struct Range {
  */
 template <int n>
 static std::ostream &operator<<(std::ostream &out, const Range &u) {
-  out << "left : " << boost::numeric::median(u.left_end)
-      << " to right : " << boost::numeric::median(u.right_end);
+  out << "left : " << u.left_end.lower()
+      << " to right : " << u.right_end.upper();
   return out;
 }
 
