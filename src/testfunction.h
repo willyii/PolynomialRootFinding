@@ -37,6 +37,11 @@
 #include "util.h"
 #include "vincent.h"
 
+static const int digit = 2; // number of digit after point
+static const int digit_control = std::pow(10, digit); // controler of digit
+static const double kMAXROOT = 1000;    // root from [-kMAXROOT, kMAXROOT]
+static const double kCHANGE_PROB = 0.5; // prob to change root
+
 /**
  * Get random integer in range min to max
  */
@@ -48,7 +53,7 @@ int rand_int(int min, int max) { return rand() % (max - min) + min; }
 double rand_double(double min, double max) {
   double f = (double)rand() / RAND_MAX;
   f = min + f * (max - min);
-  f = std::ceil(f * 100) / 100;
+  f = std::ceil(f * digit_control) / digit_control;
   return f;
 }
 
@@ -70,17 +75,17 @@ RandomPolyRet RandomPoly() {
 
   int num_roots = rand_int(2, kMAXDEGREE);
   while (root == 0.0)
-    root = rand_double(-1000, 1000);
+    root = rand_double(-kMAXROOT, kMAXROOT);
   ret.poly[1] = interval(1, 1);
   ret.poly[0] = interval(-root, -root);
   ret.poly.set_degree(1);
   ret.roots.emplace_back(root);
 
   for (int i = 1; i < num_roots; i++) {
-    if (rand_double(0, 1) < .8) {
+    if (rand_double(0, 1) < kCHANGE_PROB) {
       root = 0.0;
       while (root == 0.0)
-        root = rand_double(-1000, 1000);
+        root = rand_double(-kMAXROOT, kMAXROOT);
     }
 
     Poly<kMAXDEGREE> backup(ret.poly);
