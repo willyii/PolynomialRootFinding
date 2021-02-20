@@ -37,10 +37,12 @@
 #include "util.h"
 #include "vincent.h"
 
-static const int digit = 2; // number of digit after point
+static const int digit = 1; // number of digit after point
 static const int digit_control = std::pow(10, digit); // controler of digit
-static const double kMAXROOT = 1000;    // root from [-kMAXROOT, kMAXROOT]
-static const double kCHANGE_PROB = 0.5; // prob to change root
+static const double kMAXROOT = 1;      // root from [-kMAXROOT, kMAXROOT]
+static const double kCHANGE_PROB = .5; // prob to change root
+static const bool FIXSEED = false;     // fix test set
+static const int SEED = 2033;
 
 /**
  * Get random integer in range min to max
@@ -126,7 +128,9 @@ template <int n> std::string PolyToString(const Poly<n> &poly) {
 void RandomPolyToFile(int num_polys) {
 
   srand(time(NULL));
-  // srand(2116);
+
+  if (FIXSEED)
+    srand(SEED);
   std::ofstream write_file_poly, write_file_solution;
   write_file_poly.open(kRANDOM_FILE);
   write_file_solution.open(kRANDOM_FILE_SOL);
@@ -274,6 +278,7 @@ void RunningCorrectTest(const char *test_file_path,
     poly_roots = new Range[kMAXDEGREE];
     root_num = BudanRootIsolate(coefs[i], num_coefs[i], poly_roots);
     std::cout << "root num " << root_num << std::endl;
+    // assert(root_num == actual_roots[i].size());
     printf("Budan Theorem resuts: \n");
     for (int j = 0; j < root_num; j++)
       printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),

@@ -41,10 +41,9 @@ template <int n> bool IsZero(const Poly<n> &poly) {
 
 template <int n> bool EndGCD(const Poly<n> &poly, int count) {
   // return IsZero(poly);
-  double tmp = std::pow(10, count);
   for (int i = 0; i <= poly.get_degree(); i++) {
-    double tolerance = boost::numeric::width(poly[i]) / 2;
-    tolerance *= tmp;
+    double tolerance = boost::numeric::width(poly[i]);
+    tolerance *= 10;
     double mid = boost::numeric::median(poly[i]);
 
     if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0))
@@ -85,8 +84,10 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
                  int count = 1) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
-  if (debug_GCD)
+  if (debug_GCD) {
     std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
+    std::cout << "- DEGBUG_GCD: count " << count << std::endl;
+  }
   if (EndGCD(remainder, count)) {
     ret = poly2;
     return;
@@ -159,11 +160,13 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly_in, Poly<n> *ans) {
 
   while (1) { // b !=1
     if (end_degree == poly.get_degree()) {
+      Monic(b);
       ans[ret++] = b;
       assert(ret <= kMAXDEGREE);
       break;
-    } else if (end_degree > poly.get_degree()) { // GCD Failed
-      ans[0] = poly_in;
+    } else if (end_degree > poly.get_degree() || IsZero(d)) { // failed
+      ans[0] = poly;
+      assert(ret <= kMAXDEGREE);
       return 1;
     }
     a = GCD(b, d);

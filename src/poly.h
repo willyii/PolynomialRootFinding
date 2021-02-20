@@ -49,9 +49,8 @@ public:
   Poly(const double *input_coef, int num_input) : coef_{} {
     assert(num_input <= n + 1);
 
-    for (int i = num_input - 1; i >= 0; i--) {
-      coef_[i] = 1.0;
-      coef_[i] *= input_coef[i];
+    for (int i = 0; i < num_input; i++) {
+      coef_[i] = input_coef[i];
     }
     set_degree();
   }
