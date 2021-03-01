@@ -1,0 +1,17 @@
+\subsection{Previous and Related Work}
+
+Thus far, machine learning for BGP anomaly detection has not grown very complex, and still uses relatively simple methods such as SVMs \cite{Scholkopf1998SVMsTheory}, or simple RNNs such as LSTMs (Long Short-Term Memory) \cite{Hochreiter1997LongMemory} or GRUs (Gated Recurrent Unit) \cite{Chung2014EmpiricalModeling}. 
+
+Other anomaly detection tasks have seen the use of more complex models involving deep learning such as, GANs (Generative Adversarial Networks) \cite{goodfellow2014generative} \cite{Ngo2019FenceDetection} and Deep SVDD (Support Vector Data Description) \cite{ocnn-ruff18a}. These have yet to be applied to the specific domain of BGP anomaly detection.
+
+As stated above, there currently is no literature which compares the inter-anomaly generalizability of these models, so we will have to design our experimental framework from scratch. 
+% BGP anomaly detection technique is a hot topic aiming at detecting and alerting anomalous events so as to minimize the damage it causes. 
+% According to the survey\cite{Ahmed15}, typical types of anomalies can be concluded as point anomaly, contextual anomaly and collective anomaly. Worms, power outages, and BGP router configuration errors are all considered as anomalous events. These attacks are sharp, resulting in sustained increases in the number of announcement or withdrawal messages exchanged by BGP routers\cite{Ding18}.
+
+% Machine learning based(classification, clustering, statistical analysis) network anomaly detection is an important category in all the detection methods, thus making both datasets and feature selection algorithms significant. Well-known datasets like Route Views, Réseaux IP Européens (RIPE), and BCNET\cite{Ding18} are widely chosen by researchers to apply various feature selection algorithms. One outstanding approach is the automatic feature extraction by neural network\cite{Xu20} for it solving the problem of manually selecting and deciding the statistical features used for anomaly detection. Generally, the output of anomaly detection techniques are scores and/or binary labels, and evaluation is generated based on both criteria.
+
+% Neural networks have been commonly applied to anomaly detection. For supervised anomaly detection, many recent papers use LSTMs (Long Short-Term Memory) \cite{Hochreiter1997LongMemory} and GRUs (Gated Recurrent Unit) \cite{Chung2014EmpiricalModeling}, which work on a timeseries, rather than an individual sample. Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} were original developed for image generation, but have since been applied to a wider variety of tasks, including anomaly detection. Fence-GAN \cite{Ngo2019FenceDetection}
+
+% For one-class learning, most models use the idea of fitting a hyperplane or hypersphere to the data and then using that to classify anything outside of it as anomalous. One common model for this purpose is the Support Vector Data Description (SVDD) \cite{Tax2004} model, which is insprired by the Support Vector Machine (SVM) \cite{Scholkopf1998SVMsTheory}. Another relatively common family of models for this task are the one-class neural networks (OC-NN) \cite{OCNN}. One example of this is the Deep SVDD \cite{ocnn-ruff18a}, which has been successfully applied to image classification.
+
+% However, most of these one-class techniques have yet to be applied specifically to BGP anomaly detection. The closest work we were able to find was by Allahdadi \etal \cite{Allahdadi2017ADetection}, which uses a one-class SVM.
