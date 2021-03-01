@@ -39,21 +39,28 @@ template <int n> bool IsZero(const Poly<n> &poly) {
   return true;
 }
 
-template <int n> bool EndGCD(const Poly<n> &poly, int count) {
-  // return IsZero(poly);
-  for (int i = 0; i <= poly.get_degree(); i++) {
-    double tolerance = boost::numeric::width(poly[i]);
-    tolerance *= 10;
-    double mid = boost::numeric::median(poly[i]);
+/**
+ * Return true if should terminate GCD
+ *
+ *
+ * @tparam n : Maximum degree of poly
+ * @param poly : Polynomial
+ */
+template <int n> bool EndGCD(const Poly<n> &poly) {
+  return IsZero(poly);
+  // for (int i = 0; i <= poly.get_degree(); i++) {
+  // double tolerance = boost::numeric::width(poly[i]);
+  // tolerance *= 10;
+  // double mid = boost::numeric::median(poly[i]);
 
-    if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0))
-      return false;
-  }
-  return true;
+  // if (!(mid - tolerance <= 0.0 && mid + tolerance >= 0.0))
+  // return false;
+  //}
+  // return true;
 }
 
 /**
- * Make a polynomial monic
+ * Make lead coefficient of polynomial to 1
  *
  * @tparam n :Maximum degree of polynomial
  * @param poly :Polynomial, might be modified.
@@ -80,19 +87,17 @@ template <int n> void Monic(Poly<n> &poly) {
  * @param ret :Store GCD of poly1 and poly2, might be modified
  */
 template <int n1, int n2, int n3>
-void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
-                 int count = 1) {
+void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret) {
   static_assert(n3 >= n2);
   auto remainder = Remainder(poly1, poly2);
   if (debug_GCD) {
     std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
-    std::cout << "- DEGBUG_GCD: count " << count << std::endl;
   }
-  if (EndGCD(remainder, count)) {
+  if (EndGCD(remainder)) {
     ret = poly2;
     return;
   }
-  GCD_helper_(poly2, remainder, ret, count + 1);
+  GCD_helper_(poly2, remainder, ret);
 }
 
 /**
@@ -133,9 +138,9 @@ Poly<std::min(n1, n2)> GCD(const Poly<n1> &poly1, const Poly<n2> &poly2) {
  *             modifed
  * @return :Number of square free polynomials
  */
-template <int n> int SquareFreeDecompose(const Poly<n> &poly_in, Poly<n> *ans) {
-  Poly<n> poly(poly_in);
-  Monic(poly);
+template <int n> int SquareFreeDecompose(const Poly<n> &poly, Poly<n> *ans) {
+  // Poly<n> poly(poly_in);
+  // Monic(poly);
   int ret = 0, end_degree = 0; // number of square free polynomial
 
   auto fd(poly.Derivative());
@@ -158,17 +163,16 @@ template <int n> int SquareFreeDecompose(const Poly<n> &poly_in, Poly<n> *ans) {
     std::cout << "================" << std::endl;
   }
 
-  while (1) { // b !=1
+  while (1) {
     if (end_degree == poly.get_degree()) {
       Monic(b);
       ans[ret++] = b;
-      assert(ret <= kMAXDEGREE);
       break;
     } else if (end_degree > poly.get_degree() || IsZero(d)) { // failed
       ans[0] = poly;
-      assert(ret <= kMAXDEGREE);
       return 1;
     }
+
     a = GCD(b, d);
 
     ans[ret++] = a;
@@ -313,6 +317,12 @@ void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
 
   if ((delta.upper() < 0))
     return;
+  else if (boost::numeric::zero_in(delta)) { // repeat root
+    interval root1(-((poly[1]) / (2.0 * poly[2])));
+    AddToRange(repeat_time * 2, root1, root1, ranges, num_roots);
+    return;
+  }
+
   delta = boost::numeric::sqrt(delta);
 
   interval root1(-((poly[1] + delta) / (2.0 * poly[2])));

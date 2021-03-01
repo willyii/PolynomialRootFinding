@@ -47,8 +47,8 @@ public:
    * @param num_input: Number of coefficients
    */
   Poly(const double *input_coef, int num_input) : coef_{} {
-    assert(num_input <= n + 1);
 
+    assert(num_input <= n + 1);
     for (int i = 0; i < num_input; i++) {
       coef_[i] = input_coef[i];
     }
@@ -142,6 +142,7 @@ public:
   }
 
   bool containZero(int i) const { return boost::numeric::zero_in(coef_[i]); }
+
   /**
    * --------------------------------------------------------------------------
    *

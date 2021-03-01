@@ -37,11 +37,11 @@
 #include "util.h"
 #include "vincent.h"
 
-static const int digit = 1; // number of digit after point
+static const int digit = 2; // number of digit after point
 static const int digit_control = std::pow(10, digit); // controler of digit
-static const double kMAXROOT = 10;     // root from [-kMAXROOT, kMAXROOT]
-static const double kCHANGE_PROB = .5; // prob to change root
-static const bool FIXSEED = false;     // fix test set
+static const double kMAXROOT = 1000;    // root from [-kMAXROOT, kMAXROOT]
+static const double kCHANGE_PROB = 0.5; // prob to change root
+static const bool FIXSEED = false;      // fix test set
 static const int SEED = 2033;
 
 /**
@@ -201,16 +201,16 @@ void RunningTimeTest(const char *file_path) {
       vincent_end - vincent_start);
 
   // Print budan time
-  std::cout << "Buand Method takes " << budan_duration.count() << " ms for "
+  std::cout << "Buand Method takes " << budan_duration.count() << " us for "
             << coefs.size() << " polynomials" << std::endl;
   std::cout << "Average time : " << budan_duration.count() / coefs.size()
-            << "ms" << std::endl;
+            << "us" << std::endl;
 
   // Print continued fraction time
-  std::cout << "Vincent Method takes " << vincent_duration.count() << " ms "
+  std::cout << "Vincent Method takes " << vincent_duration.count() << " us "
             << coefs.size() << " polynomials" << std::endl;
   std::cout << "Average time : " << vincent_duration.count() / coefs.size()
-            << "ms" << std::endl;
+            << "us" << std::endl;
   return;
 }
 
