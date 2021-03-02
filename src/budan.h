@@ -84,12 +84,6 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
   // std::cout << "DEBUG: original poly " << original_poly << std::endl;
 
-  // if (original_poly.get_degree() == 0)
-  // return 0;
-  // else if (original_poly.get_degree() == 1)
-  // Linear<kMAXDEGREE>(original_poly, 1, ranges, &num_roots);
-  // else if (original_poly.get_degree() == 2)
-  // Quadratic<kMAXDEGREE>(original_poly, 1, ranges, &num_roots);
   Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
   int num_square_free(

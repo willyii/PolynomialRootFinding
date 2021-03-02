@@ -201,16 +201,16 @@ void RunningTimeTest(const char *file_path) {
       vincent_end - vincent_start);
 
   // Print budan time
-  std::cout << "Buand Method takes " << budan_duration.count() << " ms for "
+  std::cout << "Buand Method takes " << budan_duration.count() << " us for "
             << coefs.size() << " polynomials" << std::endl;
   std::cout << "Average time : " << budan_duration.count() / coefs.size()
-            << "ms" << std::endl;
+            << "us" << std::endl;
 
   // Print continued fraction time
-  std::cout << "Vincent Method takes " << vincent_duration.count() << " ms "
+  std::cout << "Vincent Method takes " << vincent_duration.count() << " us "
             << coefs.size() << " polynomials" << std::endl;
   std::cout << "Average time : " << vincent_duration.count() / coefs.size()
-            << "ms" << std::endl;
+            << "us" << std::endl;
   return;
 }
 
@@ -281,8 +281,8 @@ void RunningCorrectTest(const char *test_file_path,
     // assert(root_num == actual_roots[i].size());
     printf("Budan Theorem resuts: \n");
     for (int j = 0; j < root_num; j++)
-      printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),
-             boost::numeric::median(poly_roots[j].right_end));
+      printf("From %f to %f \n", poly_roots[j].left_end.lower(),
+             poly_roots[j].right_end.upper());
     delete[] poly_roots;
     poly_roots = nullptr;
     printf("\n");
@@ -294,8 +294,8 @@ void RunningCorrectTest(const char *test_file_path,
     root_num = VincentRootIsolate(coefs[i], num_coefs[i], poly_roots);
     printf("Continued Fraction resuts: \n");
     for (int j = 0; j < root_num; j++)
-      printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),
-             boost::numeric::median(poly_roots[j].right_end));
+      printf("From %f to %f \n", poly_roots[j].left_end.lower(),
+             poly_roots[j].right_end.upper());
     delete[] poly_roots;
     printf("\n \n \n");
   }

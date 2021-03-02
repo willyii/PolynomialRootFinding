@@ -18,6 +18,13 @@
 #include "util.h"
 #include <limits>
 
+template <int n> interval LowerBound(const Poly<n> &poly) {
+  interval lc = poly[0], ans = boost::numeric::abs(poly.lead_coef() / lc);
+  for (int i = poly.get_degree() - 1; i > 0; i--)
+    ans = boost::numeric::max(ans, boost::numeric::abs(poly[i] / lc));
+  return 1.0 / (1.0 + ans.upper());
+}
+
 /**
  * struct Mobius - represent Mobius transformation, map x to (ax + b)/(cx+d)
  */
@@ -132,13 +139,6 @@ int VincentRootIsolate(const double *coef, int coef_num, Range *ranges) {
   int num_roots(0);
   Poly<kMAXDEGREE> original_poly(coef, coef_num);
 
-  // if (original_poly.get_degree() == 0)
-  // return 0;
-  // else if (original_poly.get_degree() == 1)
-  // Linear<kMAXDEGREE>(original_poly, 1, ranges, &num_roots);
-  // else if (original_poly.get_degree() == 2)
-  // Quadratic<kMAXDEGREE>(original_poly, 1, ranges, &num_roots);
-  // else {
   Poly<kMAXDEGREE> square_free_polys[kMAXDEGREE];
 
   int num_square_free(
