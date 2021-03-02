@@ -86,7 +86,6 @@ void GCD_helper_(const Poly<n1> &poly1, const Poly<n2> &poly2, Poly<n3> &ret,
   auto remainder = Remainder(poly1, poly2);
   if (debug_GCD) {
     std::cout << "- DEGBUG_GCD: remainder " << remainder << std::endl;
-    std::cout << "- DEGBUG_GCD: count " << count << std::endl;
   }
   if (EndGCD(remainder, count)) {
     ret = poly2;
