@@ -16,7 +16,7 @@
 // double kEPSILON = 1e-9;
 
 // Maxium possible degree of polynomials
-static const int kMAXDEGREE = 8;
+static const int kMAXDEGREE = 7;
 
 // Minimum range
 // static const double kMINRANGE = 1e-3;
