@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{7}
+\begin{thebibliography}{1}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -37,118 +37,20 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
-\bibitem[\protect\citeauthoryear{Al-Musawi, Branch, and Armitage}{Al-Musawi
-  et~al\mbox{.}}{2016}]%
-        {al2016bgp}
-\bibfield{author}{\bibinfo{person}{Bahaa Al-Musawi}, \bibinfo{person}{Philip
-  Branch}, {and} \bibinfo{person}{Grenville Armitage}.}
-  \bibinfo{year}{2016}\natexlab{}.
-\newblock \showarticletitle{BGP anomaly detection techniques: A survey}.
-\newblock \bibinfo{journal}{\emph{IEEE Communications Surveys \& Tutorials}}
-  \bibinfo{volume}{19}, \bibinfo{number}{1} (\bibinfo{year}{2016}),
-  \bibinfo{pages}{377--396}.
+\bibitem[\protect\citeauthoryear{Ayoub}{Ayoub}{1980}]%
+        {Abel-Ruffini}
+\bibfield{author}{\bibinfo{person}{Raymond~G. Ayoub}.}
+  \bibinfo{year}{1980}\natexlab{}.
+\newblock \showarticletitle{Paolo Ruffini's Contributions to the Quintic}.
+\newblock \bibinfo{journal}{\emph{Archive for History of Exact Sciences}}
+  \bibinfo{volume}{23}, \bibinfo{number}{3} (\bibinfo{year}{1980}),
+  \bibinfo{pages}{253--277}.
 \newblock
-
-
-\bibitem[\protect\citeauthoryear{Chung, Gulcehre, Cho, and Bengio}{Chung
-  et~al\mbox{.}}{2014}]%
-        {Chung2014EmpiricalModeling}
-\bibfield{author}{\bibinfo{person}{Junyoung Chung}, \bibinfo{person}{Caglar
-  Gulcehre}, \bibinfo{person}{KyungHyun Cho}, {and} \bibinfo{person}{Yoshua
-  Bengio}.} \bibinfo{year}{2014}\natexlab{}.
-\newblock \showarticletitle{{Empirical Evaluation of Gated Recurrent Neural
-  Networks on Sequence Modeling}}.
-\newblock  (\bibinfo{date}{12} \bibinfo{year}{2014}).
-\newblock
+\showISSN{00039519, 14320657}
 \urldef\tempurl%
-\url{http://arxiv.org/abs/1412.3555}
+\url{http://www.jstor.org/stable/41133596}
 \showURL{%
 \tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Goodfellow, Pouget-Abadie, Mirza, Xu,
-  Warde-Farley, Ozair, Courville, and Bengio}{Goodfellow et~al\mbox{.}}{2014}]%
-        {goodfellow2014generative}
-\bibfield{author}{\bibinfo{person}{Ian~J. Goodfellow}, \bibinfo{person}{Jean
-  Pouget-Abadie}, \bibinfo{person}{Mehdi Mirza}, \bibinfo{person}{Bing Xu},
-  \bibinfo{person}{David Warde-Farley}, \bibinfo{person}{Sherjil Ozair},
-  \bibinfo{person}{Aaron Courville}, {and} \bibinfo{person}{Yoshua Bengio}.}
-  \bibinfo{year}{2014}\natexlab{}.
-\newblock \bibinfo{title}{Generative Adversarial Networks}.
-\newblock
-\newblock
-\showeprint[arxiv]{1406.2661}~[stat.ML]
-
-
-\bibitem[\protect\citeauthoryear{Hochreiter and Schmidhuber}{Hochreiter and
-  Schmidhuber}{1997}]%
-        {Hochreiter1997LongMemory}
-\bibfield{author}{\bibinfo{person}{Sepp Hochreiter} {and}
-  \bibinfo{person}{Jürgen Schmidhuber}.} \bibinfo{year}{1997}\natexlab{}.
-\newblock \showarticletitle{{Long Short-Term Memory}}.
-\newblock \bibinfo{journal}{\emph{Neural Computation}} \bibinfo{volume}{9},
-  \bibinfo{number}{8} (\bibinfo{date}{11} \bibinfo{year}{1997}),
-  \bibinfo{pages}{1735--1780}.
-\newblock
-\showISSN{08997667}
-\urldef\tempurl%
-\url{https://doi.org/10.1162/neco.1997.9.8.1735}
-\showDOI{\tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Ngo, Winarto, Li, Park, Akram, and Lee}{Ngo
-  et~al\mbox{.}}{2019}]%
-        {Ngo2019FenceDetection}
-\bibfield{author}{\bibinfo{person}{Cuong~Phuc Ngo},
-  \bibinfo{person}{Amadeus~Aristo Winarto}, \bibinfo{person}{Connie Kou~Khor
-  Li}, \bibinfo{person}{Sojeong Park}, \bibinfo{person}{Farhan Akram}, {and}
-  \bibinfo{person}{Hwee~Kuan Lee}.} \bibinfo{year}{2019}\natexlab{}.
-\newblock \showarticletitle{{Fence GAN: Towards Better Anomaly Detection}}.
-\newblock \bibinfo{journal}{\emph{Proceedings - International Conference on
-  Tools with Artificial Intelligence, ICTAI}}  \bibinfo{volume}{2019-November}
-  (\bibinfo{date}{4} \bibinfo{year}{2019}), \bibinfo{pages}{141--148}.
-\newblock
-\urldef\tempurl%
-\url{http://arxiv.org/abs/1904.01209}
-\showURL{%
-\tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Ruff, Vandermeulen, Goernitz, Deecke,
-  Siddiqui, Binder, M{\"u}ller, and Kloft}{Ruff et~al\mbox{.}}{2018}]%
-        {ocnn-ruff18a}
-\bibfield{author}{\bibinfo{person}{Lukas Ruff}, \bibinfo{person}{Robert
-  Vandermeulen}, \bibinfo{person}{Nico Goernitz}, \bibinfo{person}{Lucas
-  Deecke}, \bibinfo{person}{Shoaib~Ahmed Siddiqui}, \bibinfo{person}{Alexander
-  Binder}, \bibinfo{person}{Emmanuel M{\"u}ller}, {and} \bibinfo{person}{Marius
-  Kloft}.} \bibinfo{year}{2018}\natexlab{}.
-\newblock \showarticletitle{Deep One-Class Classification}
-  \emph{(\bibinfo{series}{Proceedings of Machine Learning Research},
-  Vol.~\bibinfo{volume}{80})}, \bibfield{editor}{\bibinfo{person}{Jennifer Dy}
-  {and} \bibinfo{person}{Andreas Krause}} (Eds.). \bibinfo{publisher}{PMLR},
-  \bibinfo{address}{Stockholmsmässan, Stockholm Sweden},
-  \bibinfo{pages}{4393--4402}.
-\newblock
-\urldef\tempurl%
-\url{http://proceedings.mlr.press/v80/ruff18a.html}
-\showURL{%
-\tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Sch{\"{o}}lkopf}{Sch{\"{o}}lkopf}{1998}]%
-        {Scholkopf1998SVMsTheory}
-\bibfield{author}{\bibinfo{person}{Bernhard Sch{\"{o}}lkopf}.}
-  \bibinfo{year}{1998}\natexlab{}.
-\newblock \showarticletitle{{SVMs - A practical consequence of learning
-  theory}}.
-\newblock \bibinfo{journal}{\emph{IEEE Intelligent Systems and Their
-  Applications}} \bibinfo{volume}{13}, \bibinfo{number}{4} (\bibinfo{date}{7}
-  \bibinfo{year}{1998}), \bibinfo{pages}{18--21}.
-\newblock
-\showISSN{10947167}
-\urldef\tempurl%
-\url{https://doi.org/10.1109/5254.708428}
-\showDOI{\tempurl}
 
 
 \end{thebibliography}

@@ -12,49 +12,44 @@ Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=200001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-Warning--no journal in Chung2014EmpiricalModeling
-Warning--no number and no volume in Chung2014EmpiricalModeling
-Warning--page numbers missing in both pages and numpages fields in Chung2014EmpiricalModeling
-Warning--empty booktitle in ocnn-ruff18a
-You've used 7 entries,
+You've used 1 entry,
             5959 wiz_defined-function locations,
-            1394 strings with 16540 characters,
-and the built_in function-call counts, 9267 in all, are:
-= -- 1199
-> -- 425
+            1340 strings with 14877 characters,
+and the built_in function-call counts, 1307 in all, are:
+= -- 199
+> -- 20
 < -- 0
-+ -- 141
-- -- 142
-* -- 748
-:= -- 988
-add.period$ -- 35
-call.type$ -- 7
-change.case$ -- 61
-chr.to.int$ -- 7
-cite$ -- 11
-duplicate$ -- 708
-empty$ -- 502
-format.name$ -- 166
-if$ -- 2193
++ -- 5
+- -- 8
+* -- 71
+:= -- 117
+add.period$ -- 5
+call.type$ -- 1
+change.case$ -- 5
+chr.to.int$ -- 1
+cite$ -- 1
+duplicate$ -- 108
+empty$ -- 77
+format.name$ -- 8
+if$ -- 321
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 25
-newline$ -- 116
-num.names$ -- 58
-pop$ -- 241
+missing$ -- 4
+newline$ -- 53
+num.names$ -- 8
+pop$ -- 32
 preamble$ -- 1
-purify$ -- 123
+purify$ -- 14
 quote$ -- 0
-skip$ -- 246
+skip$ -- 36
 stack$ -- 0
-substring$ -- 669
-swap$ -- 77
+substring$ -- 108
+swap$ -- 13
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 140
-warning$ -- 4
-while$ -- 52
+type$ -- 16
+warning$ -- 0
+while$ -- 11
 width$ -- 0
-write$ -- 179
-(There were 4 warnings)
+write$ -- 61
