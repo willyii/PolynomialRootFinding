@@ -1,0 +1,73 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{2}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Ayoub}{Ayoub}{1980}]%
+        {Abel-Ruffini}
+\bibfield{author}{\bibinfo{person}{Raymond~G. Ayoub}.}
+  \bibinfo{year}{1980}\natexlab{}.
+\newblock \showarticletitle{Paolo Ruffini's Contributions to the Quintic}.
+\newblock \bibinfo{journal}{\emph{Archive for History of Exact Sciences}}
+  \bibinfo{volume}{23}, \bibinfo{number}{3} (\bibinfo{year}{1980}),
+  \bibinfo{pages}{253--277}.
+\newblock
+\showISSN{00039519, 14320657}
+\urldef\tempurl%
+\url{http://www.jstor.org/stable/41133596}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Yun}{Yun}{1976}]%
+        {Yuns}
+\bibfield{author}{\bibinfo{person}{David~Y.Y. Yun}.}
+  \bibinfo{year}{1976}\natexlab{}.
+\newblock \showarticletitle{On Square-Free Decomposition Algorithms}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the Third ACM Symposium on Symbolic
+  and Algebraic Computation}} (Yorktown Heights, New York, USA)
+  \emph{(\bibinfo{series}{SYMSAC '76})}. \bibinfo{publisher}{Association for
+  Computing Machinery}, \bibinfo{address}{New York, NY, USA},
+  \bibinfo{pages}{26–35}.
+\newblock
+\showISBNx{9781450377904}
+\urldef\tempurl%
+\url{https://doi.org/10.1145/800205.806320}
+\showDOI{\tempurl}
+
+
+\end{thebibliography}
