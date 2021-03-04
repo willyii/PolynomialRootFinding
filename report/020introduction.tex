@@ -1,0 +1,15 @@
+\section{Introduction}
+
+One of the most fundamental scientific computation is to computing the real
+roots of polynomials. For the polynomials with low order, like quadratic or
+cubic, we can using formula to get roots directly. However, according to the 
+Abel–Ruffini theorem\cite{Abel-Ruffini}, there is no solution in radicals to general 
+polynomial equations of degree of five or higher with arbitrary coefficients. 
+Therefore, general root-finding algorithms are needed for general polynomials.
+
+However, the usual root-finding algorithms, like Newton Method, cannot generally
+certify having found all real roots. Especially, if such algorithms does not
+find any root, one cannot know if there is real roots or not. In order to get
+all real roots, real-root isolation is useful. Real-root isolation can generate
+intervals, which contain only one real root of the polynomial, so that no real
+root will be missed.
