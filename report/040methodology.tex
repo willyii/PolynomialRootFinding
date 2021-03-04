@@ -1,3 +1,65 @@
 \section{Methodology}
 
-In this section, 
+In this section, I will introduce the methods that applied to this project.
+Since both two methods are only work on square-free polynomials, the first step
+of this project is appling square free decomposition to original polynomials to
+avoid repeat roots. After square free decomposition, methods based on Budan's
+Theorem and Continued Fraction will be applied to square-free polynomials. They both based on
+Descartes' rule of sign to check how many real roots in a interval. The continued fraction
+method also uses Mobius transformation, which will be introduce in Continued Fraction
+subsection.
+
+\subsection{Square Free Decomposition} 
+In mathematics, a square-free polynomial is a polynomial defined over a field
+that does not have as a divisor any square of a non-constant
+polynomial\cite{Yuns}. Usually, a square-free polynomial refers to the
+polynomials with no repeated roots. This project applied Yun's
+algorithm\cite{Yuns} to perform square-free decomposition. It's based one the
+succession of Greatest Common Divisor(GCD).
+
+\subsubsection{Greatest Common Divisor}
+
+In algebra, the greatest common divisor of two polynomials is a polynomial, 
+of the highest possible degree, that is a factor of both the two original
+polynomials. This concept is simillar to the GCD of two integers. 
+
+This project applied Euclid's algorithm to compute the GCD of two polynomials.
+It's simillar to the  Euclidean division for integers. In the Algorithm~\ref{alg1}
+, $rem(a,b)$ refers to the remainder of Euclidean division of
+polynomial $a$ and polynomial $b$.
+
+\begin{algorithm}[H]
+\label{alg1}
+\SetAlgoLined
+  \SetKwInOut{Input}{input}
+  \SetKwInOut{Output}{output}
+
+  \Input{$P1$: a univariate polynomial\newline
+         $P2$: a univariate polynomial}
+  \Output{Greatest common divisor of $P1$ and $P2$}
+
+  $r_0 = P1$\;
+  $r_1 = P2$\;
+  \For{$i=1; r_i \neq 0; i++$}{
+    $r_{i+1} = rem(r_{i-1},r_i)$
+  }
+
+  \Return{$r_{i-1}$}
+
+\caption{GCD of two polynomials}
+\end{algorithm}
+
+\subsubsection{Yun's Algorithm}
+
+\subsection{Budan's Theorem}
+
+\subsubsection{Descartes' rule of signs}
+
+\subsubsection{Budan's Theorem}
+
+\subsection{Continued Fraction}
+
+\subsubsection{Mobius Transformation}
+
+\subsubsection{Continued Fraction}
+
