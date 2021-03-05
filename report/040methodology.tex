@@ -11,7 +11,7 @@ subsection.
 
 \subsection{Square Free Decomposition} 
 In mathematics, a square-free polynomial is a polynomial defined over a field
-that does not have as a divisor any square of a non-constant
+that does not have a divisor any square of a non-constant
 polynomial\cite{Yuns}. Usually, a square-free polynomial refers to the
 polynomials with no repeated roots. This project applied Yun's
 algorithm\cite{Yuns} to perform square-free decomposition. It's based one the
@@ -24,8 +24,7 @@ of the highest possible degree, that is a factor of both the two original
 polynomials. This concept is simillar to the GCD of two integers. 
 
 This project applied Euclid's algorithm to compute the GCD of two polynomials.
-It's simillar to the  Euclidean division for integers. In the Algorithm~\ref{alg1}
-, $rem(a,b)$ refers to the remainder of Euclidean division of
+In the Algorithm~\ref{alg1}, $rem(a,b)$ refers to the remainder of Euclidean division of
 polynomial $a$ and polynomial $b$.
 
 \begin{algorithm}[H]
@@ -40,7 +39,7 @@ polynomial $a$ and polynomial $b$.
 
   $r_0 = P1$\;
   $r_1 = P2$\;
-  \For{$i=1; r_i \neq 0; i++$}{
+  \For{$i=1; r_i \neq 0; i=i+1$}{
     $r_{i+1} = rem(r_{i-1},r_i)$
   }
 
@@ -51,7 +50,39 @@ polynomial $a$ and polynomial $b$.
 
 \subsubsection{Yun's Algorithm}
 
+Based on the succession of GCD, Yun developed a square-free decomposition
+algorithm for univariate polynomials. Given a primitive polynomial $P$, the
+algorithm will compute square-free polynomials $P_i$ and the subscript refers to
+the times this square-free polynomial appears. Which means $P= \prod_{i=1}^k
+P_i^i$.
+
+\begin{algorithm}[H]
+\label{alg2}
+\SetAlgoLined
+  \SetKwInOut{Input}{input}
+  \SetKwInOut{Output}{output}
+
+  \Input{$P$: primitive polynomial}
+  \Output{List of square-free polynomials}
+
+  $G = GCD(P, dP/dx)$\;
+  $C_1=P/G$\;
+  $D_1 = (dP/dx)/G - dC_1/dx$\;
+
+  \For{$i=1,C_i\neq 0;i=i+1$}{
+    $P_i= GCD(C_i,D_i)$\;
+    $C_{i+1}= C_i/P_i$\;
+    $D_{i+1}= D_i/P_i - dC_{i+1}/dx$\;
+  }
+
+  \Return{$P_1, P_2...P_k$}
+
+\caption{Yun's Square-free Decomposition Algorithm}
+\end{algorithm}
+
 \subsection{Budan's Theorem}
+
+After the square-free decomposition,
 
 \subsubsection{Descartes' rule of signs}
 
