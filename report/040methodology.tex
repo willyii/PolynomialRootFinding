@@ -82,15 +82,121 @@ P_i^i$.
 
 \subsection{Budan's Theorem}
 
-After the square-free decomposition,
+Budan's Theorem is a theorem used for bounding the numnber of real roots in a
+given interval. Given a univariate polynomial $P$, we denote
+$\#_{l,r}(P)$ as the number of real roots of $P$ in half-open interval $(l,r]$.
+Then we denote $v_h(P)$ as the number of sign changes in coefficients of
+polynomial $P_h$, where $P_h(x) = P(x+h)$.
 
-\subsubsection{Descartes' rule of signs}
+Budan's Theorem states that $v_l(h) - v_r(h) - \#_{l,r}(P)$ is a
+nonnegative even integer.
 
-\subsubsection{Budan's Theorem}
+From above statement, we can know that if $v_l(h) - v_r(h) = 1 \text{ or } 0$, there is only
+one real root or no root in interval $(l,r]$. 
+
+Based on this theorem, this project applied bisection to isolate the real roots.
+This process described in Algorithm~\ref{alg3}
+
+\begin{algorithm}[H]
+\label{alg3}
+\SetAlgoLined
+  \SetKwInOut{Input}{input}
+  \SetKwInOut{Output}{output}
+
+  \Input{$P$ square-free polynomial} 
+  \Output{List of intervals contains only one real root}
+
+  $ret = []$\;
+  $up\_bound = Upper(P)$\;
+  $low\_bound = - up\_bound$\;
+  $search = [(low\_bound, up\_bound)]$\;
+
+  \While{$search$ not empty}{
+    $l, r = pop(search)$\;
+    $vl = sign\_change(P(x+l))$\;
+    $vr = sign\_change(P(x+r))$\;
+    \If{$vl - vr = 1$}{
+      $ret.append([l,r])$\;
+    }
+    \ElseIf{$vl - vr > 1$}{
+      $mid = l + (r-l)/2$\;
+      $search.append(mid, r)$\;
+      $search.append(l, mid)$\;
+    }
+  }
+
+  \Return{ret}\;
+\caption{Real-root isolation based on Budan's Theorem}
+\end{algorithm}
+
+In Algorithm~\ref{alg3}, $Upper(P)$ returns the upper bound of real roots of
+$P$. We are using Lagrange's bound in this project. Assuming $P = a_0 + a_1x +
+... + a_nx^n$, Lagrange's bound is $max\{1,
+\sum_{i=0}^{n-1}|\frac{a_i}{a_n}|\}$.
 
 \subsection{Continued Fraction}
 
-\subsubsection{Mobius Transformation}
+Let's first introduce some notation used in this algorithm. Let $M(x)$ represent a
+Mobius Transformation, which map $x$ to $\frac{ax+b}{cx+d}$. So that the number
+of positive
+roots of $P(M(x))$ equals to the number of roots in interval $(\frac{b}{d},
+\frac{a}{c}]$. And $s = sign\_change(P)$ represents the sign changes along
+coefficients of $P$.
 
-\subsubsection{Continued Fraction}
+We using $\{a,b,c,d,p, s\}$ to represent a interval. Where, $ad-bc \neq 0$ and
+the roots of original polynomial $P$ in $(\frac{b}{d},\frac{a}{c}]$ are images
+of positive roots of $p$. $s = sign\_change(p)$.
 
+The algorithm can be described as Algorithm~\ref{alg4}. 
+
+\begin{algorithm}[H]
+\label{alg4}
+\SetAlgoLined
+  \SetKwInOut{Input}{input}
+  \SetKwInOut{Output}{output}
+
+  \Input{$P$ square-free polynomial with no zero root} 
+  \Output{List of intervals contains only one positive real root}
+
+  $s = sign\_change(P)$\;
+  \If{$s=0$}{
+    \Return{[]};
+  }
+  \ElseIf{$s=1$}{
+    \Return{$[(0,\infty)]$};
+  }
+
+  $ret = []$\;
+  $intervals = [\{1,0,0,1,P,s\}]$\;
+
+  \While{$intervals$ not empty}{
+    $\{a,b,c,d,p,s\} = pop(intervals)$\;
+    $p' = p(x+1)$\;
+
+    \If{$p'(0)=0$}{
+      $ret.append([\frac{b}{d},\frac{b}{d}])$\;
+      $p' = p'/x$\;
+    }
+
+    $s' = sign\_change(p')$\;
+      $intervals.append(\{a, a+b, c, c+d, p', s' \})$\;
+
+    \If{$s-s' = 1$}{
+      $ret.append([\frac{a}{c},\frac{b}{d}])$\;
+    }
+    \ElseIf{$s-s' > 1$} {
+      % add A(b/(1 + x)),  M(b/(1 + x)) to L
+      $p'' = p(b/(1+x))$\;
+      $intervals.append(\{b, a+b, d, c+d, p'', sign\_change(p'') \})$\;
+
+    }
+  }
+
+  \Return{ret}\;
+\caption{Real-root isolation based on Continued Fraction}
+\end{algorithm}
+
+Above algorithm only accept the polynomials with non-zero roots, therefore 
+before using the Algorithm~\ref{alg4}, we need to remove the zero roots of
+original $P$. Then we used Algorithm~\ref{alg4} with $P(x)$ and $P(-x)$ to get
+the positive roots and negative roots.
