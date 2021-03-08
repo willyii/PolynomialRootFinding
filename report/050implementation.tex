@@ -1,3 +1,74 @@
 \section{Implementation}
 
-This section will 
+This section will introduce how I implement this project and what I tried to
+optimize it.
+
+\subsection{Polynomial} 
+
+At first, I tried to use \textit{vector} from \textit{std} library to implement
+polynomial class. But due to time consuming of dynamic memory allocation
+process. I changed it to static process.  
+
+I use template class with an integer template $n$ to represents the
+maximum possible degree of polynomial. Which means although a polynomial class with
+template $n$, it's highest degree could be $n1$ where $n1 \leq n$. Although in
+this way, programmer need to handle the possible change over the template when
+writing some operators, like $*,+$, program can get rid of dynamic memory allocation,
+which can save a lot of running time.
+
+\subsection{Replace $x$ with $x+a$}
+
+In order to optimize the process that replace $x$ to $x+a$ in a polynomial, I applied Taylor
+expansion. If I want to change $P(x)$ to $P(x+a)$, I can take Taylor expansion
+at point $a$ with $\Delta x = x$. Then:
+
+$$
+P(x) = P(a) + P'(a) *x + ... + \frac{1}{n!}P^{(n)}(a)*x^n
+$$
+
+% TODO:Experiment show optimization 
+
+\subsection{Approximate GCD}
+
+With above implementation, it cannot perform square-free decomposition
+correctly. The main reason behind this is the representation of float in
+computer and computation error. 
+
+In order to solve such error problem, I tried to use tolerance. If a number
+smaller than the tolerance, it will be treated as zero. At first I used fixed
+tolerance, which cannot perform well as the magnitude of largest coefficient
+grows.
+
+Then, I tried to make the original polynomial
+\textit{regular}\cite{Approximate}, which means make the leading coefficient of
+polynomial to $O(1)$ and remaining coefficients either $O(1)$ or $0$ by scaling
+transformation $P\rightarrow \xi P $ and $x \rightarrow  \eta x$. The notation $O(c)$
+not same as the Landau’s symbol and it means a number of approximately the same
+magnitude as $c$.
+
+% TODO: correct this paragraph
+However, changing of coefficients and roots will introduce extra computation.
+Besides that, in some cases that have several extremely large roots, changing
+coefficients to make them $O(1)$ will make some coefficients extremely small and
+loss some accuracy even miss real roots.
+
+\subsection{Interval arithmetic}
+
+With above problem, I discard the methods introduced by
+Matu-Tarow\cite{Approximate} and applied \textit{interval arithmetic} to the
+project. Every exact number in project has been changed to a interval that
+represents a set of possible values. If zero in such interval, this number will
+be seen as zero.
+
+With interval arithmetic, the computation has been doubled since every
+computation need to computation both ends of interval. However, this
+implementation can handle the errors from float computation and data measuring.
+
+\subsection{Analysis}
+
+% TODO: close roots
+% TODO: Large roots
+% TODO: Small roots
+% TODO: Falied condition 
+% TODO: Percision
+% TODO: Running Time

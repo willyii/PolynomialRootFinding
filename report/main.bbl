@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{2}
+\begin{thebibliography}{3}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -51,6 +51,22 @@
 \url{http://www.jstor.org/stable/41133596}
 \showURL{%
 \tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Noda and Sasaki}{Noda and Sasaki}{1991}]%
+        {Approximate}
+\bibfield{author}{\bibinfo{person}{Matu-Tarow Noda} {and}
+  \bibinfo{person}{Tateaki Sasaki}.} \bibinfo{year}{1991}\natexlab{}.
+\newblock \showarticletitle{Approximate GCD and its application to
+  ill-conditioned equations}.
+\newblock \bibinfo{journal}{\emph{J. Comput. Appl. Math.}}
+  \bibinfo{volume}{38}, \bibinfo{number}{1} (\bibinfo{year}{1991}),
+  \bibinfo{pages}{335--351}.
+\newblock
+\showISSN{0377-0427}
+\urldef\tempurl%
+\url{https://doi.org/10.1016/0377-0427(91)90180-R}
+\showDOI{\tempurl}
 
 
 \bibitem[\protect\citeauthoryear{Yun}{Yun}{1976}]%
