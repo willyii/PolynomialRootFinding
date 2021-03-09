@@ -125,6 +125,18 @@ public:
     return ans;
   }
 
+  /**
+   * Derivative of polynomal
+   */
+  void Derivative_() {
+    for (int i = 0; i < degree_; i++)
+      coef_[i] = coef_[i + 1] * double(i + 1);
+    for (int i = degree_; i <= n; i++) {
+      coef_[i] = 0;
+    }
+    degree_--;
+  }
+
   interval lead_coef() const { return coef_[degree_]; }
 
   /**
@@ -400,14 +412,14 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
   while (remainder_degree >= degree) {
     interval division = remainder.lead_coef() / lead_coef;
 
-    std::cout << "Debug Remainder:  division "
-              << boost::numeric::median(division) << "["
-              << boost::numeric::width(division) << "]" << std::endl;
+    // std::cout << "Debug Remainder:  division "
+    //<< boost::numeric::median(division) << "["
+    //<< boost::numeric::width(division) << "]" << std::endl;
     int degree_idx = remainder_degree - degree;
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
 
-    std::cout << "Debug Remainder:  remainder " << remainder << std::endl;
+    // std::cout << "Debug Remainder:  remainder " << remainder << std::endl;
   }
 
   // Set remaineder should returned

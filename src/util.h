@@ -25,7 +25,7 @@
 #include "range.h"
 
 // Debug
-const static bool debug_GCD = true;
+const static bool debug_GCD = false;
 
 /**
  * Return True if all coefficients of poly is zero
@@ -208,7 +208,7 @@ template <int n> interval UpperBound(const Poly<n> &poly) {
   interval lc = poly.lead_coef(), ans = boost::numeric::abs(poly[0] / lc);
   for (int i = 1; i < poly.get_degree(); i++)
     ans = boost::numeric::max(ans, boost::numeric::abs(poly[i] / lc));
-  return 1.0 + ans;
+  return 1.0 + ans.upper();
 }
 
 /**
@@ -230,7 +230,7 @@ template <int n> Poly<n> AddToX(const Poly<n> &poly, interval h) {
   interval divisor(1);
 
   for (int i = 1; i <= poly.get_degree(); i++) {
-    tmp = tmp.Derivative();
+    tmp.Derivative_();
     divisor *= i;
     ret[i] = tmp.ValueAt(h) / divisor;
   }
