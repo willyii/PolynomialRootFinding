@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <boost/numeric/interval.hpp>
+#include <boost/numeric/interval/utility_fwd.hpp>
 #include <cassert>
 #include <cmath>
 #include <iostream>
@@ -398,15 +399,22 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
 
   while (remainder_degree >= degree) {
     interval division = remainder.lead_coef() / lead_coef;
+
+    std::cout << "Debug Remainder:  division "
+              << boost::numeric::median(division) << "["
+              << boost::numeric::width(division) << "]" << std::endl;
     int degree_idx = remainder_degree - degree;
     MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
+
+    std::cout << "Debug Remainder:  remainder " << remainder << std::endl;
   }
 
   // Set remaineder should returned
   for (int i = 0; i <= remainder.get_degree(); i++)
     remainder_ret[i] = remainder[i];
   remainder_ret.set_degree(remainder.get_degree());
+
   return remainder_ret;
 }
 

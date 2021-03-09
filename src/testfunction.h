@@ -37,10 +37,10 @@
 #include "util.h"
 #include "vincent.h"
 
-static const int digit = 2; // number of digit after point
+static const int digit = 1; // number of digit after point
 static const int digit_control = std::pow(10, digit); // controler of digit
-static const double kMAXROOT = 1000;    // root from [-kMAXROOT, kMAXROOT]
-static const double kCHANGE_PROB = 0.5; // prob to change root
+static const double kMAXROOT = 100;     // root from [-kMAXROOT, kMAXROOT]
+static const double kCHANGE_PROB = 0.7; // prob to change root
 static const bool FIXSEED = false;      // fix test set
 static const int SEED = 2033;
 
@@ -75,7 +75,7 @@ RandomPolyRet RandomPoly() {
   RandomPolyRet ret;
   double root = 0.0;
 
-  int num_roots = rand_int(2, kMAXDEGREE);
+  int num_roots = kMAXDEGREE;
   while (root == 0.0)
     root = rand_double(-kMAXROOT, kMAXROOT);
   ret.poly[1] = interval(1, 1);
@@ -281,8 +281,8 @@ void RunningCorrectTest(const char *test_file_path,
     // assert(root_num == actual_roots[i].size());
     printf("Budan Theorem resuts: \n");
     for (int j = 0; j < root_num; j++)
-      printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),
-             boost::numeric::median(poly_roots[j].right_end));
+      printf("From %f to %f \n", poly_roots[j].left_end.lower(),
+             poly_roots[j].right_end.upper());
     delete[] poly_roots;
     poly_roots = nullptr;
     printf("\n");
@@ -294,8 +294,8 @@ void RunningCorrectTest(const char *test_file_path,
     root_num = VincentRootIsolate(coefs[i], num_coefs[i], poly_roots);
     printf("Continued Fraction resuts: \n");
     for (int j = 0; j < root_num; j++)
-      printf("From %f to %f \n", boost::numeric::median(poly_roots[j].left_end),
-             boost::numeric::median(poly_roots[j].right_end));
+      printf("From %f to %f \n", poly_roots[j].left_end.lower(),
+             poly_roots[j].right_end.upper());
     delete[] poly_roots;
     printf("\n \n \n");
   }

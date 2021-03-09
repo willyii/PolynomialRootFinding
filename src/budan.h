@@ -45,11 +45,13 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
   if (left_change == right_change)
     return;
   // search range smaller than threshold
-  // /* TODO : terminate condition */
-  else if (boost::numeric::median(right) - boost::numeric::median(left) <=
-           boost::numeric::width(right - left) + 1e-3) {
-    if ((left_change - right_change) == 1) // exact one root
-      AddToRange(duplicate_times, left, right, ranges, num_roots);
+  else if ((left_change - right_change) == 1) { // exact one root
+    AddToRange(duplicate_times, left, right, ranges, num_roots);
+    return;
+  } else if (boost::numeric::median(right) - boost::numeric::median(left) <=
+             boost::numeric::width(right - left) + 1e-6) {
+    AddToRange(duplicate_times * (left_change - right_change), left, right,
+               ranges, num_roots);
     return;
   }
 
@@ -95,8 +97,8 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
 
     for (int i = 0; i < num_square_free; i++) {
 
-      // std::cout << "DEBUG: square free poly " << square_free_polys[i]
-      //<< std::endl;
+      std::cout << "DEBUG: square free poly " << square_free_polys[i]
+                << std::endl;
 
       // Handle zero roots
       if (ZeroRoots(&square_free_polys[i]))

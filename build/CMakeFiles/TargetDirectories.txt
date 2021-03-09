@@ -1,0 +1,4 @@
+/home/xinlong/Documents/Github/PolynomialRootFinding/build/CMakeFiles/edit_cache.dir
+/home/xinlong/Documents/Github/PolynomialRootFinding/build/CMakeFiles/Tylor.dir
+/home/xinlong/Documents/Github/PolynomialRootFinding/build/CMakeFiles/rebuild_cache.dir
+/home/xinlong/Documents/Github/PolynomialRootFinding/build/CMakeFiles/Poly.dir

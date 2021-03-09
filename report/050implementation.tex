@@ -18,6 +18,14 @@ which can save a lot of running time.
 
 \subsection{Replace $x$ with $x+a$}
 
+Changing $x$ to $x+a$ in a polynomial is a very common operation in both
+methods, since I need to use the coefficients of $P(x+a)$ and get the sign
+variance. 
+
+At first, I used very primitive idea for this process. Initialize with very
+simple polynomial $x+ a$. Then multiply it by coefficients and increase its
+order one by one. Add them together at last to get transformed polynomial.
+
 In order to optimize the process that replace $x$ to $x+a$ in a polynomial, I applied Taylor
 expansion. If I want to change $P(x)$ to $P(x+a)$, I can take Taylor expansion
 at point $a$ with $\Delta x = x$. Then:
@@ -26,12 +34,41 @@ $$
 P(x) = P(a) + P'(a) *x + ... + \frac{1}{n!}P^{(n)}(a)*x^n
 $$
 
-% TODO:Experiment show optimization 
+This process avoid multiplication of two polynomials, which needs $O(n^2)$
+operations in my implementation. In order to make sure Taylor expansion can
+improve the perform of program, I made some experiments to compare the
+computation time of changing $x$ to $x+a$. Reuslts are in table~\ref{tb1}.
+Coefficients in test polynomial are generated randomly from $-n$ to $n$ and
+degree of test polynomial is $n-1$.
+
+\begin{center}
+\label{tb1}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+
+ $n$  & Tylor Expansion   & Original Method\\ 
+
+ \hline
+ 10   & 12$us$  & 16 $us$\\ 
+ 20   & 42$us$  & 58 $us$\\ 
+ 50   & 250$us$  & 340 $us$\\ 
+ 100   & 986$us$  & 1345 $us$\\ 
+ 150   & 2169$us$  & 3082 $us$\\ 
+ 200   & 3801$us$  & 5784 $us$\\ 
+ \hline
+\end{tabular}
+\end{center}
+
+As shown above, the running time of polynomial shifting with Tylor Expansion is
+about $25\%$  faster than the primitive one in my implementation.
+
+Appling Fast Fourier Transform can speed up polynomial multiplication process.
+Maybe I will implement it in the future.
 
 \subsection{Approximate GCD}
 
 With above implementation, it cannot perform square-free decomposition
-correctly. The main reason behind this is the representation of float in
+correctly all the time. The main reason behind this is the representation of float in
 computer and computation error. 
 
 In order to solve such error problem, I tried to use tolerance. If a number
@@ -46,11 +83,10 @@ transformation $P\rightarrow \xi P $ and $x \rightarrow  \eta x$. The notation $
 not same as the Landau’s symbol and it means a number of approximately the same
 magnitude as $c$.
 
-% TODO: correct this paragraph
 However, changing of coefficients and roots will introduce extra computation.
 Besides that, in some cases that have several extremely large roots, changing
-coefficients to make them $O(1)$ will make some coefficients extremely small and
-loss some accuracy even miss real roots.
+coefficients to make them $O(1)$ will make some coefficients very small and loose the
+percision. 
 
 \subsection{Interval arithmetic}
 
@@ -64,11 +100,11 @@ With interval arithmetic, the computation has been doubled since every
 computation need to computation both ends of interval. However, this
 implementation can handle the errors from float computation and data measuring.
 
-\subsection{Analysis}
+By using interval arithmetic, I observed how error propagates during the GCD
+process. It's close related the magnitude of coefficient of polynomial. This
+will be discussed in Analysis~\ref{Analysis} section. 
 
-% TODO: close roots
-% TODO: Large roots
-% TODO: Small roots
-% TODO: Falied condition 
-% TODO: Percision
-% TODO: Running Time
+\subsection{Optimize Continued Fraction}
+
+% TODO: speed up continued fraction
+
