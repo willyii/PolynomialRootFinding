@@ -304,7 +304,7 @@ template <int n1, int n2>
 void MinusRightMoveScale(const Poly<n2> &poly2, int move_num, interval scale,
                          Poly<n1> &poly1) {
   for (int i = poly2.get_degree(); i >= 0; i--) {
-    poly1[i + move_num] -= poly2[i] * scale;
+    poly1[i + move_num] -= poly2[i] * scale / poly2.lead_coef();
   }
   poly1.set_degree();
 }
@@ -339,7 +339,8 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
     int degree_idx = remainder_degree - degree;
     ret.quotient[degree_idx] = division;
 
-    MinusRightMoveScale(poly2, degree_idx, division, remainder);
+    MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
+    // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
   ret.quotient.set_degree();
@@ -378,7 +379,8 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
     int degree_idx = remainder_degree - degree;
     quotient[degree_idx] = division;
 
-    MinusRightMoveScale(poly2, degree_idx, division, remainder);
+    MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
+    // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
 
@@ -413,10 +415,11 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
     interval division = remainder.lead_coef() / lead_coef;
 
     // std::cout << "Debug Remainder:  division "
-    //<< boost::numeric::median(division) << "["
-    //<< boost::numeric::width(division) << "]" << std::endl;
+    //          << boost::numeric::median(division) << "["
+    //          << boost::numeric::width(division) << "]" << std::endl;
     int degree_idx = remainder_degree - degree;
-    MinusRightMoveScale(poly2, degree_idx, division, remainder);
+    MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
+    // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
 
     // std::cout << "Debug Remainder:  remainder " << remainder << std::endl;

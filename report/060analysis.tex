@@ -1,4 +1,74 @@
-\section{analysis} \label{Analysis}
+\section{Resutl and analysis} \label{Analysis}
+
+\subsection{Running Time}
+
+Whit above implementation, I test the running time of these two methods. Result
+can be found in following table \ref{tb2}. Same as mentioned of Tylor Expansion
+test, test polynomials are generated with random coefficient from $-n$ to $n$ with
+degree $n-1$. 
+
+\begin{center}
+\label{tb2}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+
+ $n$  & Budan's Theorem & Continued Fraction\\ 
+
+ \hline
+ 10   & 8.430$ms$  & 0.786$ms$\\ 
+ 20   & 38.574$ms$  & 1.826$ms$\\ 
+ 50   & 208.707$ms$  & 3.387 $ms$\\ 
+ 100   & 988.346$ms$  & 11.301$ms$\\ 
+ 150   & 2574.148$ms$  & 12.656$ms$\\ 
+ 200   & 3918.112$ms$  & 21.634$ms$\\ 
+ \hline
+\end{tabular}
+\end{center}
+
+From the table~\ref{tb2}, we can see that Budan's Theorem method takes longer
+time than Continued Fraction method. This might because with bisection method,
+searching range need to be small enough before one can figure out if there is
+root or not. However, above polynomials are generated with random coefficients,
+which cannot guarantee it has real roots. 
+
+In order to figure out the relationship between the running time with magnitude
+of roots, I designed following experiments. Test polynomials has several roots
+and have every roots has $p=0.5$ probability same as previous one. Then every
+root is in ranger $[-max\_root, max\_root]$. Running time is shown in
+table~\ref{tb3}. Since with large degree, some number might be truncated, I test
+with polynomials with degree 5.
+
+\begin{center}
+\label{tb3}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+
+ $max\_root$  & Budan's Theorem & Continued Fraction\\ 
+
+ \hline
+ 1   & 38$us$  & 38$us$\\ 
+ 20   & 31$us$  & 29$us$\\ 
+ 50   & 38$us$  & 39$us$\\ 
+ 100   & 42$us$  & 56$us$\\ 
+ 150   & 46$us$  & 70$us$\\ 
+ 200   & 46$us$  & 83$us$\\ 
+ \hline
+\end{tabular}
+\end{center}
+
+There are several reasons that makes running time in this table is much lesser
+than the previous one. The first one is the degree of these polynomials are
+small, only 5 actually. Second, there are repeat roots in these polynomials and
+after square-free decomposition, square-free polynomials might only have small
+degree like $1$ or $2$, which can be solved with closed formula solution.
+
+And we can see that, running time of Continued Fraction method is longer than
+Budan's Theorem. It's noticeable that $p'=p(x+1)$ line in Algorithm~\ref{alg4}.
+It is only shift polynomial by $1$ for each time. Therefore, when root is large,
+it takes longer for Continued Fraction method to shift to the place around
+roots. This place is need to be optimized, if the shifting can be flexible and
+adjustable according to the lower bound of roots of polynomial.
+
 
 % TODO: close roots
 % TODO: Large roots

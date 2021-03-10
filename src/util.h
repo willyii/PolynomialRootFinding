@@ -313,7 +313,10 @@ void Linear(const Poly<n> &poly, int repeat_time, Range *ranges,
 template <int n>
 void Quadratic(const Poly<n> &poly, int repeat_time, Range *ranges,
                int *num_roots) {
-  interval delta((poly[1] * poly[1] - 4.0 * poly[0] * poly[2])); // b^2 - 4ac
+  interval delta(
+      (boost::numeric::median(poly[1]) * boost::numeric::median(poly[1]) -
+       4.0 * boost::numeric::median(poly[0]) *
+           boost::numeric::median(poly[2]))); // b^2 - 4ac
 
   if ((delta.upper() < 0))
     return;

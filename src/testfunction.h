@@ -39,8 +39,8 @@
 
 static const int digit = 1; // number of digit after point
 static const int digit_control = std::pow(10, digit); // controler of digit
-static const double kMAXROOT = 100;     // root from [-kMAXROOT, kMAXROOT]
-static const double kCHANGE_PROB = 0.7; // prob to change root
+static const double kMAXROOT = 50;      // root from [-kMAXROOT, kMAXROOT]
+static const double kCHANGE_PROB = 0.5; // prob to change root
 static const bool FIXSEED = false;      // fix test set
 static const int SEED = 2033;
 

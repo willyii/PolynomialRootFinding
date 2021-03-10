@@ -97,8 +97,8 @@ int BudanRootIsolate(const double *coef, int coef_num, Range *ranges) {
 
     for (int i = 0; i < num_square_free; i++) {
 
-      // std::cout << "DEBUG: square free poly " << square_free_polys[i]
-      //<< std::endl;
+      std::cout << "DEBUG: square free poly " << square_free_polys[i]
+                << std::endl;
 
       // Handle zero roots
       if (ZeroRoots(&square_free_polys[i]))

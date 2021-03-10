@@ -46,14 +46,11 @@ template <int n> Poly<n> Tylor(const Poly<n> &poly, interval h) {
     return poly;
 
   Poly<n> ret, tmp(poly);
-  std::cout << tmp << std::endl;
   ret[0] = tmp.ValueAt(h);
   double divisor(1.0);
   for (int index = 1; index <= poly.get_degree(); ++index) {
     divisor *= index;
-    std::cout << "Fuck " << index << std::endl;
     tmp.Derivative_();
-    std::cout << "Fuck " << index << std::endl;
     ret[index] = (tmp.ValueAt(h) / divisor);
   }
 
@@ -104,17 +101,17 @@ int main() {
   Poly<kTYLORDEGREE> test_poly(coeffs, kTYLORDEGREE);
   std::cout << "orig " << test_poly << std::endl;
 
-  //   Tylor
+  // Tylor
   auto tylor_start = std::chrono::high_resolution_clock::now();
   auto r1 = Tylor(test_poly, h);
   auto tylor_end = std::chrono::high_resolution_clock::now();
 
-  // Original
+  //    Original
   auto ori_start = std::chrono::high_resolution_clock::now();
   auto r2 = Original(test_poly, h);
   auto ori_end = std::chrono::high_resolution_clock::now();
 
-  // Time
+  //     Time
   auto tylor_duration = std::chrono::duration_cast<std::chrono::microseconds>(
       tylor_end - tylor_start);
   auto ori_duration = std::chrono::duration_cast<std::chrono::microseconds>(
@@ -128,6 +125,11 @@ int main() {
 
   std::cout << r1 << std::endl;
   std::cout << r2 << std::endl;
+
+  interval a = 1.0, b = 3.0;
+  interval tmp = a - b;
+  std::cout << boost::numeric::median(tmp) << "[" << boost::numeric::width(tmp)
+            << "]" << std::endl;
 
   return 0;
 }
