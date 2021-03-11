@@ -1,10 +1,10 @@
 \section{Methodology}
 
-In this section, I will introduce the methods that applied to this project.
+This section introduce the methods that applied to this project.
 Since both two methods are only work on square-free polynomials, the first step
-of this project is appling square free decomposition to original polynomials to
+of this project is applying square free decomposition to original polynomials to
 avoid repeat roots. After square free decomposition, methods based on Budan's
-Theorem and Continued Fraction will be applied to square-free polynomials. They both based on
+Theorem and Continued Fraction will be applied. They both based on
 Descartes' rule of sign to check how many real roots in a interval. The continued fraction
 method also uses Mobius transformation, which will be introduce in Continued Fraction
 subsection.
@@ -130,7 +130,7 @@ This process described in Algorithm~\ref{alg3}
 \end{algorithm}
 
 In Algorithm~\ref{alg3}, $Upper(P)$ returns the upper bound of real roots of
-$P$. We are using Lagrange's bound in this project. Assuming $P = a_0 + a_1x +
+$P$. We are using Lagrange's bound\cite{Lag} in this project. Assuming $P = a_0 + a_1x +
 ... + a_nx^n$, Lagrange's bound is $max\{1,
 \sum_{i=0}^{n-1}|\frac{a_i}{a_n}|\}$.
 

@@ -67,12 +67,57 @@ Budan's Theorem. It's noticeable that $p'=p(x+1)$ line in Algorithm~\ref{alg4}.
 It is only shift polynomial by $1$ for each time. Therefore, when root is large,
 it takes longer for Continued Fraction method to shift to the place around
 roots. This place is need to be optimized, if the shifting can be flexible and
-adjustable according to the lower bound of roots of polynomial.
+adjustable according to the lower bound of roots of polynomial it would be
+faster.
+
+\subsection{Fail Conditions}
+
+Although this implementation can work correctly in most cases, there are
+some conditions that could lead to failure. 
+
+Since both methods need to work on polynomial with no repeat roots, square-free
+decomposition becomes the most important step in the program. However, with the
+Yun's algorithm\cite{Yuns}, $GCD$ computation should be success and divisions
+should be exact, which cannot be achieved by floating number. 
+
+As mentioned before, introducing interval arithmetic can see how error
+propagated along with square-free decomposition process. Although can not know
+how exact errors changing over $GCD$ process, it's related with the magnitude of
+the coefficients. 
+
+The magnitude of coefficients influence the error through the process computing
+the remainder of two polynomials. 
+
+Let polynomial $P=a_0+a_1*x +
+a_2*x^2...+a_n*x^n$, and its derivative
+$P'=a_1+2*a_2*x...+n*a_n*x^{n-1}$. Let's simulate the first step of $GCD$
+process, which is compute the $rem(P,P')$. All of coefficient in polynomial
+$a_0...a_n$ are intervals with no error if it can represented by computer
+perfectly
+
+\begin{align*}
+  div1 &= 1/n \\ 
+  rem1 &= P - div * x * P' =  a_0 + \frac{n-1}{n}a_1*x+ \frac{n-2}{n}a_2*x^2....
+\frac{1}{n}*a_{n-1}x^{n-1}\\ 
+  div2 &= \frac{a_{n-1}}{a_n} * \frac{1}{n^2} \\ 
+  rem2 &= rem1 - div2 * P' = (a_0 - div2*a_1) + (\frac{n-1}{n}*a_1 - div2 *
+  2*a_2)+ ... \\
+      &= \sum_{i=0}^{n-1} (\frac{n-i}{n}*a_i -
+      \frac{a_{n-1}*a_{i+1}}{n^2*a_n}(i+1)) x^i
+\end{align*} 
+
+$rem2$ in above equations only has degree $n-1$ which is one less than $P'$,
+therefore, it should be the remainder of $P/P'$. It's noticeable that $div2 =
+\frac{a_{n-1}}{a_n} * \frac{1}{n^2}$ might be very large. Although a interval $a_i
+= [a_i-\epsilon, a_i + \epsilon]$ might be small at first, when it multiplied by $div2$,
+the interval 
+will be enlarged to $a_i * div2 = [(a_i-\epsilon)*div2, (a_i+\epsilon)*div2]$
+and might not be ignorable. Besides that, with the intervals enlarged, some
+number might be regarded as zero accidentally. 
+
+Therefore, if magnitude of coefficients is very large and roots are close enough, 
+there are potential for this program to failed in $GCD$ process and lead to failure
+in real-root isolation.
 
 
-% TODO: close roots
-% TODO: Large roots
-% TODO: Small roots
-% TODO: Falied condition 
-% TODO: Percision
-% TODO: Running Time
+

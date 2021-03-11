@@ -50,8 +50,8 @@ void BudanSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
     return;
   } else if (boost::numeric::median(right) - boost::numeric::median(left) <=
              boost::numeric::width(right - left) + 1e-6) {
-    AddToRange(duplicate_times * (left_change - right_change), left, right,
-               ranges, num_roots);
+    // AddToRange(duplicate_times * (left_change - right_change), left, right,
+    // ranges, num_roots);
     return;
   }
 

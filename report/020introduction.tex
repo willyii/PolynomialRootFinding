@@ -1,28 +1,27 @@
 \section{Introduction}
 
-One of the most fundamental scientific computation is to computing the real
-roots of polynomials. For the polynomials with low order, like quadratic or
-cubic, we can using formula to get roots directly. However, according to the 
-Abel–Ruffini theorem\cite{Abel-Ruffini}, there is no solution in radicals to general 
-polynomial equations of degree of five or higher with arbitrary coefficients. 
-Therefore, general root-finding algorithms are needed for general polynomials.
+One of the most fundamental scientific computations is computing the real roots
+of polynomials. For the polynomials with low order, like quadratic or cubic, we
+can use formulas to get roots directly. However, according to the Abel–Ruffini
+theorem\cite{Abel-Ruffini}, there is no solution in radicals to general
+polynomial equations with five degrees or higher with arbitrary coefficients.
+Therefore, general root-finding algorithms are needed for arbitrary polynomials.
 
 However, the usual root-finding algorithms, like Newton Method, cannot generally
 certify having found all real roots. Especially, if such algorithms does not
-find any root, one cannot know if there is real roots or not. In order to get
+find any root, one cannot know if there are real roots or not. In order to get
 all real roots, real-root isolation is useful. Real-root isolation can generate
 intervals, which contain only one real root of the polynomial, so that no real
 root will be missed.
 
 In this project, I implemented two real-root isolation algorithms based on
-Budan's Theorem and Continued Fraction. After basic implemented, I optimized the
-program with better data structure and interval arithmetic. Then I tried to
-analysis the percision of this program. After that, I compare the running time
-of two algorithms and analysis in what condition these methods will fail. 
+Budan's Theorem\cite{Budan} and Continued Fraction. After basic implemented, I optimized the
+program with better data structure and interval arithmetic. After that, I compare
+the running time of two algorithms and analyze in what condition these methods will fail. 
 
-The origanization of this project is as follows. In Section 2, I will review the
-development of methods that used in this project. In Section 3, I will
-introduced the methodologies that used to implemente the real-root isolation.
+The organization of this report is as follows. Section 3 will
+introduce the methodologies that used to implement the real-root isolation.
 Section 4 has the way that I implemented this project and what I tried to
-optimize it. And the analysis of error and percision will be described in
-Section 5.
+optimize it. And running time comparison and how error propagated  
+will be discussed in Section 5.
+

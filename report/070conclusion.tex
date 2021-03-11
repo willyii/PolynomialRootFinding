@@ -1,1 +1,17 @@
 \section{Conclusion}
+
+In this project, I tried to implemented real-roots isolation program based on
+Budan's Theorem and Continued Fraction methods. Besides that, I also tried
+several methods to optimize the program, like Tylor Expansion for polynomial
+shift and interval arithmetic for error control. 
+
+Then we compare the running time of both methods. In general, continued fraction
+methods needs lesser computation time for polynomials with arbitrary
+coefficients. But, for the polynomials with large roots, continued fraction
+might take longer, since slow shift of polynomial and this can be optimized in
+the future. 
+
+With the interval arithmetic, I tried to analyze the conditions that might
+cause failure of the program. And found that the tolerance of intervals might be
+enlarged in the process of $remainder$ and $GCD$ computation. If the magnitude
+of coefficient is large and the roots are close, program might failed.

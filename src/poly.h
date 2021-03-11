@@ -363,6 +363,7 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
  */
 template <int n1, int n2>
 Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
+  // std::cout << poly1 << " \ndiv\n " << poly2 << std::endl;
   Poly<n1> quotient, remainder(poly1);
 
   // If poly2 is a constant number
@@ -385,7 +386,6 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
   }
 
   quotient.set_degree();
-
   return quotient;
 }
 
@@ -414,15 +414,15 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
   while (remainder_degree >= degree) {
     interval division = remainder.lead_coef() / lead_coef;
 
-    // std::cout << "Debug Remainder:  division "
-    //          << boost::numeric::median(division) << "["
-    //          << boost::numeric::width(division) << "]" << std::endl;
+    std::cout << "Debug Remainder:  division "
+              << boost::numeric::median(division) << "["
+              << boost::numeric::width(division) << "]" << std::endl;
     int degree_idx = remainder_degree - degree;
     MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
     // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
 
-    // std::cout << "Debug Remainder:  remainder " << remainder << std::endl;
+    std::cout << "Debug Remainder:  remainder " << remainder << std::endl;
   }
 
   // Set remaineder should returned

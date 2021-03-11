@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{3}
+\begin{thebibliography}{5}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -36,6 +36,32 @@
 \providecommand\bibinfo[2]{#2}
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{??}{Bud}{[n.d.]}]%
+        {Budan}
+ \bibinfo{year}{[n.d.]}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Budan's theorem}}.
+\newblock
+\urldef\tempurl%
+\url{https://en.wikipedia.org/wiki/Budan%27s_theorem}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Last edited: 2020-12-31.}
+
+
+\bibitem[\protect\citeauthoryear{??}{Lag}{[n.d.]}]%
+        {Lag}
+ \bibinfo{year}{[n.d.]}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Lagrange's bounds}}.
+\newblock
+\urldef\tempurl%
+\url{https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#cite_note-2}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Last edited: 2021-3-9.}
+
 
 \bibitem[\protect\citeauthoryear{Ayoub}{Ayoub}{1980}]%
         {Abel-Ruffini}
