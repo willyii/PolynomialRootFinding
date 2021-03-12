@@ -1,17 +1,20 @@
-\section{Conclusion}
+\section{Conclusion} \label{conclusion}
 
-In this project, I tried to implemented real-roots isolation program based on
-Budan's Theorem and Continued Fraction methods. Besides that, I also tried
-several methods to optimize the program, like Tylor Expansion for polynomial
-shift and interval arithmetic for error control. 
+In this project, we implement a real-roots isolation program based on
+Budan’s theorem and continued fraction. Besides that, we also use several
+methods to optimize the program, like Taylor Expansion for polynomial shift and
+interval arithmetic for error control.
 
-Then we compare the running time of both methods. In general, continued fraction
-methods needs lesser computation time for polynomials with arbitrary
-coefficients. But, for the polynomials with large roots, continued fraction
-might take longer, since slow shift of polynomial and this can be optimized in
-the future. 
+Then we compare the running time of these two algorithms. It is noticeable that
+when there are conjugate complex roots, Budan’s theorem will take longer. And
+continued fraction methods perform worse when polynomials have several large
+real roots due to slow shifts of polynomials. This can be optimized in the
+future.
 
-With the interval arithmetic, I tried to analyze the conditions that might
-cause failure of the program. And found that the tolerance of intervals might be
-enlarged in the process of $remainder$ and $GCD$ computation. If the magnitude
-of coefficient is large and the roots are close, program might failed.
+With the application of interval arithmetic, our program becomes more robust to
+the errors from inexact computation and representation, although it is not
+perfect for all of the cases. We analyze the conditions that might
+cause failure of the program and find that the magnitude of coefficients might
+affect error's change during the processes of $GCD$ and $remainder$ computation.
+If the coefficients are large, the errors might become not ignorable and affect
+the accuracy of factors. Which might finally lead to failure of our program.

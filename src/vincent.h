@@ -58,6 +58,14 @@ void VincentSquareFreeSolve(const Poly<n> &poly, int duplicate_times,
                             int *num_roots) {
   int sign_change(poly.SignChange());
 
+  // std::cout << "Vincent search from "
+  //<< boost::numeric::median(mobius.b) /
+  // boost::numeric::median(mobius.d)
+  //<< " to "
+  //<< boost::numeric::median(mobius.a) /
+  // boost::numeric::median(mobius.c)
+  //<< std::endl;
+
   if (sign_change == 0) // no positive root
     return;
   else if (sign_change == 1) {             // Only one positive ropot

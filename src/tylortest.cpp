@@ -14,10 +14,10 @@
 #include <chrono>
 #include <time.h>
 
-static const int kTYLORDEGREE = 5;
+static const int kTYLORDEGREE = 6;
 static const int digit = 2; // number of digit after point
 static const int digit_control = std::pow(10, digit); // controler of digit
-static const double max_root = kTYLORDEGREE;
+static const double max_root = 1000;
 // static const double max_root = std::pow(2, kTYLORDEGREE);
 
 /**
@@ -118,9 +118,9 @@ int main() {
       ori_end - ori_start);
 
   std::cout << "Tylor expansion method takes " << tylor_duration.count()
-            << " us for " << kTYLORDEGREE - 1 << " degree" << std::endl;
+            << " ns for " << kTYLORDEGREE - 1 << " degree" << std::endl;
 
-  std::cout << "Original method takes " << ori_duration.count() << " us for "
+  std::cout << "Original method takes " << ori_duration.count() << " ns for "
             << kTYLORDEGREE - 1 << " degree" << std::endl;
 
   std::cout << r1 << std::endl;

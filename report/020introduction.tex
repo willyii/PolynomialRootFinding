@@ -1,27 +1,41 @@
 \section{Introduction}
 
-One of the most fundamental scientific computations is computing the real roots
-of polynomials. For the polynomials with low order, like quadratic or cubic, we
-can use formulas to get roots directly. However, according to the Abel–Ruffini
-theorem\cite{Abel-Ruffini}, there is no solution in radicals to general
-polynomial equations with five degrees or higher with arbitrary coefficients.
-Therefore, general root-finding algorithms are needed for arbitrary polynomials.
+One of the important scientific computing problems is computing the real roots
+of polynomials. It has wide applications in computer graphics. For the
+polynomials with low order, like quadratic or cubic, we can use formulas to get
+roots directly. However, according to the Abel–Ruffini theorem, there is no
+solution in radicals to general polynomial equations of five degrees or higher
+with arbitrary coefficients\cite{Abel-Ruffini}.
 
-However, the usual root-finding algorithms, like Newton Method, cannot generally
-certify having found all real roots. Especially, if such algorithms does not
-find any root, one cannot know if there are real roots or not. In order to get
-all real roots, real-root isolation is useful. Real-root isolation can generate
-intervals, which contain only one real root of the polynomial, so that no real
-root will be missed.
+There are a lot of algorithms to find the real roots of polynomials. Although
+most root-finding algorithms, Newton’s method for example, may produce some real
+roots, the convergence of algorithms are not guaranteed. Furthermore, these
+methods cannot generally certify having found all real roots. Which means if
+such methods do not find any root, one cannot know if there are real roots or
+not. Moreover, there are some cases where one does not need the exact roots of
+polynomial equations. Take ray tracing as an example. When computing the
+distance from intersection point to ray’s end point, the object with smallest
+distance is important to us, instead of exact distance to point of intersection.
+In these cases, computing exact roots is not very essential.
 
-In this project, I implemented two real-root isolation algorithms based on
-Budan's Theorem\cite{Budan} and Continued Fraction. After basic implemented, I optimized the
-program with better data structure and interval arithmetic. After that, I compare
-the running time of two algorithms and analyze in what condition these methods will fail. 
+Real-root isolation is an appropriate method for the above problems. It will
+generate a sequence of disjoint intervals. Each interval contains only one real
+root of the polynomial. And combining these intervals together, all real roots
+could be found. Besides that, isolating the roots instead of computing them out
+might speed up the cases that do not need exact roots, as mentioned above. 
 
-The organization of this report is as follows. Section 3 will
-introduce the methodologies that used to implement the real-root isolation.
-Section 4 has the way that I implemented this project and what I tried to
-optimize it. And running time comparison and how error propagated  
-will be discussed in Section 5.
+This project aims to implement a real-root isolation program based on Budan’s
+theorem and continued fraction. These two methods are based on Descartes’ rule
+of signs, which describes how to get information on the number of positive real
+roots of a polynomial and first introduced by René Descartes\cite{rule_of_sign}. Budan’s theorem,
+developed from Descartes’ rule of signs, provides the methods to bound the
+number of real roots of a polynomial in an interval\cite{Budan}. Vincent introduced the
+continued fraction method in his work in 1834\cite{Vincent}. Both methods work only on
+square-free polynomials. Therefore, this project takes Yun’s algorithm to
+perform square free decomposition\cite{Yuns}.
 
+The organization of this report is as follows. Section \ref{methods} will introduce the
+theory basis of this project. Section \ref{implementation} describes how the program implemented
+and what have been tried to optimize. Running time comparison and analysis of
+how error propagation through computation will be discussed in Section
+\ref{analysis}. Finally, a conclusion is drawn in Section \ref{conclusion}.

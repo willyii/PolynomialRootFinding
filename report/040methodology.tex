@@ -1,30 +1,31 @@
-\section{Methodology}
+\section{Methodology} \label{methods}
 
-This section introduce the methods that applied to this project.
-Since both two methods are only work on square-free polynomials, the first step
-of this project is applying square free decomposition to original polynomials to
-avoid repeat roots. After square free decomposition, methods based on Budan's
-Theorem and Continued Fraction will be applied. They both based on
-Descartes' rule of sign to check how many real roots in a interval. The continued fraction
-method also uses Mobius transformation, which will be introduce in Continued Fraction
-subsection.
+%This section introduce the methods that applied to this project.
+%Since both two methods are only work on square-free polynomials, the first step
+%of this project is applying square free decomposition to original polynomials to
+%avoid repeat roots. After square free decomposition, methods based on Budan's
+%Theorem and Continued Fraction will be applied. They both based on
+%Descartes' rule of sign to check how many real roots in a interval. The continued fraction
+%method also uses Mobius transformation, which will be introduce in Continued Fraction
+%subsection.
 
 \subsection{Square Free Decomposition} 
 In mathematics, a square-free polynomial is a polynomial defined over a field
 that does not have a divisor any square of a non-constant
 polynomial\cite{Yuns}. Usually, a square-free polynomial refers to the
 polynomials with no repeated roots. This project applied Yun's
-algorithm\cite{Yuns} to perform square-free decomposition. It's based one the
+algorithm to perform square-free decomposition. It's based one the
 succession of Greatest Common Divisor(GCD).
 
 \subsubsection{Greatest Common Divisor}
 
 In algebra, the greatest common divisor of two polynomials is a polynomial, 
 of the highest possible degree, that is a factor of both the two original
-polynomials. This concept is simillar to the GCD of two integers. 
+polynomials. This concept is similar to the GCD of two integers. Ideally, both
+polynomials divided by their greatest common divisor should have no remainder.
 
-This project applied Euclid's algorithm to compute the GCD of two polynomials.
-In the Algorithm~\ref{alg1}, $rem(a,b)$ refers to the remainder of Euclidean division of
+This project uses Euclidean algorithm to compute the GCD of two polynomials.
+In Algorithm~\ref{alg1}, $rem(a,b)$ refers to the remainder of Euclidean division of
 polynomial $a$ and polynomial $b$.
 
 \begin{algorithm}[H]
@@ -50,11 +51,14 @@ polynomial $a$ and polynomial $b$.
 
 \subsubsection{Yun's Algorithm}
 
-Based on the succession of GCD, Yun developed a square-free decomposition
-algorithm for univariate polynomials. Given a primitive polynomial $P$, the
-algorithm will compute square-free polynomials $P_i$ and the subscript refers to
-the times this square-free polynomial appears. Which means $P= \prod_{i=1}^k
-P_i^i$.
+Based on the success of GCD, Yun developed a square-free decomposition
+algorithm for univariate polynomials. 
+
+Given a primitive polynomial $P$, assume $P=P_1P_2^2...P_n^n$ is desired
+factorization. Yun's algorithm will compute square-free polynomials $P_i$ and
+the subscript refers to the times this square-free polynomial appears. Which
+means $P_i$ appears $i$ times in original polynomial. This process is described in
+Algorithm~\ref{alg2} formally.
 
 \begin{algorithm}[H]
 \label{alg2}
@@ -62,7 +66,7 @@ P_i^i$.
   \SetKwInOut{Input}{input}
   \SetKwInOut{Output}{output}
 
-  \Input{$P$: primitive polynomial}
+  \Input{Primitive polynomial $P$}
   \Output{List of square-free polynomials}
 
   $G = GCD(P, dP/dx)$\;
@@ -75,27 +79,26 @@ P_i^i$.
     $D_{i+1}= D_i/P_i - dC_{i+1}/dx$\;
   }
 
-  \Return{$P_1, P_2...P_k$}
+  \Return{$P_1, P_2...P_n$}
 
 \caption{Yun's Square-free Decomposition Algorithm}
 \end{algorithm}
 
 \subsection{Budan's Theorem}
 
-Budan's Theorem is a theorem used for bounding the numnber of real roots in a
+Budan's theorem is a theorem used for bounding the number of real roots in a
 given interval. Given a univariate polynomial $P$, we denote
 $\#_{l,r}(P)$ as the number of real roots of $P$ in half-open interval $(l,r]$.
 Then we denote $v_h(P)$ as the number of sign changes in coefficients of
 polynomial $P_h$, where $P_h(x) = P(x+h)$.
 
-Budan's Theorem states that $v_l(h) - v_r(h) - \#_{l,r}(P)$ is a
-nonnegative even integer.
+Budan's theorem states that $v_l(h) - v_r(h) - \#_{l,r}(P)$ is a nonnegative
+even integer. From this statement, we can know that if $v_l(h) - v_r(h) = 1
+\text{ or } 0$, there is only one or zero real root in interval $(l,r]$. 
 
-From above statement, we can know that if $v_l(h) - v_r(h) = 1 \text{ or } 0$, there is only
-one real root or no root in interval $(l,r]$. 
-
-Based on this theorem, this project applied bisection to isolate the real roots.
-This process described in Algorithm~\ref{alg3}
+Based on this theorem, this project combines bisection method with Budan's
+theorem to isolate the real roots.  This process described in
+Algorithm~\ref{alg3}.
 
 \begin{algorithm}[H]
 \label{alg3}
@@ -103,7 +106,7 @@ This process described in Algorithm~\ref{alg3}
   \SetKwInOut{Input}{input}
   \SetKwInOut{Output}{output}
 
-  \Input{$P$ square-free polynomial} 
+  \Input{A square-free polynomial $P$} 
   \Output{List of intervals contains only one real root}
 
   $ret = []$\;
@@ -118,7 +121,7 @@ This process described in Algorithm~\ref{alg3}
     \If{$vl - vr = 1$}{
       $ret.append([l,r])$\;
     }
-    \ElseIf{$vl - vr > 1$}{
+    \ElseIf{$vl - vr > 1$ and $r - l \geq MINIMAL\_RANGE $}{
       $mid = l + (r-l)/2$\;
       $search.append(mid, r)$\;
       $search.append(l, mid)$\;
@@ -130,24 +133,27 @@ This process described in Algorithm~\ref{alg3}
 \end{algorithm}
 
 In Algorithm~\ref{alg3}, $Upper(P)$ returns the upper bound of real roots of
-$P$. We are using Lagrange's bound\cite{Lag} in this project. Assuming $P = a_0 + a_1x +
-... + a_nx^n$, Lagrange's bound is $max\{1,
+$P$. This project uses Lagrange's bound\cite{Lag} in this project. Assuming $P =
+a_0 + a_1x + ... + a_nx^n$, Lagrange's bound is $max\{1,
 \sum_{i=0}^{n-1}|\frac{a_i}{a_n}|\}$.
+
+
+
+
 
 \subsection{Continued Fraction}
 
-Let's first introduce some notation used in this algorithm. Let $M(x)$ represent a
-Mobius Transformation, which map $x$ to $\frac{ax+b}{cx+d}$. So that the number
-of positive
-roots of $P(M(x))$ equals to the number of roots in interval $(\frac{b}{d},
-\frac{a}{c}]$ of $P$. And $s = sign\_change(P)$ represents the sign changes along
-coefficients of $P$.
+Let's first introduce some notations used in this algorithm. Let $M(x)$
+represent a Mobius transformation, which maps $x$ to $\frac{ax+b}{cx+d}$. So
+that the number of positive roots of $P(M(x))$ equals the number of roots in
+interval $(\frac{b}{d}, \frac{a}{c}]$ of $P$. Denote the sign changes of 
+coefficients of $P$ as $s$.
 
-We using $\{a,b,c,d,p, s\}$ to represent a interval. Where, $ad-bc \neq 0$ and
-the roots of original polynomial $P$ in $(\frac{b}{d},\frac{a}{c}]$ are images
-of positive roots of $p$. $s = sign\_change(p)$.
+We use $\{a,b,c,d,p, s\}$ to represent an interval. Where, $ad-bc \neq 0$ and the
+roots of original polynomial $P$ in interval $(\frac{b}{d},\frac{a}{c}]$ are
+images of positive roots of $p$.
 
-The algorithm can be described as Algorithm~\ref{alg4}. 
+Continued fraction method can be formalized as Algorithm~\ref{alg4}. 
 
 \begin{algorithm}[H]
 \label{alg4}
@@ -155,11 +161,11 @@ The algorithm can be described as Algorithm~\ref{alg4}.
   \SetKwInOut{Input}{input}
   \SetKwInOut{Output}{output}
 
-  \Input{$P$ square-free polynomial with no zero root} 
+  \Input{A square-free polynomial with no zero root $P$} 
   \Output{List of intervals contains only one positive real root}
 
   $s = sign\_change(P)$\;
-  \If{$s=0$}{
+  \If{$s=0$}{ 
     \Return{[]};
   }
   \ElseIf{$s=1$}{
@@ -196,7 +202,6 @@ The algorithm can be described as Algorithm~\ref{alg4}.
 \caption{Real-root isolation based on Continued Fraction}
 \end{algorithm}
 
-Above algorithm only accept the polynomials with non-zero roots, therefore 
-before using the Algorithm~\ref{alg4}, we need to remove the zero roots of
-original $P$. Then we used Algorithm~\ref{alg4} with $P(x)$ and $P(-x)$ to get
-the positive roots and negative roots.
+Algorithm~\ref{alg4} can only returns positive real roots, therefore,
+Algorithm~\ref{alg4} will be applied both on $P(x)$ and $P(-x)$. Zero roots
+should be handled before using Algorithm~\ref{alg4}. 

@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{5}
+\begin{thebibliography}{8}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -50,13 +50,39 @@
 \shownote{Last edited: 2020-12-31.}
 
 
+\bibitem[\protect\citeauthoryear{??}{Vin}{[n.d.]}]%
+        {Vincent}
+ \bibinfo{year}{[n.d.]}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Continued fraction method}}.
+\newblock
+\urldef\tempurl%
+\url{https://en.wikipedia.org/wiki/Real-root_isolation#Continued_fraction_method}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Last edited: 2020-12-31.}
+
+
+\bibitem[\protect\citeauthoryear{??}{rul}{[n.d.]}]%
+        {rule_of_sign}
+ \bibinfo{year}{[n.d.]}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Descartes’ rule of signs}}.
+\newblock
+\urldef\tempurl%
+\url{https://en.wikipedia.org/wiki/Descartes%27_rule_of_signs}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Last edited: 2021-3-9.}
+
+
 \bibitem[\protect\citeauthoryear{??}{Lag}{[n.d.]}]%
         {Lag}
  \bibinfo{year}{[n.d.]}\natexlab{}.
 \newblock \bibinfo{booktitle}{\emph{Lagrange's bounds}}.
 \newblock
 \urldef\tempurl%
-\url{https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#cite_note-2}
+\url{https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#Lagrange's_and_Cauchy's_bounds}
 \showURL{%
 \tempurl}
 \newblock
@@ -77,6 +103,16 @@
 \url{http://www.jstor.org/stable/41133596}
 \showURL{%
 \tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Gerhard}{Gerhard}{2004}]%
+        {Taylor}
+\bibfield{author}{\bibinfo{person}{J. Gerhard}.}
+  \bibinfo{year}{2004}\natexlab{}.
+\newblock \showarticletitle{Modular Algorithms in Symbolic Summation and
+  Symbolic Integration}. In \bibinfo{booktitle}{\emph{Lecture Notes in Computer
+  Science}}. \bibinfo{pages}{42--49}.
+\newblock
 
 
 \bibitem[\protect\citeauthoryear{Noda and Sasaki}{Noda and Sasaki}{1991}]%
