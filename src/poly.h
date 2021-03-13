@@ -303,6 +303,7 @@ template <int n1, int n2> struct DivsionRet {
 template <int n1, int n2>
 void MinusRightMoveScale(const Poly<n2> &poly2, int move_num, interval scale,
                          Poly<n1> &poly1) {
+  interval tmp = poly1.lead_coef();
   for (int i = poly2.get_degree(); i >= 0; i--) {
     poly1[i + move_num] -= poly2[i] * scale / poly2.lead_coef();
   }

@@ -18,6 +18,13 @@
 #include "util.h"
 #include <limits>
 
+template <int n> interval LowerBound(const Poly<n> &poly) {
+  interval lc = poly[0], ans = boost::numeric::abs(poly.lead_coef() / lc);
+  for (int i = poly.get_degree() - 1; i > 0; i--)
+    ans = boost::numeric::max(ans, boost::numeric::abs(poly[i] / lc));
+  return 1.0 / (1.0 + ans.upper());
+}
+
 /**
  * struct Mobius - represent Mobius transformation, map x to (ax + b)/(cx+d)
  */
