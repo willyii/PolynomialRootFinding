@@ -42,7 +42,7 @@ bool is_file_exist(const char *fileName) {
 }
 
 int main(int argc, char *argv[]) {
-  std::cout << std::setprecision(16);
+  std::cout << std::setprecision(19);
   if (argc == 1) {
     // Generate random polynomials and write to file
     // Then read from file and record the running time

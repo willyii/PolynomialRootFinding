@@ -48,8 +48,8 @@ public:
    * @param num_input: Number of coefficients
    */
   Poly(const double *input_coef, int num_input) : coef_{} {
-    assert(num_input <= n + 1);
 
+    assert(num_input <= n + 1);
     for (int i = 0; i < num_input; i++) {
       coef_[i] = input_coef[i];
     }
@@ -125,6 +125,18 @@ public:
     return ans;
   }
 
+  /**
+   * Derivative of polynomal
+   */
+  void Derivative_() {
+    for (int i = 0; i < degree_; i++)
+      coef_[i] = coef_[i + 1] * double(i + 1);
+    for (int i = degree_; i <= n; i++) {
+      coef_[i] = 0;
+    }
+    degree_--;
+  }
+
   interval lead_coef() const { return coef_[degree_]; }
 
   /**
@@ -143,6 +155,7 @@ public:
   }
 
   bool containZero(int i) const { return boost::numeric::zero_in(coef_[i]); }
+
   /**
    * --------------------------------------------------------------------------
    *
@@ -292,7 +305,7 @@ void MinusRightMoveScale(const Poly<n2> &poly2, int move_num, interval scale,
                          Poly<n1> &poly1) {
   interval tmp = poly1.lead_coef();
   for (int i = poly2.get_degree(); i >= 0; i--) {
-    poly1[i + move_num] -= poly2[i] * scale;
+    poly1[i + move_num] -= poly2[i] * scale / poly2.lead_coef();
   }
   poly1.set_degree();
 }
@@ -327,7 +340,8 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
     int degree_idx = remainder_degree - degree;
     ret.quotient[degree_idx] = division;
 
-    MinusRightMoveScale(poly2, degree_idx, division, remainder);
+    MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
+    // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
   ret.quotient.set_degree();
@@ -350,6 +364,7 @@ DivsionRet<n1, std::max(n2 - 1, 0)> Division(const Poly<n1> &poly1,
  */
 template <int n1, int n2>
 Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
+  // std::cout << poly1 << " \ndiv\n " << poly2 << std::endl;
   Poly<n1> quotient, remainder(poly1);
 
   // If poly2 is a constant number
@@ -366,12 +381,12 @@ Poly<n1> Quotient(const Poly<n1> &poly1, const Poly<n2> &poly2) {
     int degree_idx = remainder_degree - degree;
     quotient[degree_idx] = division;
 
-    MinusRightMoveScale(poly2, degree_idx, division, remainder);
+    MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
+    // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
   }
 
   quotient.set_degree();
-
   return quotient;
 }
 
@@ -399,15 +414,23 @@ Poly<std::max(n2 - 1, 0)> Remainder(const Poly<n1> &poly1,
 
   while (remainder_degree >= degree) {
     interval division = remainder.lead_coef() / lead_coef;
+
+    // std::cout << "Debug Remainder:  division "
+    //<< boost::numeric::median(division) << "["
+    //<< boost::numeric::width(division) << "]" << std::endl;
     int degree_idx = remainder_degree - degree;
-    MinusRightMoveScale(poly2, degree_idx, division, remainder);
+    MinusRightMoveScale(poly2, degree_idx, remainder.lead_coef(), remainder);
+    // MinusRightMoveScale(poly2, degree_idx, division, remainder);
     remainder_degree = remainder.get_degree();
+
+    // std::cout << "Debug Remainder:  remainder " << remainder << std::endl;
   }
 
   // Set remaineder should returned
   for (int i = 0; i <= remainder.get_degree(); i++)
     remainder_ret[i] = remainder[i];
   remainder_ret.set_degree(remainder.get_degree());
+
   return remainder_ret;
 }
 

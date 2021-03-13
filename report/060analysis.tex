@@ -1,0 +1,138 @@
+\section{Results and analysis} \label{analysis}
+
+\subsection{Running Time}
+
+With above implementation and operation, we test the running time of these two
+methods. Results can be found in table~\ref{tb2}. Since we do not pay attention
+to the polynomials with degree more than 6, we only test the polynomials with
+degree 6 in this section. These test polynomials are generated with random
+coefficients from $-c$ to $c$. 
+
+\begin{center}
+\label{tb2}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+
+ $c$  & Budan's Theorem & Continued Fraction\\ 
+
+ \hline
+ 10   & 195 $us$  & 26 $us$\\ 
+ 20   & 240 $us$  & 22 $us$\\ 
+ 50   & 243 $us$  & 32 $us$\\ 
+ 100   & 257 $us$  & 32 $us$\\ 
+ 1000   & 259 $us$  & 32 $us$\\ 
+ \hline
+\end{tabular}
+\end{center}
+
+From table~\ref{tb2}, we can see that Budan's theorem method takes longer than
+the continued fraction method. This might be because in Budan’s theorem, we need
+to get the upper bound of root $up\_b$ first and get $P(x+up\_b)$ to check how
+many positive real roots. However in continued fraction, sign variance of $P$
+can tell us the information about positive roots directly. 
+
+Furthermore, in Budan's theorem method, sometimes the search range needs to be
+small enough to figure out whether there are roots or not. Take $P(x) = x^4 +1 $
+as an example. In Budan's theorem method with search range $[0-\epsilon,
+0+\epsilon]$, $v_{0+\epsilon}(P) - v_{0-\epsilon}(P) = 4$ is always valid, no
+matter how small the $\epsilon$ is. Therefore, the bisection process will
+terminate only when $2\epsilon < MINIMAL\_RANGE$. However, the continued
+fraction method will check zero root first, then find no positive root since
+$v_0(P(x)) = 0$ and no negative roots since $v_0(P(-x))=0$. That's the reason
+why the Budan’s theorem method takes longer than the continued fraction method.
+
+Above polynomials are generated with random coefficients, which means it cannot
+guarantee that those polynomials have real roots. In order to figure out the
+relationship between the running time with magnitude of roots, we designed
+following experiments. Test polynomials have 6 roots and every root has $p =
+0.5$ probability same as the previous one. Distinct roots are generated randomly
+in range $[-max\_root, max\_root]$. Degree of test polynomials is 6. Running
+times are shown in table~\ref{tb3}.
+
+
+\begin{center}
+\label{tb3}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+
+ $max\_root$  & Budan's Theorem & Continued Fraction\\ 
+
+ \hline
+ 1   & 23 $us$  & 23 $us$\\ 
+ 10   & 28 $us$  & 25 $us$\\ 
+ 50   & 34 $us$  & 36 $us$\\ 
+ 100   & 36 $us$  & 51 $us$\\ 
+ 200   & 39 $us$  & 86 $us$\\ 
+ 500   & 42 $us$  & 180 $us$\\ 
+ 1000   & 47 $us$  & 300 $us$\\ 
+ \hline
+\end{tabular}
+\end{center}
+
+First, we can observe that when roots go larger the continued fraction method
+takes longer than the Budan's theorem method. It is noticeable that $p'=p(x+1)$
+step in Algorithm~\ref{alg4} only shifts polynomial by $1$ each time. Therefore,
+when roots are large, it takes longer for the continued fraction method to shift
+the polynomial to the place around roots. This place needs to be optimized in
+the future.  Shifting can be flexible according to the lower bound of roots of
+polynomials.
+
+Furthermore, we can also notice that the Budan’s theorem method runs faster than the 
+previous one while the continued fraction method runs slower. This mainly
+because these polynomials are guaranteed to have 6 real roots. With 6 real
+roots, there are no conjugate complex roots, like $x^4-1$. This condition makes
+Budan’s theorem method terminate earlier. Besides that, some factors of original
+polynomial might only have degree of 2 or 1. These factors can be solved very
+quickly. However, for the continued fraction method, it takes longer to shift
+polynomials to the place around roots.
+
+\subsection{Error Analysis}
+
+Although this implementation can work correctly in most cases, there are some
+conditions that could lead to failure.
+
+Since both methods need to work on polynomials with no repeat roots, square-free
+decomposition becomes the most important step in the program. However, Yun's
+algorithm requires exact divisions and $GCD$ success, which is hard to achieve
+in floating point computation.
+
+As mentioned before, we introduce interval arithmetic to handle the errors from
+inexact computation and keep track of errors. We find that errors are related to
+the magnitude of coefficients. Errors might be enlarged during the process of
+$GCD$ and long division. Let's simulate the first step of $GCD(P,P')$, which is
+$rem(P,P')$ where $P' = \frac{dP}{dx}$.
+
+Given a polynomial $P=a_0+a_1*x + a_2*x^2...+a_n*x^n$, and its derivative
+$P'=a_1+2*a_2*x...+n*a_n*x^{n-1}$. We assume all of coefficients of $P$ and $P'$
+can be represented by computer perfectly. Which means the width of interval
+$a_i$ is zero.
+
+Then the processes to calculate $rem(P,P')$ are:
+
+\begin{align*}
+  div1 &= 1/n \\ 
+  rem1 &= P - div_1 * x * P' =  a_0 + \frac{n-1}{n}a_1*x+ \frac{n-2}{n}a_2*x^2....
+\frac{1}{n}*a_{n-1}x^{n-1}\\ 
+       &= \sum_{i=0}^{n-1} \frac{n-i}{n} a_i x^i \\
+  div2 &= \frac{a_{n-1}}{a_n} * \frac{1}{n^2} \\ 
+       &= div_1 * \frac{a_{n-1}}{na_n}\\
+  rem2 &= rem1 - div2 * P' = (a_0 - div2*a_1) + (\frac{n-1}{n}*a_1 - div2 *
+  2*a_2)+ ... \\
+      &= \sum_{i=0}^{n-2} (\frac{n-i}{n}*a_i -
+      \frac{a_{n-1}*a_{i+1}}{n^2*a_n}(i+1)) x^i \\
+      &= \sum_{i=0}^{n-2} ((1-div1*i)*a_i -
+       div2 * a_{i+1}(i+1)) x^i
+\end{align*} 
+
+Since $rem2$ only has degree $n-2$ which is one less than $P'$, it is the answer
+of $rem(P,P')$. Let's assume errors appear in computation of $div1$. Which means 
+$div1 = \frac{1}{n}\pm \epsilon$. Then we assume $\xi = \frac{a_{n-1}}{na_n}$
+is exact but very large, like $1e^{20}$. Then the $div2$ becomes
+$\frac{a_{n-1}}{a_n*n^2} \pm \epsilon * \xi$. Since $\xi$ is very large, the
+error of $div2$ is not ignorable. And it will affect the coefficients of $rem2$,
+which makes the $rem2$ not accurate.
+
+Therefore, if the magnitude of coefficients is very large, there is potential for
+this program to fail in $GCD$ and long division processes and lead to failure in
+real-root isolation.
+

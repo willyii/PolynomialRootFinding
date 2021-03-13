@@ -39,9 +39,9 @@
 
 static const int digit = 1; // number of digit after point
 static const int digit_control = std::pow(10, digit); // controler of digit
-static const double kMAXROOT = 10;     // root from [-kMAXROOT, kMAXROOT]
-static const double kCHANGE_PROB = .5; // prob to change root
-static const bool FIXSEED = false;     // fix test set
+static const double kMAXROOT = 1000;    // root from [-kMAXROOT, kMAXROOT]
+static const double kCHANGE_PROB = 0.5; // prob to change root
+static const bool FIXSEED = false;      // fix test set
 static const int SEED = 2033;
 
 /**
@@ -75,7 +75,7 @@ RandomPolyRet RandomPoly() {
   RandomPolyRet ret;
   double root = 0.0;
 
-  int num_roots = rand_int(2, kMAXDEGREE);
+  int num_roots = 6;
   while (root == 0.0)
     root = rand_double(-kMAXROOT, kMAXROOT);
   ret.poly[1] = interval(1, 1);
@@ -85,9 +85,7 @@ RandomPolyRet RandomPoly() {
 
   for (int i = 1; i < num_roots; i++) {
     if (rand_double(0, 1) < kCHANGE_PROB) {
-      root = 0.0;
-      while (root == 0.0)
-        root = rand_double(-kMAXROOT, kMAXROOT);
+      root = rand_double(-kMAXROOT, kMAXROOT);
     }
 
     Poly<kMAXDEGREE> backup(ret.poly);
