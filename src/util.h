@@ -25,7 +25,7 @@
 #include "range.h"
 
 // Debug
-const static bool debug_GCD = true;
+const static bool debug_GCD = false;
 
 /**
  * Return True if all coefficients of poly is zero

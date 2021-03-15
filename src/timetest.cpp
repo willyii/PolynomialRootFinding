@@ -44,7 +44,7 @@ int main() {
 
   for (int i = 0; i < 1000; i++) {
 
-    for (size_t i = 0; i < kTESTDEGREE; i++) {
+    for (size_t i = 0; i <= kTESTDEGREE; i++) {
       coeffs[i] = rand_double(-max_root, max_root);
     }
 
