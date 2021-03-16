@@ -14,50 +14,50 @@ this way, developers need to handle the possible change over the template when
 writing some operators, like $*,+$, programs can avoid dynamic memory
 allocation, which may save a lot of running time.
 
-\subsection{Replace $x$ with $x+a$}
+%\subsection{Replace $x$ with $x+a$}
 
-Changing $P(x)$ to $P(x+a)$ in a polynomial is a very common operation in both
-methods, since both methods need to use the coefficients of $P(x+a)$ to get the
-sign variance. 
+%Changing $P(x)$ to $P(x+a)$ in a polynomial is a very common operation in both
+%methods, since both methods need to use the coefficients of $P(x+a)$ to get the
+%sign variance. 
 
-At first, we tried a very primitive idea for this process. Initialize a very
-simple polynomial $p = x+ a$. Then multiply it by coefficients and increase its
-order one by one. Add them together at last to get transformed polynomial.
+%At first, we tried a very primitive idea for this process. Initialize a very
+%simple polynomial $p = x+ a$. Then multiply it by coefficients and increase its
+%order one by one. Add them together at last to get transformed polynomial.
 
-In order to optimize this process, we apply Taylor expansion. This process is
-also called Taylor shift\cite{Taylor}. It runs as appling Taylor expansion at
-point $a$ with $\Delta x = x$. Then we have:
+%In order to optimize this process, we apply Taylor expansion. This process is
+%also called Taylor shift\cite{Taylor}. It runs as appling Taylor expansion at
+%point $a$ with $\Delta x = x$. Then we have:
 
-$$
-P(x+a) = P(a) + P'(a) *x + ... + \frac{1}{n!}P^{(n)}(a)*x^n
-$$
+%$$
+%P(x+a) = P(a) + P'(a) *x + ... + \frac{1}{n!}P^{(n)}(a)*x^n
+%$$
 
-This process avoids multiplication of two polynomials. Multiplication needs
-$O(n^2)$ operations in our implementation. In order to make sure Taylor
-expansion can improve the performance of the program, we made some experiments
-to compare the computation time of these two implementations. Results are in
-table~\ref{tb1}.  Coefficients of test polynomials are generated randomly from
-$-1000$ to $1000$. Since this project does not pay attention to polynomials with
-degrees higher than 6, we only test polynomials with degree from 3 to 6.
+%This process avoids multiplication of two polynomials. Multiplication needs
+%$O(n^2)$ operations in our implementation. In order to make sure Taylor
+%expansion can improve the performance of the program, we made some experiments
+%to compare the computation time of these two implementations. Results are in
+%table~\ref{tb1}.  Coefficients of test polynomials are generated randomly from
+%$-1000$ to $1000$. Since this project does not pay attention to polynomials with
+%degrees higher than 6, we only test polynomials with degree from 3 to 6.
 
-\begin{center}
-\label{tb1}
-\begin{tabular}{ |c|c|c| } 
- \hline
+%\begin{center}
+%\label{tb1}
+%\begin{tabular}{ |c|c|c| } 
+ %\hline
 
- Degree  & Tylor Expansion   & Original Method\\ 
+ %Degree  & Tylor Expansion   & Original Method\\ 
 
- \hline
- 3   & 1876 $ns$  & 2272 $ns$\\ 
- 4   & 2640 $ns$  & 3439 $ns$\\ 
- 5   & 3307 $ns$  & 4910 $ns$\\ 
- 6   & 4574 $us$  & 7103 $us$\\ 
- \hline
-\end{tabular}
-\end{center}
+ %\hline
+ %3   & 1876 $ns$  & 2272 $ns$\\ 
+ %4   & 2640 $ns$  & 3439 $ns$\\ 
+ %5   & 3307 $ns$  & 4910 $ns$\\ 
+ %6   & 4574 $us$  & 7103 $us$\\ 
+ %\hline
+%\end{tabular}
+%\end{center}
 
-As shown above, the running time of polynomial shifting with Taylor Expansion is
-about $25\%$  faster than the primitive one in our implementation.
+%As shown above, the running time of polynomial shifting with Taylor Expansion is
+%about $25\%$  faster than the primitive one in our implementation.
 
 \subsection{Approximate GCD}
 

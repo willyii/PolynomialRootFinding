@@ -188,11 +188,11 @@ Continued fraction method can be formalized as Algorithm~\ref{alg4}.
       $intervals.append(\{a, a+b, c, c+d, p', s' \})$\;
 
     \If{$s-s' = 1$}{
-      $ret.append([\frac{a}{c},\frac{b}{d}])$\;
+      $ret.append([\frac{a}{c},\frac{a+b}{c+d}])$\;
     }
     \ElseIf{$s-s' > 1$} {
       % add A(b/(1 + x)),  M(b/(1 + x)) to L
-      $p'' = p(b/(1+x))$\;
+      $p'' = p(1/(1+x))$\;
       $intervals.append(\{b, a+b, d, c+d, p'', sign\_change(p'') \})$\;
 
     }

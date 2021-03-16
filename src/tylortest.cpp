@@ -74,16 +74,16 @@ template <int n> Poly<n> Original(const Poly<n> &poly, interval h) {
 
   for (int i = 1; i <= poly.get_degree(); i++) {
     ret += (poly[i] * multiplier);
-    auto intermid = multiplier;
+    // auto intermid = multiplier;
     for (int j = multiplier.get_degree(); j >= 0; j--) {
-      multiplier[j + 1] = multiplier[j];
+      multiplier[j + 1] = h * multiplier[j];
     }
-    multiplier[0] = 0;
-    multiplier += h * intermid;
-    multiplier.set_degree();
+    multiplier[0] *= h;
+    // multiplier += h * intermid;
+    multiplier.set_degree(multiplier.get_degree() + 1);
   }
 
-  ret.set_degree();
+  ret.set_degree(poly.get_degree());
 
   return ret;
 }
@@ -112,10 +112,10 @@ int main() {
   auto ori_end = std::chrono::high_resolution_clock::now();
 
   //     Time
-  auto tylor_duration = std::chrono::duration_cast<std::chrono::microseconds>(
+  auto tylor_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
       tylor_end - tylor_start);
-  auto ori_duration = std::chrono::duration_cast<std::chrono::microseconds>(
-      ori_end - ori_start);
+  auto ori_duration =
+      std::chrono::duration_cast<std::chrono::nanoseconds>(ori_end - ori_start);
 
   std::cout << "Tylor expansion method takes " << tylor_duration.count()
             << " ns for " << kTYLORDEGREE - 1 << " degree" << std::endl;
