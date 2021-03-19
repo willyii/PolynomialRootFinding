@@ -72,14 +72,14 @@ template <int n> Poly<n> Original(const Poly<n> &poly, interval h) {
   Poly<n> tmp_poly(tmp, 2), ret, multiplier(tmp, 2);
   ret[0] = poly[0];
 
+  /* TODO :  */
   for (int i = 1; i <= poly.get_degree(); i++) {
     ret += (poly[i] * multiplier);
-    // auto intermid = multiplier;
+
     for (int j = multiplier.get_degree(); j >= 0; j--) {
-      multiplier[j + 1] = h * multiplier[j];
+      multiplier[j + 1] = multiplier[j] + h * multiplier[j + 1];
     }
     multiplier[0] *= h;
-    // multiplier += h * intermid;
     multiplier.set_degree(multiplier.get_degree() + 1);
   }
 
