@@ -1,11 +1,8 @@
 # PolynomialRootFinding
 
-This projct is to build a application that can solve polynomial root finding 
-problem efficiently. 
-
-The main method applied here is root isolation. Which is continually minize thes range of roots. When the range in small enough, apply Newton Method in that range to find the root with in that range.
-
-This project will apply three methods and compare them together: Budan's threom, Vincent Theorem and Bisection method.
+This project is aims to build program to isolate real roots. We applied Budan's
+theorem and continued fraction method. We also applied Yun's algorithm to
+perform square-free decomposition
 
 ## Usage
 Pls make sure you installed [CMake](https://cmake.org/) on your machine. 
@@ -17,10 +14,36 @@ git clone https://github.com/willyii/PolynomialRootFinding
 cd PolynomialRootFinding
 make clean
 make build
-./valid.sh
 ```
 
-Last command will run the **valid.py** first. Which will generate 10000 random polynomial coefficients and coresponding roots save in **test/validation.test**
-(Polynomial with no root will use # to mark). Then it will call this project to compute the roots and valid if it is correct or not.
+There are several ways to run this program:
+
+1. 
+
+```bash
+./build/Poly
+```
+
+This will generate 1000 random polynomials in file **data/random_poly.txt**. And
+this program will try to solve them and return the running time.
+
+2.
+
+```bash
+./build/Poly valid
+```
+
+This will generate 1000 random polynomials and their solutions. This program
+will print out the exact answer and the answer of this program. User can check
+if it can return correct answer.
+
+3.
+
+```bash
+./build/Poly -path_to_test_file valid
+```
+
+The test polynomials in test_file should be in form like a\*x\^3+b\*x\^2+c. It
+will return the answer of these polynomials
 
 
