@@ -110,29 +110,41 @@ $a_i$ is zero.
 Then the processes to calculate $rem(P,P')$ are:
 
 \begin{align*}
-  div1 &= 1/n \\ 
-  rem1 &= P - div_1 * x * P' =  a_0 + \frac{n-1}{n}a_1*x+ \frac{n-2}{n}a_2*x^2....
+  div_1 &= 1/n \\ 
+  rem_1 &= P - div_1 * x * P' =  a_0 + \frac{n-1}{n}a_1*x+ \frac{n-2}{n}a_2*x^2....
 \frac{1}{n}*a_{n-1}x^{n-1}\\ 
        &= \sum_{i=0}^{n-1} \frac{n-i}{n} a_i x^i \\
-  div2 &= \frac{a_{n-1}}{a_n} * \frac{1}{n^2} \\ 
+  div_2 &= \frac{a_{n-1}}{a_n} * \frac{1}{n^2} \\ 
        &= div_1 * \frac{a_{n-1}}{na_n}\\
-  rem2 &= rem1 - div2 * P' = (a_0 - div2*a_1) + (\frac{n-1}{n}*a_1 - div2 *
+  rem_2 &= rem_1 - div_2 * P' = (a_0 - div_2*a_1) + (\frac{n-1}{n}*a_1 - div_2 *
   2*a_2)+ ... \\
       &= \sum_{i=0}^{n-2} (\frac{n-i}{n}*a_i -
       \frac{a_{n-1}*a_{i+1}}{n^2*a_n}(i+1)) x^i \\
-      &= \sum_{i=0}^{n-2} ((1-div1*i)*a_i -
-       div2 * a_{i+1}(i+1)) x^i
+      &= \sum_{i=0}^{n-2} ((1-div_1*i)*a_i -
+       div_2 * a_{i+1}(i+1)) x^i
 \end{align*} 
 
-Since $rem2$ only has degree $n-2$ which is one less than $P'$, it is the answer
-of $rem(P,P')$. Let's assume errors appear in computation of $div1$. Which means 
-$div1 = \frac{1}{n}\pm \epsilon$. Then we assume $\xi = \frac{a_{n-1}}{na_n}$
-is exact but very large, like $1e^{20}$. Then the $div2$ becomes
-$\frac{a_{n-1}}{a_n*n^2} \pm \epsilon * \xi$. Since $\xi$ is very large, the
-error of $div2$ is not ignorable. And it will affect the coefficients of $rem2$,
-which makes the $rem2$ not accurate.
+Since $rem_2$ only has degree $n-2$ which is one less than $P'$, it is the
+answer of $rem(P,P')$. Let's assume errors appear in computation of $div_1$.
+Which means $div_1 = \frac{1}{n}\pm \epsilon$. Then we set $\xi =
+\frac{a_{n-1}}{na_n}$, $div_2 = div_1 * \xi = \frac{a_{n-1}}{a_nn^2}  \pm
+\epsilon \xi$. The width of value range of $div_2$ might be changed by $\xi$.
+It's noticeable that start from $div_1$ the coefficients of intermediate
+polynomials will be expressed as a set of possible value, instead of exact
+value. Therefore, every square-free factor might be written in form as $P_i =
+c_0[\pm \epsilon_0]+ c_1[\pm \epsilon_1]*x + c_2[\pm \epsilon_2]*x^2+ ... +
+c_k[\pm \epsilon_k]*x^k$ after square-free decomposition.
 
-Therefore, if the magnitude of coefficients is very large, there is potential for
-this program to fail in $GCD$ and long division processes and lead to failure in
-real-root isolation.
+If real roots of a polynomial are close enough, a little change of the
+coefficients might change the roots a lot, not only the value, but also the
+nature. For example, a square-free polynomial $P = (x-3.003)*(x-3.004)=x^2  -
+6.007x + 9.021012$. If we only add $0.00000025$ to the constant term, these two
+roots will become repeated $3.0035$. Besides that, if we add $1e^{-7} +
+0.00000025$ to constant term, there will be no real roots for this polynomial.
 
+As mentioned before, after square-free decomposition, error of coefficients may
+not be avoidable. If roots of these polynomials are not distinctive enough,
+real-root isolation might fail since it is hard to figure out the property of
+these close roots. This problem seems inherent to specific problems. If we do not
+have extra information about polynomials, it's hard to find out close distinct
+roots.

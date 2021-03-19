@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2020)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: ACM-Reference-Format.bst
@@ -51,47 +51,45 @@ Warning--no author, editor, organization, or key in Lag
 Warning--empty organization in Lag
 Warning--empty year in Lag
 Warning--empty organization in Lag
-Warning--empty publisher in Taylor
-Warning--empty address in Taylor
-You've used 8 entries,
+You've used 7 entries,
             5959 wiz_defined-function locations,
-            1388 strings with 15990 characters,
-and the built_in function-call counts, 7427 in all, are:
-= -- 810
-> -- 98
+            1381 strings with 15861 characters,
+and the built_in function-call counts, 6333 in all, are:
+= -- 696
+> -- 78
 < -- 0
-+ -- 32
-- -- 50
-* -- 485
-:= -- 607
-add.period$ -- 36
-call.type$ -- 8
-change.case$ -- 37
-chr.to.int$ -- 8
-cite$ -- 66
-duplicate$ -- 762
-empty$ -- 549
-format.name$ -- 44
-if$ -- 1791
++ -- 27
+- -- 42
+* -- 428
+:= -- 506
+add.period$ -- 31
+call.type$ -- 7
+change.case$ -- 32
+chr.to.int$ -- 7
+cite$ -- 63
+duplicate$ -- 638
+empty$ -- 463
+format.name$ -- 36
+if$ -- 1525
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 18
-newline$ -- 135
-num.names$ -- 32
-pop$ -- 391
+missing$ -- 13
+newline$ -- 128
+num.names$ -- 24
+pop$ -- 338
 preamble$ -- 1
-purify$ -- 85
+purify$ -- 71
 quote$ -- 0
-skip$ -- 258
+skip$ -- 213
 stack$ -- 0
-substring$ -- 522
-swap$ -- 88
+substring$ -- 434
+swap$ -- 76
 text.length$ -- 19
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 212
-warning$ -- 42
-while$ -- 41
+type$ -- 182
+warning$ -- 40
+while$ -- 31
 width$ -- 0
-write$ -- 197
-(There were 42 warnings)
+write$ -- 181
+(There were 40 warnings)
