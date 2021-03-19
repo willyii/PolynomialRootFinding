@@ -1,7 +1,7 @@
 ## Page 1 
 
 Hello professor, thank you for participate my defense committee. My name is
-Xinlong Yi, I'm here for present my project. My advisor is professor Schroeder.
+Xinlong Yi, My advisor is professor Schroeder.  I'm here for present my project.
 The topic of this project is Real-root isolation of polynomials. It's a very
 common problem in mathmatics. 
 
@@ -11,7 +11,7 @@ Here is outline today, I will introduce the overview of this project. Then I
 will introduce you the theories and algorithms that applied to this project.
 Thirdly, how we implemented this project and what we tried to optimize it will
 be introduced. Then results and analysis will we introduced. And last, I will
-talk about conclusions and future work.
+talk about conclusions.
 
 ## Page 3
 
@@ -62,7 +62,7 @@ x in P to -x.
 
 Then, based on Descartes' rule of signs, Budan proposed his own statement. Which
 can help us bounding the number of real roots in an interval. It states that,
-the sign variation of P(x+l) - P(x+r) - the number of roots in half open
+the sign variation of P(x+l) - sign variation of P(x+r) - the number of roots in half open
 interval  l to r is a nonnegative even integer. 
 
 Let's look at this example. This polynomial has three roots, 1, 3, 5. The sign

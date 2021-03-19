@@ -14,7 +14,9 @@ future.
 With the application of interval arithmetic, our program becomes more robust to
 the errors from inexact computation and representation, although it is not
 perfect for all of the cases. We analyze the conditions that might
-cause failure of the program and find that the magnitude of coefficients might
-affect error's change during the processes of $GCD$ and $remainder$ computation.
-If the coefficients are large, the errors might become not ignorable and affect
-the accuracy of factors. Which might finally lead to failure of our program.
+cause failure of the program. We find that after square-free decomposition,
+every factors has error in express of coefficients. It is hard to isolate close
+real roots with this expression since small change of coefficients might causes
+large change the property of these roots.
+
+

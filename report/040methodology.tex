@@ -121,16 +121,53 @@ Algorithm~\ref{alg3}.
     \If{$vl - vr = 1$}{
       $ret.append([l,r])$\;
     }
-    \ElseIf{$vl - vr > 1$ and $r - l \geq MINIMAL\_RANGE $}{
-      $mid = l + (r-l)/2$\;
-      $search.append(mid, r)$\;
-      $search.append(l, mid)$\;
+    \ElseIf {$vr - vl > 1$}{
+      \If{$l - r \geq MINIMAL\_RANGE$} {
+        $mid = l + (r-l)/2$\;
+        $search.append(mid, r)$\;
+        $search.append(l, mid)$\;
+      }
+      \ElseIf{$(vl - vr) \%2 = 1$} {
+        $ret.append([l,r])$\;
+      }
     }
   }
 
   \Return{ret}\;
 \caption{Real-root isolation based on Budan's Theorem}
 \end{algorithm}
+
+%\begin{algorithm}[H]
+%\label{alg3}
+%\SetAlgoLined
+%  \SetKwInOut{Input}{input}
+%  \SetKwInOut{Output}{output}
+
+%  \Input{A square-free polynomial $P$} 
+%  \Output{List of intervals contains only one real root}
+
+%  $ret = []$\;
+%  $up\_bound = Upper(P)$\;
+%  $low\_bound = - up\_bound$\;
+%  $search = [(low\_bound, up\_bound)]$\;
+
+%  \While{$search$ not empty}{
+%    $l, r = pop(search)$\;
+%    $vl = sign\_change(P(x+l))$\;
+%    $vr = sign\_change(P(x+r))$\;
+%    \If{$vl - vr = 1$}{
+%      $ret.append([l,r])$\;
+%    }
+%    \ElseIf {$r - l \geq MINIMAL\_RANGE $}{
+%      $mid = l + (r-l)/2$\;
+%      $search.append(mid, r)$\;
+%      $search.append(l, mid)$\;
+%    }
+%  }
+
+%  \Return{ret}\;
+%\caption{Real-root isolation based on Budan's Theorem}
+%\end{algorithm}
 
 In Algorithm~\ref{alg3}, $Upper(P)$ returns the upper bound of real roots of
 $P$. This project uses Lagrange's bound\cite{Lag} in this project. Assuming $P =
@@ -177,10 +214,13 @@ Continued fraction method can be formalized as Algorithm~\ref{alg4}.
 
   \While{$intervals$ not empty}{
     $\{a,b,c,d,p,s\} = pop(intervals)$\;
+    \If{$s = 0$}{
+      continue;
+    }
     $p' = p(x+1)$\;
 
     \If{$p'(0)=0$}{
-      $ret.append([\frac{b}{d},\frac{b}{d}])$\;
+      $ret.append([\frac{a+b}{c+d},\frac{a+b}{c+d}])$\;
       $p' = p'/x$\;
     }
 
@@ -188,11 +228,11 @@ Continued fraction method can be formalized as Algorithm~\ref{alg4}.
       $intervals.append(\{a, a+b, c, c+d, p', s' \})$\;
 
     \If{$s-s' = 1$}{
-      $ret.append([\frac{a}{c},\frac{a+b}{c+d}])$\;
+      $ret.append([\frac{b}{d},\frac{a+b}{c+d}])$\;
     }
     \ElseIf{$s-s' > 1$} {
       % add A(b/(1 + x)),  M(b/(1 + x)) to L
-      $p'' = p(1/(1+x))$\;
+      $p'' = (x+1)^m p(1/(1+x))$\;
       $intervals.append(\{b, a+b, d, c+d, p'', sign\_change(p'') \})$\;
 
     }
